@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Compass AEPED</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="../css/style.css">
+    </head>
+    <body>
+        <header class="main-header">
+            <figure class="logo-fig">
+                <img class="logo-png" src="../images/logo-700px-01.png" alt="compass-aeped-logo">
+            </figure>
+            <div class="company-title">
+                <h1>Compass AEPED</h1>
+            </div>
+            <div class="header-content">
+
+                <nav class="main-nav">
+                  <ul class="nav-list">
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="projects.html">Projects</a></li>
+                    <li><a href="team.html">Team</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li class="cta-button"><a href="contact.html">Get in Touch</a></li>
+                  </ul>
+                </nav>
+            </div>
+                
+            <button class="mobile-menu-toggle">☰</button>
+            <div class="profile-icon" id="profileIcon">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </header>
+        <!-- Navigation Drawer -->
+        <div class="drawer-overlay" id="drawerOverlay"></div>
+        <nav class="navigation-drawer" id="navigationDrawer">
+            <div class="drawer-profile">
+                <div class="drawer-profile-icon" id="drawerProfileIcon">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+                <div class="drawer-profile-info">
+                    <span id="drawerUserName">Guest</span>
+                    <span id="drawerUserEmail"></span>
+                </div>
+            </div>
+            <ul class="drawer-menu">
+                <li><a href="#"><i class="material-icons">home</i> Home</a></li>
+                <li><a href="#"><i class="material-icons">settings</i> Settings</a></li>
+                <li><a href="#"><i class="material-icons">favorite</i> Favorites</a></li>
+                <li class="divider"></li>
+                <li><a href="signin.html" id="accountAction"><i class="material-icons">account_circle</i> Sign In</a></li>
+            </ul>
+        </nav>
+        <section class="contact-detail">
+          <h1>Contact Us!</h1>
+        </section>
+        <section>
+            <div>aaaa</div>
+            <div>b</div>
+            <div>c</div>
+        </section>
+        <section>lower-section</section>
+        
+        <div id="footer-container"></div>
+
+        <script>
+            fetch('../footer.html')
+              .then(response => response.text())
+              .then(html => {
+                document.getElementById('footer-container').innerHTML = html;
+              });
+          </script>
+        <!-- Add this in your head section or before the closing body tag -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <!-- At the bottom of your HTML, before </body> -->
+        <script src="../scripts.js"></script>
+    </body>
+</html>
