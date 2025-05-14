@@ -53,10 +53,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (file) {
             const reader = new FileReader();
             reader.onload = function(event) {
-                profilePicture.innerHTML = `<img src="${event.target.result}" alt="Profile" class="profile-image">`;
+                // Create image element while preserving the camera icon
+                const img = document.createElement('img');
+                img.src = event.target.result;
+                img.className = 'profile-image';
+                img.alt = 'Profile';
+                
+                // Clear existing content but keep the camera icon label
+                const cameraLabel = profilePicture.querySelector('label');
+                profilePicture.innerHTML = '';
+                profilePicture.appendChild(img);
+                if (cameraLabel) profilePicture.appendChild(cameraLabel);
                 
                 // In a real app, you would upload this to your server
-                // For demo, we'll store it in localStorage
                 if (currentUser) {
                     currentUser.profileImage = event.target.result;
                     updateUserInStorage();
