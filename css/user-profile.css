@@ -27,20 +27,8 @@ body {
     padding: 20px;
 }
 
-.profile-header {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 20px;
-    text-align: center;
-    /* max-width: 480px; */
-}
-
-.profile-header h1 {
-    font-size: 24px;
-    font-weight: 500;
-}
-
 .profile-container {
+    width: 100%;
     max-width: 480px;
     margin: 20px auto;
     padding: 0 20px;
@@ -218,7 +206,7 @@ body {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 400px) {
     .profile-picture {
         width: 80px;
         height: 80px;
