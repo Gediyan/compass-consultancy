@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // User is logged in
             if (user.profileImage) {
                 profileIcon.innerHTML = `<img src="${user.profileImage}" alt="Profile" class="profile-image">`;
-                dropdownProfileIcon.innerHTML = `<img src="${user.profileImage}" alt="Profile" class="profile-image">`;
+                dropdownProfileIcon.innerHTML = `<img src="${user.profileImage}" alt="Profile" class="profile-image" width="40px" height="40px" border-radius="50%">`;
             } else {
                 const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
                 profileIcon.textContent = initial;
