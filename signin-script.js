@@ -8,25 +8,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const forgotPasswordLink = document.getElementById('forgotPassword');
     const forgotPasswordModal = document.getElementById('forgotPasswordModal');
     const closeModal = document.querySelector('.close-modal');
-    const loginCard = document.querySelector('.auth-card:not(.signup-card)');
-    const signupCard = document.querySelector('.signup-card');
-    const passwordInputs = document.querySelectorAll('input[type="password"]');
+    const loginCard = document.getElementById('loginCard');
+    const signupCard = document.getElementById('signupCard');
     const togglePasswordIcons = document.querySelectorAll('.toggle-password');
     const signupPassword = document.getElementById('signupPassword');
     const strengthBars = document.querySelectorAll('.strength-bar');
     const strengthText = document.querySelector('.strength-text');
+    const successNotification = document.getElementById('successNotification');
+    const notificationMessage = document.querySelector('.notification-message');
+    const rememberMe = document.getElementById('rememberMe');
+
+    // Users database in localStorage
+    const USERS_KEY = 'compass_aeped_users';
+    const SESSION_KEY = 'compass_aeped_session';
+
+    // Initialize users if not exists
+    if (!localStorage.getItem(USERS_KEY)) {
+        localStorage.setItem(USERS_KEY, JSON.stringify([]));
+    }
+
+    // Check for existing session
+    checkExistingSession();
 
     // Switch between login and signup forms
     switchToSignup.addEventListener('click', function(e) {
         e.preventDefault();
         loginCard.style.display = 'none';
         signupCard.style.display = 'block';
+        resetForms();
     });
 
     switchToLogin.addEventListener('click', function(e) {
         e.preventDefault();
         signupCard.style.display = 'none';
         loginCard.style.display = 'block';
+        resetForms();
     });
 
     // Forgot password modal
@@ -37,11 +53,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     closeModal.addEventListener('click', function() {
         forgotPasswordModal.style.display = 'none';
+        resetForms();
     });
 
     window.addEventListener('click', function(e) {
         if (e.target === forgotPasswordModal) {
             forgotPasswordModal.style.display = 'none';
+            resetForms();
         }
     });
 
@@ -49,15 +67,19 @@ document.addEventListener('DOMContentLoaded', function() {
     togglePasswordIcons.forEach(icon => {
         icon.addEventListener('click', function() {
             const input = this.parentElement.querySelector('input');
-            if (input.type === 'password') {
-                input.type = 'text';
-                this.textContent = 'visibility';
-            } else {
-                input.type = 'password';
-                this.textContent = 'visibility_off';
-            }
+            togglePasswordVisibility(input, this);
         });
     });
+
+    function togglePasswordVisibility(input, icon) {
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = 'visibility';
+        } else {
+            input.type = 'password';
+            icon.textContent = 'visibility_off';
+        }
+    }
 
     // Password strength indicator
     signupPassword.addEventListener('input', function() {
@@ -104,11 +126,94 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Show notification
+    function showNotification(message, isError = false) {
+        notificationMessage.textContent = message;
+        successNotification.className = isError ? 'notification error show' : 'notification show';
+        
+        setTimeout(() => {
+            successNotification.classList.remove('show');
+        }, 3000);
+    }
+
+    // Reset all forms
+    function resetForms() {
+        loginForm.reset();
+        signupForm.reset();
+        forgotPasswordForm.reset();
+        
+        // Reset error messages
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.textContent = '';
+        });
+        
+        // Reset password strength
+        updateStrengthIndicator(0);
+    }
+
+    // Check if email already exists
+    function emailExists(email) {
+        const users = JSON.parse(localStorage.getItem(USERS_KEY));
+        return users.some(user => user.email === email);
+    }
+
+    // Create new user
+    function createUser(name, email, password) {
+        const users = JSON.parse(localStorage.getItem(USERS_KEY));
+        const newUser = {
+            id: Date.now().toString(),
+            name,
+            email,
+            password, // In a real app, this should be hashed
+            createdAt: new Date().toISOString()
+        };
+        users.push(newUser);
+        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        return newUser;
+    }
+
+    // Authenticate user
+    function authenticateUser(email, password) {
+        const users = JSON.parse(localStorage.getItem(USERS_KEY));
+        return users.find(user => user.email === email && user.password === password);
+    }
+
+    // Create session
+    function createSession(user, remember) {
+        const session = {
+            userId: user.id,
+            email: user.email,
+            name: user.name,
+            expires: remember ? 
+                new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() : // 30 days
+                new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString() // 2 hours
+        };
+        localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    }
+
+    // Check existing session
+    function checkExistingSession() {
+        const session = JSON.parse(localStorage.getItem(SESSION_KEY));
+        if (session) {
+            const now = new Date();
+            const expires = new Date(session.expires);
+            
+            if (now < expires) {
+                // Session is valid, redirect to dashboard
+                window.location.href = '../index.html';
+            } else {
+                // Session expired, clear it
+                localStorage.removeItem(SESSION_KEY);
+            }
+        }
+    }
+
     // Form validation and submission
     loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const email = document.getElementById('email').value;
+        const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
+        const remember = rememberMe.checked;
         
         // Reset errors
         document.getElementById('emailError').textContent = '';
@@ -132,18 +237,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (isValid) {
-            // In a real app, you would send this to your authentication server
-            console.log('Login submitted:', { email, password });
-            alert('Login successful! (This is a demo)');
-            // Redirect to dashboard or home page
-            // window.location.href = '/dashboard.html';
+            const user = authenticateUser(email, password);
+            
+            if (user) {
+                createSession(user, remember);
+                showNotification('Login successful! Redirecting...');
+                
+                // Redirect after short delay
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 1500);
+            } else {
+                showNotification('Invalid email or password', true);
+                document.getElementById('passwordError').textContent = 'Invalid email or password';
+            }
         }
     });
 
     signupForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const name = document.getElementById('signupName').value;
-        const email = document.getElementById('signupEmail').value;
+        const name = document.getElementById('signupName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
         const password = document.getElementById('signupPassword').value;
         const confirmPassword = document.getElementById('confirmPassword').value;
         const agreeTerms = document.getElementById('agreeTerms').checked;
@@ -160,6 +274,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!name) {
             document.getElementById('nameError').textContent = 'Name is required';
             isValid = false;
+        } else if (name.length < 2) {
+            document.getElementById('nameError').textContent = 'Name must be at least 2 characters';
+            isValid = false;
         }
         
         // Email validation
@@ -168,6 +285,9 @@ document.addEventListener('DOMContentLoaded', function() {
             isValid = false;
         } else if (!isValidEmail(email)) {
             document.getElementById('signupEmailError').textContent = 'Please enter a valid email';
+            isValid = false;
+        } else if (emailExists(email)) {
+            document.getElementById('signupEmailError').textContent = 'Email already registered';
             isValid = false;
         }
         
@@ -188,26 +308,27 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Terms validation
         if (!agreeTerms) {
-            alert('You must agree to the terms and conditions');
+            showNotification('You must agree to the terms and conditions', true);
             isValid = false;
         }
         
         if (isValid) {
-            // In a real app, you would send this to your registration endpoint
-            console.log('Signup submitted:', { name, email, password });
-            alert('Account created successfully! (This is a demo)');
+            const user = createUser(name, email, password);
+            showNotification('Account created successfully!');
             
-            // For demo purposes, store the user and switch to login
-            localStorage.setItem('demoUser', JSON.stringify({ name, email }));
-            signupCard.style.display = 'none';
-            loginCard.style.display = 'block';
-            document.getElementById('email').value = email;
+            // For demo purposes, switch to login and pre-fill email
+            setTimeout(() => {
+                signupCard.style.display = 'none';
+                loginCard.style.display = 'block';
+                document.getElementById('email').value = email;
+                document.getElementById('password').focus();
+            }, 1500);
         }
     });
 
     forgotPasswordForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const email = document.getElementById('resetEmail').value;
+        const email = document.getElementById('resetEmail').value.trim();
         
         // Reset error
         document.getElementById('resetEmailError').textContent = '';
@@ -216,11 +337,14 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('resetEmailError').textContent = 'Email is required';
         } else if (!isValidEmail(email)) {
             document.getElementById('resetEmailError').textContent = 'Please enter a valid email';
+        } else if (!emailExists(email)) {
+            document.getElementById('resetEmailError').textContent = 'Email not found';
         } else {
             // In a real app, you would send a password reset email
-            console.log('Password reset requested for:', email);
-            alert('Password reset link sent to your email! (This is a demo)');
-            forgotPasswordModal.style.display = 'none';
+            showNotification('Password reset link sent to your email!');
+            setTimeout(() => {
+                forgotPasswordModal.style.display = 'none';
+            }, 1500);
         }
     });
 
@@ -229,8 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const provider = this.classList.contains('google') ? 'Google' : 
                             this.classList.contains('facebook') ? 'Facebook' : 'Apple';
-            console.log(`${provider} login clicked`);
-            alert(`This would normally redirect to ${provider} login (This is a demo)`);
+            showNotification(`This would normally redirect to ${provider} login`);
         });
     });
 
@@ -239,10 +362,11 @@ document.addEventListener('DOMContentLoaded', function() {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    // Demo: Check if there's a demo user to pre-fill login
-    const demoUser = localStorage.getItem('demoUser');
-    if (demoUser) {
-        const user = JSON.parse(demoUser);
-        document.getElementById('email').value = user.email;
+    // Demo: Focus on email field if login card is shown
+    if (loginCard.style.display !== 'none') {
+        const emailField = document.getElementById('email');
+        if (emailField && !emailField.value) {
+            emailField.focus();
+        }
     }
 });
