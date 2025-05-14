@@ -1,111 +1,88 @@
 // main-scripts.js
 
 // Counter Animation Function
-// Improved Counter Animation Function
 function initCounterAnimation() {
     const counters = document.querySelectorAll('.counter');
     const animationDuration = 2000;
-    let animationTriggered = false;
-    let animationFrameId = null;
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting && !animationTriggered) {
-                animationTriggered = true;
-                
-                counters.forEach(counter => {
-                    // Skip if already animated
-                    if (counter.classList.contains('animated')) return;
-                    
-                    const target = +counter.getAttribute('data-target');
-                    const startCount = +counter.innerText || 0;
-                    const startTime = performance.now();
-                    
-                    const updateCount = (timestamp) => {
-                        const elapsed = timestamp - startTime;
-                        const progress = Math.min(elapsed / animationDuration, 1);
-                        const currentCount = Math.floor(progress * (target - startCount) + startCount);
-                        
-                        counter.innerText = currentCount.toLocaleString(); // Adds thousand separators
-                        
-                        if (progress < 1) {
-                            animationFrameId = requestAnimationFrame(updateCount);
-                        } else {
-                            counter.innerText = target.toLocaleString();
-                            counter.classList.add('animated');
-                            cancelAnimationFrame(animationFrameId);
-                        }
-                    };
-                    
-                    animationFrameId = requestAnimationFrame(updateCount);
-                });
-            }
-        });
-    }, { 
-        threshold: 0.5,
-        rootMargin: '0px 0px -50px 0px' // Triggers when 50px from bottom of viewport
-    });
-
-    // Clean up observers when leaving page
-    window.addEventListener('beforeunload', () => {
-        counters.forEach(counter => {
-            observer.unobserve(counter.parentElement);
-        });
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-        }
-    });
-
-    counters.forEach(counter => {
-        // Set initial value to 0 if empty
-        if (!counter.innerText.trim()) counter.innerText = '0';
-        observer.observe(counter.parentElement);
-    });
-}
+    let animationStarted = false;
   
-// Read More/Less Function
-function initReadMore() {
-  const btn = document.querySelector('.read-more-btn');
-  if (btn) {
-      btn.addEventListener('click', function() {
-          const moreText = document.querySelector('.more-text');
-          const isHidden = moreText.style.display === 'none';
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !animationStarted) {
+          animationStarted = true;
           
-          moreText.style.display = isHidden ? 'inline' : 'none';
-          btn.textContent = isHidden ? 'Read Less' : 'Read More';
-          
-          // Optional: Smooth scroll to maintain context
-          if (isHidden) {
-              moreText.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
+          counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            const startTime = Date.now();
+            
+            const updateCount = () => {
+              const elapsed = Date.now() - startTime;
+              const progress = Math.min(elapsed / animationDuration, 1);
+              const currentCount = Math.floor(progress * target);
+              
+              counter.innerText = currentCount;
+              
+              if (progress < 1) {
+                requestAnimationFrame(updateCount);
+              } else {
+                counter.innerText = target;
+              }
+            };
+            
+            requestAnimationFrame(updateCount);
           });
         }
-}
-
-// Read More/Less Function
-function initMobileMenuToggle() {
-  const toggleButton = document.querySelector('.mobile-menu-toggle');
-  const navList = document.querySelector('.nav-list');
+      });
+    }, { threshold: 0.5 });
   
-  toggleButton.addEventListener('click', function() {
-    navList.classList.toggle('active');
-  });
-  
-  // Close menu when clicking on links (optional)
-  document.querySelectorAll('.nav-list a').forEach(link => {
-    link.addEventListener('click', () => {
-      navList.classList.remove('active');
+    counters.forEach(counter => {
+      observer.observe(counter.parentElement);
     });
-  });
-}
+  }
   
-// Initialize all functions when DOM loads
-document.addEventListener('DOMContentLoaded', function() {
-  initCounterAnimation();
-  initMobileMenuToggle();
-  initReadMore();
-  // Add more initializers here
-});
+  // Read More/Less Function
+  function initReadMore() {
+    const btn = document.querySelector('.read-more-btn');
+    if (btn) {
+        btn.addEventListener('click', function() {
+            const moreText = document.querySelector('.more-text');
+            const isHidden = moreText.style.display === 'none';
+            
+            moreText.style.display = isHidden ? 'inline' : 'none';
+            btn.textContent = isHidden ? 'Read Less' : 'Read More';
+            
+            // Optional: Smooth scroll to maintain context
+            if (isHidden) {
+                moreText.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              }
+            });
+          }
+  }
+
+  // Read More/Less Function
+  function initMobileMenuToggle() {
+    const toggleButton = document.querySelector('.mobile-menu-toggle');
+    const navList = document.querySelector('.nav-list');
+    
+    toggleButton.addEventListener('click', function() {
+      navList.classList.toggle('active');
+    });
+    
+    // Close menu when clicking on links (optional)
+    document.querySelectorAll('.nav-list a').forEach(link => {
+      link.addEventListener('click', () => {
+        navList.classList.remove('active');
+      });
+    });
+  }
+  
+  // Initialize all functions when DOM loads
+  document.addEventListener('DOMContentLoaded', function() {
+    initCounterAnimation();
+    initMobileMenuToggle();
+    initReadMore();
+    // Add more initializers here
+  });
 
 document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
