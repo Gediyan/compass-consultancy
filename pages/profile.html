@@ -9,49 +9,45 @@
         <link rel="stylesheet" href="../css/user-profile.css">
     </head>
     <body>
-        <header class="profile-header">
-            <h1>Your Profile</h1>
-        </header>
-
-    <main class="profile-container">
-        <section class="profile-section">
-            <h2>Profile Picture</h2>
-            <p>Update your profile picture</p>
-            
-            <div class="profile-picture-container">
-                <div class="profile-picture" id="profilePicture">
-                    <span id="profileInitial">G</span>
-                    <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
-                    <label for="profileImageUpload" class="camera-icon">
-                        <i class="material-icons">photo_camera</i>
-                    </label>
-                </div>
-                <p>Click the camera icon to upload a new profile picture</p>
-            </div>
-        </section>
-
-        <section class="profile-section">
-            <h2>Personal Information</h2>
-            <p>Update your personal information</p>
-            
-            <div class="profile-info">
-                <h3>Full Name</h3>
-                <div class="editable-field" id="nameField">
-                    <span class="field-value">Guest</span>
-                    <input type="text" class="field-input" value="Gedion Amsalu" style="display: none;">
-                    <button class="edit-btn"><i class="material-icons">edit</i></button>
-                </div>
+        <main class="profile-container">
+            <section class="profile-section">
+                <h2>Profile Picture</h2>
+                <p>Update your profile picture</p>
                 
-                <h3>Email</h3>
-                <div class="readonly-field" id="emailField">
-                    <span class="field-value">guest@gmail.com</span>
+                <div class="profile-picture-container">
+                    <div class="profile-picture" id="profilePicture">
+                        <span id="profileInitial">G</span>
+                        <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
+                        <label for="profileImageUpload" class="camera-icon">
+                            <i class="material-icons">photo_camera</i>
+                        </label>
+                    </div>
+                    <p>Click the camera icon to upload a new profile picture</p>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <button class="save-btn" id="saveChanges">Save Changes</button>
-    </main>
+            <section class="profile-section">
+                <h2>Personal Information</h2>
+                <p>Update your personal information</p>
+                
+                <div class="profile-info">
+                    <h3>Full Name</h3>
+                    <div class="editable-field" id="nameField">
+                        <span class="field-value">Guest</span>
+                        <input type="text" class="field-input" value="Gedion Amsalu" style="display: none;">
+                        <button class="edit-btn"><i class="material-icons">edit</i></button>
+                    </div>
+                    
+                    <h3>Email</h3>
+                    <div class="readonly-field" id="emailField">
+                        <span class="field-value">guest@gmail.com</span>
+                    </div>
+                </div>
+            </section>
 
-    <script src="../js/profile-script.js"></script>
-</body>
+            <button class="save-btn" id="saveChanges">Save Changes</button>
+        </main>
+
+        <script src="../js/profile-script.js"></script>
+    </body>
 </html>
