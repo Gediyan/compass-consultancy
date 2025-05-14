@@ -173,10 +173,9 @@ body {
 }
 
 /* Responsive styles */
-@media (max-width: 600px) {
+@media (max-width: 800px) {
     .profile-container {
-        padding: 0 15px;
-        max-width: 100%;
+        padding: 30px 20px;
     }
     
     .profile-section {
