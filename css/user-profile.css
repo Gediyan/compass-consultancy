@@ -21,6 +21,7 @@ body {
     background-color: var(--light-bg);
     color: var(--text-color);
     line-height: 1.6;
+    display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -28,14 +29,19 @@ body {
 }
 
 .profile-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px auto;
-    padding: 0 20px;
+    width: 100%;
+    max-width: 480px;
 }
 
 .profile-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    transition: all 0.3s ease;
+}
+
+/* .profile-section {
     width: 100%;
     max-width: 480px;
     background-color: white;
@@ -43,7 +49,7 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
     margin-bottom: 20px;
-}
+} */
 
 .profile-section h2 {
     font-size: 20px;
@@ -180,56 +186,16 @@ body {
 @media (max-width: 600px) {
     
     .profile-section {
-        padding: 20px 15px;
+        padding: 30px 20px;
     }
     
-    .profile-picture {
-        width: 100px;
-        height: 100px;
-    }
-    
-    #profileInitial {
-        font-size: 40px;
-    }
-    
-    .camera-icon {
-        width: 30px;
-        height: 30px;
-    }
-    
-    .profile-section h2 {
-        font-size: 18px;
-    }
-    
-    .profile-info h3 {
-        font-size: 15px;
+    body {
+        padding: 10px;
     }
 }
 
 @media (max-width: 400px) {
-    .profile-picture {
-        width: 80px;
-        height: 80px;
-    }
-    
-    #profileInitial {
-        font-size: 32px;
-    }
-    
     .profile-section {
-        padding: 15px 10px;
-    }
-    
-    .profile-section h2 {
-        font-size: 16px;
-    }
-    
-    .profile-section p {
-        font-size: 14px;
-    }
-    
-    .save-btn {
-        padding: 8px 16px;
-        font-size: 14px;
+        padding: 25px 15px;
     }
 }
