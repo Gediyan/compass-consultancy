@@ -173,7 +173,7 @@ body {
 }
 
 /* Responsive styles */
-@media (max-width: 800px) {
+@media (max-width: 600px) {
     .profile-container {
         padding: 30px 20px;
     }
