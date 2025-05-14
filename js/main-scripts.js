@@ -1,4 +1,4 @@
-// scripts.js
+// main-scripts.js
 
 // Counter Animation Function
 // Improved Counter Animation Function
@@ -101,8 +101,8 @@ function initMobileMenuToggle() {
   
 // Initialize all functions when DOM loads
 document.addEventListener('DOMContentLoaded', function() {
-  initMobileMenuToggle();
   initCounterAnimation();
+  initMobileMenuToggle();
   initReadMore();
   // Add more initializers here
 });

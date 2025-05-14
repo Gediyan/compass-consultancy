@@ -34,30 +34,28 @@
             </div>
                 
             <button class="mobile-menu-toggle">☰</button>
-            <div class="profile-icon" id="profileIcon">
-                <!-- Will be populated by JavaScript -->
+            
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown">
+                <button class="dropdown-btn" id="profileDropdownBtn">
+                    <div class="profile-icon" id="profileIcon">G</div>
+                </button>
+                <div class="dropdown-content" id="profileDropdown">
+                    <div class="dropdown-profile-info">
+                        <div class="dropdown-profile-icon" id="dropdownProfileIcon">G</div>
+                        <div>
+                            <div id="dropdownUserName">Guest</div>
+                            <div id="dropdownUserEmail"></div>
+                        </div>
+                    </div>
+                    <a href="profile.html"><i class="material-icons">account_circle</i> Profile</a>
+                    <a href="#"><i class="material-icons">settings</i> Settings</a>
+                    <a href="#"><i class="material-icons">favorite</i> Favorites</a>
+                    <div class="divider"></div>
+                    <a href="#" id="accountAction"><i class="material-icons">account_circle</i> Sign In</a>
+                </div>
             </div>
         </header>
-        <!-- Navigation Drawer -->
-        <div class="drawer-overlay" id="drawerOverlay"></div>
-        <nav class="navigation-drawer" id="navigationDrawer">
-            <div class="drawer-profile">
-                <div class="drawer-profile-icon" id="drawerProfileIcon">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-                <div class="drawer-profile-info">
-                    <span id="drawerUserName">Guest</span>
-                    <span id="drawerUserEmail"></span>
-                </div>
-            </div>
-            <ul class="drawer-menu">
-                <li><a href="#"><i class="material-icons">home</i> Home</a></li>
-                <li><a href="#"><i class="material-icons">settings</i> Settings</a></li>
-                <li><a href="#"><i class="material-icons">favorite</i> Favorites</a></li>
-                <li class="divider"></li>
-                <li><a href="signin.html" id="accountAction"><i class="material-icons">account_circle</i> Sign In</a></li>
-            </ul>
-        </nav>
         <section class="team-detail">
           <h1>Team</h1>
         </section>

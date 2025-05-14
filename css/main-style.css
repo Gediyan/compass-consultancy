@@ -295,7 +295,7 @@ body{
 /* Wellcome Base Styles */
 .compass-wellcome {
     background: rgb(102, 104, 105);
-    background-image: url(../images/Poster-Photo.jpg);
+    background-image: url(../images/Poster-Photo-min.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
