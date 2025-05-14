@@ -15,13 +15,16 @@
     box-sizing: border-box;
 }
 
+
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--light-bg);
     color: var(--text-color);
     line-height: 1.6;
-    padding: 0;
-    margin: 0;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
 }
 
 .profile-header {
@@ -37,7 +40,7 @@ body {
 }
 
 .profile-container {
-    max-width: 800px;
+    max-width: 480px;
     margin: 20px auto;
     padding: 0 20px;
 }
@@ -174,6 +177,17 @@ body {
     }
     
     .profile-section {
-        padding: 15px;
+        padding: 30px 20px;
+    }
+    
+    body {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    
+    .profile-section {
+        padding: 25px 15px;
     }
 }
