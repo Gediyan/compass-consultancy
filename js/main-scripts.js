@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Auth functions
     function goToSignIn(e) {
         e.preventDefault();
-        window.location.href = 'pages/signin.html';
+        window.location.href = '../pages/signin.html';
     }
     
     function signOut(e) {
