@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const profilePicture = document.getElementById('profilePicture');
     const profileInitial = document.getElementById('profileInitial');
     const nameField = document.getElementById('nameField');
+    const emailField = document.getElementById('emailField');
+    const emailValue = emailField.querySelector('.field-value');
     const nameValue = nameField.querySelector('.field-value');
     const nameInput = nameField.querySelector('.field-input');
     const editBtn = nameField.querySelector('.edit-btn');
@@ -36,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (currentUser.name) {
                     nameValue.textContent = currentUser.name;
                     nameInput.value = currentUser.name;
+                    emailValue.textContent = currentUser.email;
                 }
                 
                 // Update email if you have an email field
