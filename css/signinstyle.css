@@ -10,6 +10,8 @@
     --google-red: #db4437;
     --facebook-blue: #4267b2;
     --apple-black: #000;
+    --notification-bg: #4bb543;
+    --notification-error-bg: #f94144;
 }
 
 * {
@@ -109,6 +111,7 @@ body {
     cursor: pointer;
     color: var(--light-text);
     font-size: 20px;
+    user-select: none;
 }
 
 .error-message {
@@ -133,15 +136,18 @@ body {
 .remember-me input {
     width: 16px;
     height: 16px;
+    cursor: pointer;
 }
 
 .form-options a {
     color: var(--primary-color);
     text-decoration: none;
+    transition: color 0.2s;
 }
 
 .form-options a:hover {
     text-decoration: underline;
+    color: var(--primary-dark);
 }
 
 .btn-primary {
@@ -158,6 +164,11 @@ body {
 
 .btn-primary:hover {
     background-color: var(--primary-dark);
+}
+
+.btn-primary:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 .social-login {
@@ -213,7 +224,7 @@ body {
 }
 
 .social-btn.google {
-    color: var(--google-red);
+    color: var(--text-color);
     border-color: #e0e0e0;
 }
 
@@ -222,7 +233,7 @@ body {
 }
 
 .social-btn.facebook {
-    color: var(--facebook-blue);
+    color: var(--text-color);
     border-color: #e0e0e0;
 }
 
@@ -231,7 +242,7 @@ body {
 }
 
 .social-btn.apple {
-    color: var(--apple-black);
+    color: var(--text-color);
     border-color: #e0e0e0;
 }
 
@@ -250,10 +261,12 @@ body {
     color: var(--primary-color);
     text-decoration: none;
     font-weight: 500;
+    transition: color 0.2s;
 }
 
 .auth-footer a:hover {
     text-decoration: underline;
+    color: var(--primary-dark);
 }
 
 .password-strength {
@@ -280,6 +293,7 @@ body {
 .strength-text {
     font-size: 12px;
     color: var(--light-text);
+    transition: color 0.3s;
 }
 
 .terms {
@@ -292,15 +306,18 @@ body {
 .terms label {
     font-size: 13px;
     font-weight: normal;
+    cursor: pointer;
 }
 
 .terms a {
     color: var(--primary-color);
     text-decoration: none;
+    transition: color 0.2s;
 }
 
 .terms a:hover {
     text-decoration: underline;
+    color: var(--primary-dark);
 }
 
 /* Modal Styles */
@@ -324,6 +341,18 @@ body {
     width: 100%;
     max-width: 400px;
     position: relative;
+    animation: modalFadeIn 0.3s;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .close-modal {
@@ -333,6 +362,42 @@ body {
     font-size: 24px;
     cursor: pointer;
     color: var(--light-text);
+    transition: color 0.2s;
+}
+
+.close-modal:hover {
+    color: var(--text-color);
+}
+
+/* Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 8px;
+    color: white;
+    background-color: var(--notification-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateX(150%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.notification.error {
+    background-color: var(--notification-error-bg);
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification-message {
+    font-size: 14px;
+    font-weight: 500;
 }
 
 /* Responsive Styles */
@@ -343,5 +408,19 @@ body {
 
     .social-buttons {
         flex-direction: column;
+    }
+    
+    body {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .auth-card {
+        padding: 25px 15px;
+    }
+    
+    .modal-content {
+        padding: 20px 15px;
     }
 }
