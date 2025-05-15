@@ -9,22 +9,17 @@
     --error-color: #f94144;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    font-family: 'Roboto', sans-serif;
+    align-items: center;
     background-color: var(--light-bg);
     color: var(--text-color);
-    line-height: 1.6;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Changed from center to prevent vertical overflow */
-    min-height: 100vh;
     padding: 20px;
+    display: flex;
+    font-family: 'Roboto', sans-serif;
+    justify-content: center;
+    line-height: 1.6;
+    margin: 0;
+    min-height: 100vh;
     width: 100%;
 }
 
@@ -32,15 +27,16 @@ body {
     width: 100%;
     max-width: 480px;
     margin: 0 auto;
+    padding: 0 20px; /* Added horizontal padding */
 }
 
 .profile-section {
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    transition: all 0.3s ease;
+    padding: 20px;
     width: 100%;
+    margin: 0 auto; /* Center the section */
 }
 
 .profile-section h2 {
@@ -55,11 +51,12 @@ body {
 }
 
 .profile-picture-container {
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-    position: relative;
+    align-items: center; */
+    text-align: center; /* Center all content */
+    /* margin-bottom: 20px;
+    position: relative; */
 }
 
 .profile-picture {
@@ -71,7 +68,8 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
+    margin: 0 auto 15px; /* Center the circle */
     overflow: hidden; /* Ensures everything stays within circle */
 }
 
@@ -95,9 +93,11 @@ body {
 
 /* Move camera icon outside profile-picture */
 .camera-icon {
-    position: relative;
-    left: 40px;
-    top: 40px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    top: auto;
     background-color: var(--primary-color);
     color: white;
     width: 40px;
@@ -110,6 +110,7 @@ body {
     z-index: 3; /* Higher than everything */
     box-shadow: 0 0 5px rgba(0,0,0,0.3);
     border: 2px solid white; /* Makes it stand out */
+    transform: translate(10px, 10px);
 }
 
 .profile-info h3 {
@@ -174,15 +175,25 @@ body {
     display: inline-block;
 }
 
-/* Improved responsive styles */
+/* Improved mobile responsiveness */
 @media (max-width: 600px) {
     body {
         padding: 15px;
-        align-items: flex-start; /* Ensures content stays at top on small screens */
+        display: block; /* Change to block layout on mobile */
+    }
+    
+    .profile-container {
+        padding: 0;
     }
     
     .profile-section {
-        padding: 25px;
+        padding: 25px 20px;
+    }
+}
+
+@media (max-width: 400px) {
+    .profile-section {
+        padding: 20px 15px;
     }
     
     .profile-picture {
@@ -191,58 +202,8 @@ body {
     }
     
     .camera-icon {
-        left: 30px;
-        top: 30px;
-        width: 36px;
-        height: 36px;
-    }
-    
-    #profileInitial {
-        font-size: 40px;
-    }
-}
-
-@media (max-width: 400px) {
-    body {
-        padding: 10px;
-    }
-    
-    .profile-section {
-        padding: 20px 15px;
-    }
-    
-    .profile-picture {
-        width: 90px;
-        height: 90px;
-    }
-    
-    .camera-icon {
-        left: 25px;
-        top: 25px;
-        width: 32px;
-        height: 32px;
-    }
-    
-    #profileInitial {
-        font-size: 36px;
-    }
-    
-    .editable-field, .readonly-field {
-        padding: 8px;
-    }
-    
-    .field-input {
-        padding: 6px;
-    }
-}
-
-/* Prevent horizontal scrolling on very small devices */
-@media (max-width: 350px) {
-    html {
-        overflow-x: hidden;
-    }
-    
-    body {
-        padding: 10px 5px;
+        width: 30px;
+        height: 30px;
+        transform: translate(5px, 5px);
     }
 }
