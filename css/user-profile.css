@@ -15,7 +15,6 @@
     box-sizing: border-box;
 }
 
-
 body {
     font-family: 'Roboto', sans-serif;
     background-color: var(--light-bg);
@@ -23,22 +22,25 @@ body {
     line-height: 1.6;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Changed from center to prevent vertical overflow */
     min-height: 100vh;
     padding: 20px;
+    width: 100%;
 }
 
 .profile-container {
     width: 100%;
     max-width: 480px;
+    margin: 0 auto;
 }
 
 .profile-section {
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    padding: 40px;
+    padding: 30px;
     transition: all 0.3s ease;
+    width: 100%;
 }
 
 .profile-section h2 {
@@ -172,20 +174,75 @@ body {
     display: inline-block;
 }
 
-/* Responsive styles */
+/* Improved responsive styles */
 @media (max-width: 600px) {
-    
-    .profile-section {
-        padding: 30px 20px;
+    body {
+        padding: 15px;
+        align-items: flex-start; /* Ensures content stays at top on small screens */
     }
     
-    body {
-        padding: 10px;
+    .profile-section {
+        padding: 25px;
+    }
+    
+    .profile-picture {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .camera-icon {
+        left: 30px;
+        top: 30px;
+        width: 36px;
+        height: 36px;
+    }
+    
+    #profileInitial {
+        font-size: 40px;
     }
 }
 
 @media (max-width: 400px) {
+    body {
+        padding: 10px;
+    }
+    
     .profile-section {
-        padding: 25px 15px;
+        padding: 20px 15px;
+    }
+    
+    .profile-picture {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .camera-icon {
+        left: 25px;
+        top: 25px;
+        width: 32px;
+        height: 32px;
+    }
+    
+    #profileInitial {
+        font-size: 36px;
+    }
+    
+    .editable-field, .readonly-field {
+        padding: 8px;
+    }
+    
+    .field-input {
+        padding: 6px;
+    }
+}
+
+/* Prevent horizontal scrolling on very small devices */
+@media (max-width: 350px) {
+    html {
+        overflow-x: hidden;
+    }
+    
+    body {
+        padding: 10px 5px;
     }
 }
