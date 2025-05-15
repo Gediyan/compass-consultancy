@@ -1,8 +1,8 @@
 :root {
-    --primary-color: #4361ee;
-    --primary-dark: #3a56d4;
+    --primary-color: rgb(0, 122, 160);
+    --primary-dark: rgb(0, 106, 138);
     --error-color: #f94144;
-    --success-color: #4bb543;
+    --success-color: rgb(0, 122, 160);
     --text-color: #333;
     --light-text: #666;
     --border-color: #ddd;
@@ -10,7 +10,7 @@
     --google-red: #db4437;
     --facebook-blue: #4267b2;
     --apple-black: #000;
-    --notification-bg: #4bb543;
+    --notification-bg: rgb(0, 122, 160);
     --notification-error-bg: #f94144;
 }
 
