@@ -1,11 +1,11 @@
 :root {
-    --primary-color: #4361ee;
-    --primary-dark: #3a56d4;
+    --primary-color: rgb(0, 122, 160);
+    --primary-dark: rgb(0, 106, 138);
     --text-color: #333;
     --light-text: #666;
     --border-color: #ddd;
     --light-bg: #f5f7fa;
-    --success-color: #4bb543;
+    --success-color: rgb(0, 122, 160);
     --error-color: #f94144;
 }
 
