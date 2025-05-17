@@ -21,13 +21,13 @@
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    align-items: center;
     background-color: var(--light-bg);
     color: var(--text-color);
     line-height: 1.6;
     display: flex;
+    font-family: 'Roboto', sans-serif;
     justify-content: center;
-    align-items: center;
     min-height: 100vh;
     padding: 20px;
 }
