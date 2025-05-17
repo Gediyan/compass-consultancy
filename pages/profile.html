@@ -11,9 +11,11 @@
     <body>
         <div class="profile-container card">
             <!-- Back button -->
-            <a href="../index.html" class="btn btn--secondary">
-                <i class="material-icons">arrow_back</i> Back to Home
-            </a>
+             <div class="back-to-home">
+                <a href="../index.html" class="btn btn--secondary arrow-back">
+                    <i class="material-icons">arrow_back</i> Back to Home
+                </a>
+            </div>
             
             <!-- Profile header -->
             <header class="profile-header">
@@ -59,9 +61,11 @@
                         <div class="field-group">
                             <label for="nameInput">Full Name</label>
                             <div class="editable-field" id="nameField">
-                                <span class="field-value">Guest</span>
-                                <input type="text" id="nameInput" class="field-input" value="Guest" style="display: none;">
-                                <button class="btn btn--secondary"><i class="material-icons">edit</i> Edit</button>
+                                <div class="field-container">
+                                    <span class="field-value naming">Guest</span>
+                                    <input type="text" id="nameInput" class="field-input" value="Guest" style="display: none;">
+                                </div>
+                                <button class="btn btn--secondary edit-btn"><i class="material-icons">edit</i></button>
                             </div>
                         </div>
                         

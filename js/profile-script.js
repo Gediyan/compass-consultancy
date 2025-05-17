@@ -177,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Update current user
             if (currentUser) {
                 currentUser.profileImage = event.target.result;
-                updateUserInStorage();
                 updateProfileDisplay();
                 showNotification('Profile picture updated successfully!');
             }
@@ -207,7 +206,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (currentUser) {
                 currentUser.name = newName;
-                updateUserInStorage();
                 updateProfileDisplay(); // Update initial if needed
             }
         }
@@ -217,6 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleSaveChanges() {
+        updateUserInStorage();
         showNotification('Changes saved successfully!');
         setTimeout(() => {
             window.location.href = '../index.html';
@@ -252,6 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (session) {
             session.name = currentUser.name;
+            session.profilePicture = currentUser.profilePicture;
             localStorage.setItem(SESSION_KEY, JSON.stringify(session));
         }
     }
