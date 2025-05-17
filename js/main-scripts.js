@@ -193,10 +193,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // Auth functions
   function goToUserProfile(e) {
       e.preventDefault();
-        const isRoot = window.location.pathname === '/index.html' || 
-                   window.location.pathname === '/';
-        const path = isRoot ? 'pages/profile.html' : '../pages/profile.html';
-        window.location.href = path;
+
+      if (window.location.pathname.includes('/pages/')) {
+        window.location.href = 'profile.html';
+      } else {
+        window.location.href = 'pages/profile.html';
+      }
   }
   
   // Auth functions
