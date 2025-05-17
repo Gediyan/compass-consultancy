@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
           dropdownUserName.textContent = user.name || 'User';
           dropdownUserEmail.textContent = user.email || '';
 
-          profileAction.onclick = goToProfile;
+          profileAction.onclick = goToUserProfile;
           
           accountAction.innerHTML = '<i class="material-icons">exit_to_app</i> Sign Out';
           accountAction.onclick = signOut;
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Auth functions
-  function goToProfile(e) {
+  function goToUserProfile(e) {
       e.preventDefault();
         const isRoot = window.location.pathname === '/index.html' || 
                    window.location.pathname === '/';
