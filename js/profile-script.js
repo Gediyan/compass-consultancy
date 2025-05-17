@@ -1,18 +1,40 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Profile script initialized'); // Debugging
 
     // DOM Elements
     const elements = {
         profileImageUpload: document.getElementById('profileImageUpload'),
         profilePicture: document.getElementById('profilePicture'),
         profileInitial: document.getElementById('profileInitial'),
+
         nameField: document.getElementById('nameField'),
         emailField: document.getElementById('emailField'),
+        accountCreated: document.getElementById('accountCreatedDate'),
+
         nameValue: document.querySelector('#nameField .field-value'),
+        emailValue: document.querySelector('#emailField .field-value'),
+        accountCreatedValue: document.querySelector('#accountCreatedDate .field-value'),
+
         nameInput: document.querySelector('#nameField .field-input'),
-        editBtn: document.querySelector('#nameField .edit-btn'),
-        saveBtn: document.getElementById('saveChanges')
+        editBtn: document.querySelector('#nameField .btn--secondary'),
+        saveBtn: document.getElementById('saveChanges'),
+        
     };
+
+    // Add these at the top with your other DOM elements
+    const notificationMessage = document.getElementById('notification-message');
+    const successNotification = document.getElementById('successNotification');
+    const deletePhotoBtn = document.getElementById('deletePhotoBtn');
+    const closeModal = document.querySelector('.close-modal');
+
+    // Forgot password modal
+    deletePhotoBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        confirmationModal.style.display = 'flex';
+    });
+
+    closeModal.addEventListener('click', function() {
+        confirmationModal.style.display = 'none';
+    });
 
     // Current user data
     let currentUser = null;
@@ -21,13 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
     initProfile();
 
     function initProfile() {
-        console.log('Initializing profile...');
         loadUserData();
         setupEventListeners();
     }
 
     function loadUserData() {
-        console.log('Loading user data...');
         const sessionData = getSessionData();
         
         if (sessionData) {
@@ -37,12 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('User found:', currentUser);
                 updateProfileDisplay();
                 updateUserInfoDisplay();
-            } else {
-                console.warn('No user found for session');
-            }
-        } else {
-            console.warn('No active session found');
-        }
+            } 
+        } 
     }
 
     function getSessionData() {
@@ -59,36 +75,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
 
-// Update profile display to handle delete button visibility
-function updateProfileDisplay() {
-    if (!currentUser) return;
+    // Update profile display to handle delete button visibility
+    function updateProfileDisplay() {
+        if (!currentUser) return;
 
-    // Clear previous image if exists
-    const existingImg = elements.profilePicture.querySelector('img');
-    if (existingImg) {
-        elements.profilePicture.removeChild(existingImg);
-    }
+        // Clear previous image if exists
+        const existingImg = elements.profilePicture.querySelector('img');
+        if (existingImg) {
+            elements.profilePicture.removeChild(existingImg);
+        }
 
-    if (currentUser.profileImage) {
-        const img = document.createElement('img');
-        img.src = currentUser.profileImage;
-        img.alt = 'Profile';
-        img.className = 'profile-image';
-        elements.profilePicture.insertBefore(img, elements.profileInitial);
-        elements.profileInitial.style.display = 'none';
-        document.getElementById('deletePhotoBtn').style.display = 'block';
-    } else {
-        const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'G';
-        elements.profileInitial.textContent = initial;
-        elements.profileInitial.style.display = 'flex';
-        document.getElementById('deletePhotoBtn').style.display = 'none';
+        if (currentUser.profileImage) {
+            const img = document.createElement('img');
+            img.src = currentUser.profileImage;
+            img.alt = 'Profile';
+            img.className = 'profile-image';
+            elements.profilePicture.insertBefore(img, elements.profileInitial);
+            elements.profileInitial.style.display = 'none';
+            document.getElementById('deletePhotoBtn').style.display = 'block';
+        } else {
+            const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'G';
+            elements.profileInitial.textContent = initial;
+            elements.profileInitial.style.display = 'flex';
+            document.getElementById('deletePhotoBtn').style.display = 'none';
+        }
     }
-}
 
     function updateUserInfoDisplay() {
         if (!currentUser) return;
-
-        console.log('Updating user info display...');
         
         if (elements.nameValue && elements.nameInput) {
             elements.nameValue.textContent = currentUser.name || 'Guest';
@@ -97,6 +111,18 @@ function updateProfileDisplay() {
         
         if (elements.emailValue) {
             elements.emailValue.textContent = currentUser.email || 'guest@gmail.com';
+        }
+        
+        if (elements.accountCreatedValue) {
+            const dateValue = currentUser.createdAt;
+            const date = new Date(dateValue);
+            const options = {year: 'numeric', month: 'long', day: 'numeric',
+                // hour: '2-digit',
+                // minute: '2-digit',
+                // second: '2-digit',
+                // timeZoneName: 'short'
+                };
+            elements.accountCreatedValue.textContent = date.toLocaleString('en-US', options) || '';
         }
     }
 
@@ -125,36 +151,35 @@ function updateProfileDisplay() {
     }
 
     function handleImageUpload(e) {
-        console.log('Handling image upload...');
         const file = e.target.files[0];
         
         if (!file) {
-            console.log('No file selected');
+            showNotification('Please select an image file (JPEG, PNG, GIF)', true);
             return;
         }
 
         // Validate file type
         if (!file.type.match('image.*')) {
-            alert('Please select an image file (JPEG, PNG, GIF)');
+            showNotification('Please select an image file (JPEG, PNG, GIF)', true);
             return;
         }
 
         // Validate file size (2MB max)
         if (file.size > 2 * 1024 * 1024) {
-            alert('Image size should be less than 2MB');
+            showNotification('Image size should be less than 25MB', true);
             return;
         }
 
         const reader = new FileReader();
         
         reader.onload = function(event) {
-            console.log('File read successfully');
             
             // Update current user
             if (currentUser) {
                 currentUser.profileImage = event.target.result;
                 updateUserInStorage();
                 updateProfileDisplay();
+                showNotification('Profile picture updated successfully!');
             }
             
             // Reset input to allow same file to be selected again
@@ -162,22 +187,19 @@ function updateProfileDisplay() {
         };
         
         reader.onerror = function() {
-            console.error('Error reading file');
-            alert('Error reading the image file. Please try another image.');
+            showNotification('Error reading image file', true);
         };
         
         reader.readAsDataURL(file);
     }
 
     function toggleNameEdit() {
-        console.log('Toggling name edit mode');
         elements.nameValue.style.display = 'none';
         elements.nameInput.style.display = 'block';
         elements.nameInput.focus();
     }
 
     function saveNameChange() {
-        console.log('Saving name change');
         const newName = elements.nameInput.value.trim();
         
         if (newName && newName !== elements.nameValue.textContent) {
@@ -195,8 +217,7 @@ function updateProfileDisplay() {
     }
 
     function handleSaveChanges() {
-        console.log('Saving all changes...');
-        alert('Changes saved successfully!');
+        showNotification('Changes saved successfully!');
         setTimeout(() => {
             window.location.href = '../index.html';
         }, 1000);
@@ -204,8 +225,6 @@ function updateProfileDisplay() {
 
     function updateUserInStorage() {
         if (!currentUser) return;
-
-        console.log('Updating user in storage...');
         
         try {
             const USERS_KEY = 'compass_aeped_users';
@@ -223,7 +242,7 @@ function updateProfileDisplay() {
             // Update session data if needed
             updateSessionData();
         } catch (e) {
-            console.error('Error updating user storage:', e);
+            showNotification('Error updating user storage', true);
         }
     }
 
@@ -235,6 +254,27 @@ function updateProfileDisplay() {
             session.name = currentUser.name;
             localStorage.setItem(SESSION_KEY, JSON.stringify(session));
         }
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+        // Reset any existing notifications
+        successNotification.classList.remove('show', 'error');
+        
+        // Force reflow to ensure animation restarts
+        void successNotification.offsetWidth;
+        
+        // Set message and style
+        notificationMessage.textContent = message;
+        successNotification.classList.add('show');
+        if (isError) {
+            successNotification.classList.add('error');
+        }
+        
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+            successNotification.classList.remove('show');
+        }, 3000);
     }
 });
 
