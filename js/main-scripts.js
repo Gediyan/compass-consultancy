@@ -189,14 +189,20 @@ document.addEventListener('DOMContentLoaded', function() {
   // Auth functions
   function goToSignIn(e) {
       e.preventDefault();
-      window.location.href = '/pages/signin.html'; // Note the leading slash
+        const isRoot = window.location.pathname === '/index.html' || 
+                   window.location.pathname === '/';
+        const path = isRoot ? 'pages/signin.html' : '../pages/signin.html';
+        window.location.href = path;
   }
   
   function signOut(e) {
       e.preventDefault();
       const SESSION_KEY = 'compass_aeped_session';
       localStorage.removeItem(SESSION_KEY);
-      window.location.href = '/index.html';
+      const isRoot = window.location.pathname === '/index.html' || 
+                  window.location.pathname === '/';
+      const path = isRoot ? 'index.html' : '../index.html';
+      window.location.href = path;
       // Optional: Show a notification
       showNotification('You have been signed out');
   }
@@ -211,7 +217,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Redirect to sign-in page on click
     profileDropdownBtn.onclick = function() {
-        window.location.href = '/pages/signin.html';
+        const isRoot = window.location.pathname === '/index.html' || 
+                   window.location.pathname === '/';
+        const path = isRoot ? 'pages/signin.html' : '../pages/signin.html';
+        window.location.href = path;
     };
   }
 });
