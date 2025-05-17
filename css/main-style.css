@@ -326,6 +326,7 @@ body{
 
 /* Wellcome Base Styles */
 .compass-wellcome {
+    align-items: center;
     background: linear-gradient(rgba(0, 122, 160, 0.5), rgba(82, 81, 81, 0.5)), 
                     url(../images/Poster-Photo-min.jpg);
     background-size: cover;
@@ -343,15 +344,13 @@ body{
 .wellcome-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
     gap: 1.5rem; /* Space between logo and text */
-    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1rem;
 }
 /* Text container - stacks items vertically */
 .text-content {
-    text-align: start;
+    text-align: justify;
     max-width: 500px;
     position: relative;
 }
@@ -375,12 +374,44 @@ body{
 .logo-wrapper {
     flex-shrink: 0; /* Prevents logo from shrinking */
     width: clamp(150px, 25vw, 300px);
-    max-width: 500px;
+    max-width: 700px;
     position: relative;
 }
 
+.point-o {
+    fill: none;
+    stroke: #ffffff;
+    stroke-linejoin: round;
+    stroke-width: 1.5px;
+}
+
+.arrow {
+    fill: #ffffff;
+}
+
+.inner-arc, .outer-arc {
+    fill: none;
+    stroke: #ffffff;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.upper-arrow-line, .bottom-arrow-line, .underline {
+    fill: none;
+    stroke: #ffffff;
+    stroke-linecap: round;
+}
+
+.upper-arrow-line, .bottom-arrow-line, .underline {
+    stroke-width: 1.5px;
+}
+
+.outer-arc {
+    stroke-width: 2px;
+}
+
 .logo-svg {
-    filter: brightness(0) invert(1); /* Makes black SVG white */
+    /* filter: brightness(0) invert(1); Makes black SVG white */
     width: 100%;
     height: auto;
 }
@@ -406,6 +437,63 @@ body{
     line-height: 1.6;
 }
 
+.Text_1_C {
+    fill: inherit;
+}
+
+/* Text coloring animation - Light mode */
+@keyframes colorText {
+    0%, 100% { fill: #00ff33; }
+    25% { fill: #ffff00; }
+    50% { fill: #FF0000; }
+}
+
+/* Stagger the text animations */
+#Text_1_C path:nth-child(1) {
+    animation: colorText 5s ease-in-out infinite;
+    animation-delay: 0s;
+}
+#Text_1_C path:nth-child(2) {
+    animation: colorText 5s ease-in-out infinite;
+    animation-delay: 0.2s;
+}
+#Text_1_C path:nth-child(3) {
+    animation: colorText 5s ease-in-out infinite;
+    animation-delay: 0.4s;
+}
+#Text_1_C path:nth-child(4) {
+    animation: colorText 5s ease-in-out infinite;
+    animation-delay: 0.6s;
+}
+#Text_1_C path:nth-child(5) {
+    animation: colorText 5s ease-in-out infinite;
+    animation-delay: 0.8s;
+}
+#Text_1_C path:nth-child(6) {
+    animation: colorText 5s ease-in-out infinite;
+    animation-delay: 1s;
+}
+#Text_1_C path:nth-child(7) {
+    animation: colorText 5s ease-in-out infinite;
+    animation-delay: 1.2s;
+}
+#Text_1_C path:nth-child(8) {
+    animation: colorText 5s ease-in-out infinite;
+    animation-delay: 1.4s;
+}
+#Text_1_C path:nth-child(9) {
+    animation: colorText 5s ease-in-out infinite;
+    animation-delay: 1.6s;
+}
+#Text_1_C path:nth-child(10) {
+    animation: colorText 5s ease-in-out infinite;
+    animation-delay: 1.8s;
+}
+#Text_1_C path:nth-child(11) {
+    animation: colorText 5s ease-in-out infinite;
+    animation-delay: 2s;
+}
+
 /* Read More Button */
 .read-more-btn {
     background: none;
@@ -426,6 +514,7 @@ body{
 @media (max-width: 768px) {
     .wellcome-container {
         flex-direction: column;
+        align-items: center;
         text-align: center;
         padding: 1rem;
     }
