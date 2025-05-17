@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Redirect to sign-in page on click
     profileDropdownBtn.onclick = function() {
-        window.location.href = '../pages/signin.html';
+        window.location.href = '/pages/signin.html';
     };
   }
 });
