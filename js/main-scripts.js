@@ -157,7 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
           
           dropdownUserName.textContent = user.name || 'User';
           dropdownUserEmail.textContent = user.email || '';
-
+          
+          profileAction.innerHTML = '<i class="material-icons">account_circle</i> Profile';
           profileAction.onclick = goToUserProfile;
           
           accountAction.innerHTML = '<i class="material-icons">exit_to_app</i> Sign Out';
