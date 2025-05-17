@@ -283,7 +283,7 @@ body {
         padding: 15px;
     }
     
-    .profile-picture-container {
+    .pp-image {
         flex-direction: column;
         align-items: center;
     }
