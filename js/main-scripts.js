@@ -89,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const dropdownBtn = document.getElementById('profileDropdownBtn');
   const dropdown = document.getElementById('profileDropdown');
   const accountAction = document.getElementById('accountAction');
+  const profileAction = document.getElementById('profileAction');
   
   // Check session status on page load
   checkSessionStatus();
@@ -156,6 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
           
           dropdownUserName.textContent = user.name || 'User';
           dropdownUserEmail.textContent = user.email || '';
+
+          profileAction.onclick = goToProfile;
           
           accountAction.innerHTML = '<i class="material-icons">exit_to_app</i> Sign Out';
           accountAction.onclick = signOut;
@@ -184,6 +187,15 @@ document.addEventListener('DOMContentLoaded', function() {
               dropdown.classList.remove('show');
           }
       });
+  }
+  
+  // Auth functions
+  function goToProfile(e) {
+      e.preventDefault();
+        const isRoot = window.location.pathname === '/index.html' || 
+                   window.location.pathname === '/';
+        const path = isRoot ? 'pages/profile.html' : '../pages/profile.html';
+        window.location.href = path;
   }
   
   // Auth functions
