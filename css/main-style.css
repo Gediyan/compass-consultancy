@@ -18,6 +18,7 @@
     --paragraph-text-color:#333;
     --paragraph-text-bg:#d2cece;
     --cards-bg-color: #fff;
+    --read-more-btn-color: #3498db;
     --footer-header1-color: rgb(130, 212, 236);
     --footer-section-bg-color:#2c3e50;
     --footer-paragraph-color:#ecf0f1;
@@ -42,6 +43,7 @@
     --paragraph-text-color:#f0f0f0;
     --paragraph-text-bg:#615e5e;
     --cards-bg-color: #2d2d2d;
+    --read-more-btn-color: #b5b6b7;
     --footer-header1-color: rgb(209, 235, 243);
     --footer-section-bg-color:#373a3e;
     --footer-paragraph-color:#cfcfcf;
@@ -327,7 +329,7 @@ nav a:hover::after {
     font-size: clamp(0.9rem, 2vw, 1.1rem);
     font-weight: normal;
     line-height: 1.6;
-    color: var(--paragraph-text-color);
+    color: var(--primary-white-colorr);
 }
 
 /* Logo */
@@ -527,7 +529,7 @@ main {
 
 .news-container, .events-container, .service-intro-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 1.5rem;
     margin-bottom: 3rem;
     width: 100%;
@@ -593,11 +595,13 @@ main {
 }
 
 .news-card, .event-card {
+    display: flex;
     background-color: var(--cards-bg-color);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s ease;
+    min-height: 200px;
 }
 
 .news-card:hover, .event-card:hover, .service-card:hover {
@@ -605,31 +609,36 @@ main {
 }
 
 .card-image {
-    width: 100%;
-    height: 180px;
+    width: 40%;
+    min-width: 40%;
     object-fit: cover;
+    border-radius: 8px 0 0 8px;
+    align-self: stretch;
 }
 
-.card-content {
-    padding: 1.2rem;
+.news-card .card-content {
+    width: 60%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Crucial for text overflow */
 }
 
-@media (min-width: 768px) {
-    .card-content {
-        padding: 1.5rem;
-    }
+.event-card .card-content {
+    width: 60%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Crucial for text overflow */
 }
 
 .card-title {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
     color: var(--primary-color);
-}
-
-@media (min-width: 768px) {
-    .card-title {
-        font-size: 1.2rem;
-    }
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .card-date {
@@ -642,24 +651,48 @@ main {
     color: #aaa;
 }
 
-.card-excerpt {
+.news-card .card-excerpt {
     color: var(--paragraph-text-color);
+    flex: 1; /* Add this */
     line-height: 1.5;
-    margin-bottom: 1rem;
     font-size: 0.95rem;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-clamp: 3;
+    text-overflow: ellipsis;
+}
+
+.event-card .card-excerpt {
+    color: var(--paragraph-text-color);
+    flex: 1; /* Add this */
+    line-height: 1.5;
+    font-size: 0.95rem;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-clamp: 3;
+    text-overflow: ellipsis;
 }
 
 .read-more {
-    color: var(--paragraph-text-color);
+    color: var(--read-more-btn-color);
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95rem;
+    margin-top: auto;
+    align-self: flex-start;
 }
 
 .event-details {
     display: flex;
     gap: 1rem;
     margin-bottom: 1rem;
+    min-width: 0; /* Allows text truncation in flex children */
 }
 
 .event-date {
@@ -671,23 +704,10 @@ main {
     min-width: 60px;
 }
 
-@media (min-width: 768px) {
-    .event-date {
-        min-width: 80px;
-        padding: 0.5rem 1rem;
-    }
-}
-
 .event-day {
     font-size: 1.2rem;
     font-weight: bold;
     display: block;
-}
-
-@media (min-width: 768px) {
-    .event-day {
-        font-size: 1.5rem;
-    }
 }
 
 .event-month {
@@ -695,14 +715,9 @@ main {
     text-transform: uppercase;
 }
 
-@media (min-width: 768px) {
-    .event-month {
-        font-size: 0.8rem;
-    }
-}
-
 .event-info {
     flex: 1;
+    min-width: 0; /* Crucial for text truncation */
 }
 
 .event-location {
@@ -711,10 +726,79 @@ main {
     gap: 0.5rem;
     color: var(--paragraph-text-color);
     font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .dark-theme .event-location {
     color: #aaa;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+    .card-excerpt {
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .cards-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .card {
+        flex-direction: column;
+        min-height: auto;
+    }
+    
+    .card-image {
+        width: 100%;
+        height: 200px;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    .card-content {
+        width: 100%;
+    }
+    
+    .card-title {
+        white-space: normal;
+    }
+    
+    .card-excerpt {
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+}
+
+@media (max-width: 500px) {
+    .card-excerpt {
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+        display: block;
+        white-space: nowrap;
+    }
+}
+
+/* Enhanced fallback for older browsers */
+@supports not (-webkit-line-clamp: 3) {
+    .card-excerpt {
+        position: relative;
+        max-height: 4.5em;
+        overflow: hidden;
+        padding-right: 1em; /* Space for ellipsis */
+    }
+    .card-excerpt:after {
+        content: '...';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        background: var(--card-bg);
+        padding-left: 0.5em;
+    }
 }
 
 

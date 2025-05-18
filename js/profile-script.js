@@ -85,7 +85,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Convert image to base64 if exists
         let imageBase64 = 'https://via.placeholder.com/600x400'; // Default placeholder
+        // In your postForm submit handler:
         if (imageFile) {
+            // Check image size (e.g., max 2MB)
+            if (imageFile.size > 2 * 1024 * 1024) {
+                showNotification('Image size should be less than 2MB', true);
+                return;
+            }
             imageBase64 = await convertToBase64(imageFile);
         }
         
