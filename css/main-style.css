@@ -113,7 +113,6 @@ header {
 @media (min-width: 500px) {
     
     .company-name h1{
-        /* display: none; */
         font-size: 1rem;
     }
 }
@@ -125,7 +124,6 @@ header {
     }
     
     .company-name h1{
-        /* display: none; */
         font-size: 1rem;
     }
 }
