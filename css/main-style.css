@@ -662,8 +662,8 @@ main {
 }
 
 .event-date {
-    background-color: var(--paragraph-text-bg);
-    color: var(--paragraph-text-color);
+    background-color: var(--primary-color);
+    color: white;
     padding: 0.5rem;
     border-radius: 4px;
     text-align: center;

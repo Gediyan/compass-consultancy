@@ -398,6 +398,7 @@ body {
 
 /* Form Styles */
 .form-group {
+    align-items: center;
     margin-bottom: 20px;
 }
 
