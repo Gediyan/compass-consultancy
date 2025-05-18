@@ -65,9 +65,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Handle post submission
-    const postForm = document.getElementById('postForm');
+    // const postForm = document.getElementById('postForm');
     
-    postForm.addEventListener('submit', function(e) {
+    // In your postForm submit handler:
+    postForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         // Get form values
@@ -81,6 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (type === 'event') {
             location = document.getElementById('eventLocation').value;
         }
+
+        // Convert image to base64 if exists
+        let imageBase64 = 'https://via.placeholder.com/600x400'; // Default placeholder
+        if (imageFile) {
+            imageBase64 = await convertToBase64(imageFile);
+        }
         
         // Create new post object
         const newPost = {
@@ -91,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
             date,
             location,
             createdAt: new Date().toISOString(),
-            image: imageFile ? URL.createObjectURL(imageFile) : 'https://via.placeholder.com/600x400'
+            image: imageBase64 // Now storing base64 string
         };
         
         // Save to localStorage
@@ -110,6 +117,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update posts list
         updatePostsList();
     });
+
+    // Helper function to convert file to base64
+    function convertToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
 
     // Function to update posts list
     function updatePostsList() {

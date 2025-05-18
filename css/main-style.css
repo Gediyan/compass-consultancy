@@ -7,6 +7,7 @@
     --primary-white-color: white;
     --body-bg-color:#f9f9f9;
     --primary-dark: rgb(0, 106, 138);
+    --text-gray:rgb(130, 128, 128);
     --get-in-touch-hover: #006080;
     --dropdown-bg: rgb(0, 122, 160);
     --dropdown-divider-color: #ddd;
@@ -30,6 +31,7 @@
     --primary-white-color: rgb(171, 168, 168);
     --body-bg-color:#121212;
     --primary-dark: rgb(203, 216, 219);
+    --text-gray:rgb(188, 185, 185);
     --get-in-touch-hover: #006080;
     --dropdown-bg: rgb(39, 43, 44);
     --dropdown-divider-color: #ddd;
@@ -369,7 +371,6 @@ nav a:hover::after {
 }
 
 .logo-svg {
-    /* filter: brightness(0) invert(1); Makes black SVG white */
     width: 100%;
     height: auto;
 }
@@ -796,7 +797,7 @@ main {
 
 .section-title-description {
     font-size: 1rem;
-    color: var(--paragraph-text-color);
+    color: var(--text-gray);
     margin-bottom: 2rem;
     font-weight: normal;
 }
@@ -863,6 +864,50 @@ main {
     color: black;
 }
 /*Team Page Style ends here*/
+
+/* Why choos us */
+.why-choose-container {
+    /* grid-template-columns: 1fr;
+    max-width: 600px; */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.why-choose-detail {
+    display: flex;
+    align-items: start;
+    gap: 2px;
+}
+
+.check-box {
+    font-size: h6;
+    width: 30px;
+    color: var(--primary-color);
+}
+
+.expert-items {
+    color: var(--text-gray);
+}
+
+.team-working {
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.why-choose-items {
+    display: flex;
+    justify-content: space-between;
+    gap: 2px;
+}
+
+@media (max-width: 600px){
+    
+    .why-choose-items {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+}
 
 /* Footer Base Styles */
 .site-footer {
