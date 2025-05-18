@@ -271,3 +271,87 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+// Function to load posts on home page
+function loadPosts() {
+    const POSTS_KEY = 'compass_aeped_posts';
+    const posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
+    
+    const newsContainer = document.querySelector('.news-container');
+    const eventsContainer = document.querySelector('.events-container');
+    
+    // Clear existing content
+    newsContainer.innerHTML = '';
+    eventsContainer.innerHTML = '';
+    
+    // Filter and sort posts
+    const newsPosts = posts.filter(post => post.type === 'news')
+                          .sort((a, b) => new Date(b.date) - new Date(a.date));
+    const eventPosts = posts.filter(post => post.type === 'event')
+                          .sort((a, b) => new Date(a.date) - new Date(b.date)); // Events sorted chronologically
+    
+    // Handle news posts
+    if (newsPosts.length > 0) {
+        newsPosts.forEach(post => {
+            newsContainer.appendChild(createPostElement(post));
+        });
+    } else {
+        newsContainer.innerHTML = '<p class="no-posts">No news articles found.</p>';
+    }
+    
+    // Handle event posts
+    if (eventPosts.length > 0) {
+        eventPosts.forEach(post => {
+            eventsContainer.appendChild(createPostElement(post));
+        });
+    } else {
+        eventsContainer.innerHTML = '<p class="no-posts">No upcoming events found.</p>';
+    }
+}
+
+// Helper function to create post element
+function createPostElement(post) {
+    const element = document.createElement('div');
+    element.className = post.type === 'news' ? 'news-card' : 'event-card';
+    
+    if (post.type === 'news') {
+        element.innerHTML = `
+            <img src="${post.image}" alt="${post.title}" class="card-image">
+            <div class="card-content">
+                <h3 class="card-title">${post.title}</h3>
+                <div class="card-date">${new Date(post.date).toLocaleDateString()}</div>
+                <p class="card-excerpt">${post.description}</p>
+                <a href="#" class="read-more">Read More →</a>
+            </div>
+        `;
+    } else {
+        // For events
+        const eventDate = new Date(post.date);
+        const day = eventDate.getDate();
+        const month = eventDate.toLocaleString('default', { month: 'short' });
+        
+        element.innerHTML = `
+            <img src="${post.image}" alt="${post.title}" class="card-image">
+            <div class="card-content">
+                <div class="event-details">
+                    <div class="event-date">
+                        <span class="event-day">${day}</span>
+                        <span class="event-month">${month}</span>
+                    </div>
+                    <div class="event-info">
+                        <h3 class="card-title">${post.title}</h3>
+                        <div class="event-location">📍 ${post.location}</div>
+                    </div>
+                </div>
+                <p class="card-excerpt">${post.description}</p>
+                <a href="#" class="read-more">Learn More →</a>
+            </div>
+        `;
+    }
+    
+    return element;
+}
+
+// Call loadPosts when the page loads
+document.addEventListener('DOMContentLoaded', loadPosts);

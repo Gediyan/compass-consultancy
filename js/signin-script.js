@@ -22,6 +22,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const USERS_KEY = 'compass_aeped_users';
     const SESSION_KEY = 'compass_aeped_session';
 
+    // Add this near the top with other constants
+    const ACCOUNT_TYPE_KEY = 'accountType';
+    let accountType = 'customer'; // Default account type
+
+    // Account type tabs functionality
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove active class from all tabs
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            this.classList.add('active');
+            
+            // Update account type
+            accountType = this.dataset.accountType;
+        });
+    });
+
     // Initialize users if not exists
     if (!localStorage.getItem(USERS_KEY)) {
         localStorage.setItem(USERS_KEY, JSON.stringify([]));
@@ -165,10 +184,14 @@ document.addEventListener('DOMContentLoaded', function() {
             name,
             email,
             password, // In a real app, this should be hashed
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            accountType: accountType // Store the selected account type
         };
         users.push(newUser);
         localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        
+        // Also store the account type separately if needed
+        localStorage.setItem(ACCOUNT_TYPE_KEY, accountType);
         return newUser;
     }
 

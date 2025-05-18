@@ -8,12 +8,14 @@
     --body-bg-color:#f9f9f9;
     --primary-dark: rgb(0, 106, 138);
     --get-in-touch-hover: #006080;
+    --dropdown-bg: rgb(0, 122, 160);
     --dropdown-divider-color: #ddd;
     --welcome-gradiant-top: rgba(0, 122, 160, 0.5);
     --welcome-gradiant-bottom:rgba(82, 81, 81, 0.5);
     --box-shadow-color: rgba(0,0,0,0.1);
     --header1-color: #222;
     --paragraph-text-color:#333;
+    --paragraph-text-bg:#d2cece;
     --cards-bg-color: #fff;
     --footer-header1-color: rgb(130, 212, 236);
     --footer-section-bg-color:#2c3e50;
@@ -29,12 +31,14 @@
     --body-bg-color:#121212;
     --primary-dark: rgb(203, 216, 219);
     --get-in-touch-hover: #006080;
+    --dropdown-bg: rgb(39, 43, 44);
     --dropdown-divider-color: #ddd;
     --welcome-gradiant-top: rgba(1, 58, 75, 0.8);
     --welcome-gradiant-bottom:rgba(92, 91, 91, 0.8);
     --box-shadow-color: rgba(188, 188, 188, 0.1);
     --header1-color: #f4f4f4;
     --paragraph-text-color:#f0f0f0;
+    --paragraph-text-bg:#615e5e;
     --cards-bg-color: #2d2d2d;
     --footer-header1-color: rgb(209, 235, 243);
     --footer-section-bg-color:#373a3e;
@@ -81,12 +85,25 @@ header {
     background: none;
     border: none;
     color: white;
-    font-size: 1.5rem;
+    font-size: 1rem;
     cursor: pointer;
     padding: 0.5rem;
 }
 
 @media (max-width: 823px) {
+    header {
+        padding: 0.5rem;
+    }
+
+    .logo {
+        height: 30px;
+    }
+    
+    .company-name h1{
+        font-size: 0.8rem;
+    }
+
+    
     .menu-toggle {
         display: block;
     }
@@ -107,13 +124,6 @@ header {
     nav a {
         padding: 0.8rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-}
-
-@media (min-width: 500px) {
-    
-    .company-name h1{
-        font-size: 1rem;
     }
 }
 
@@ -201,7 +211,7 @@ nav a:hover::after {
     display: none;
     position: absolute;
     right: 0;
-    background-color: var(--primary-color);
+    background-color: var(--dropdown-bg);
     min-width: 240px;
     box-shadow: 0 8px 16px var(--box-shadow-color);
     border-radius: 8px;
@@ -516,27 +526,69 @@ main {
 
 .news-container, .events-container, .service-intro-container {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
     margin-bottom: 3rem;
+    width: 100%;
 }
 
+/* For when there's only 1 post */
+.news-container:has(> :only-child),
+.events-container:has(> :only-child) {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* For when there are 2 posts */
+.news-container:has(> :nth-child(2):last-child),
+.events-container:has(> :nth-child(2):last-child) {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 1200px;
+}
+
+/* Tablet view - ensure 2 columns when screen is wide enough */
 @media (min-width: 600px) {
-    .news-container, .events-container, .service-intro-container {
-        grid-template-columns: repeat(2, 1fr);
+    .service-intro-container:not(:has(> :only-child)),
+    .news-container:not(:has(> :only-child)),
+    .events-container:not(:has(> :only-child)) {
+        grid-template-columns: repeat(1, 1fr);
     }
 }
 
+/* Desktop view - 3 columns when enough posts exist */
 @media (min-width: 992px) {
-    .news-container, .events-container, .service-intro-container {
+    .service-intro-container:has(> :nth-child(3)),
+    .news-container:has(> :nth-child(3)),
+    .events-container:has(> :nth-child(3)) {
         grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    margin-bottom: 3rem;
+    }
+    
+    .service-intro-container:has(> :nth-child(4)),
+    .news-container:has(> :nth-child(4)),
+    .events-container:has(> :nth-child(4)) {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+/* Center the grid containers */
+.service-intro-container,
+.news-container,
+.events-container {
     max-width: 1200px;
     margin: 0 auto 3rem;
     padding: 0 1rem;
     width: calc(100% - 2rem);
 }
+
+/* Style for when no posts exist */
+.no-posts {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    color: var(--light-text);
+    font-style: italic;
 }
 
 .news-card, .event-card {
@@ -590,13 +642,14 @@ main {
 }
 
 .card-excerpt {
+    color: var(--paragraph-text-color);
     line-height: 1.5;
     margin-bottom: 1rem;
     font-size: 0.95rem;
 }
 
 .read-more {
-    color: var(--secondary-color);
+    color: var(--paragraph-text-color);
     text-decoration: none;
     font-weight: 500;
     font-size: 0.95rem;
@@ -609,8 +662,8 @@ main {
 }
 
 .event-date {
-    background-color: var(--secondary-color);
-    color: white;
+    background-color: var(--paragraph-text-bg);
+    color: var(--paragraph-text-color);
     padding: 0.5rem;
     border-radius: 4px;
     text-align: center;
@@ -655,7 +708,7 @@ main {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #777;
+    color: var(--paragraph-text-color);
     font-size: 0.85rem;
 }
 
