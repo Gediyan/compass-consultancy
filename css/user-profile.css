@@ -398,7 +398,6 @@ body {
 
 /* Form Styles */
 .form-group {
-    align-items: center;
     margin-bottom: 20px;
 }
 
@@ -411,7 +410,7 @@ body {
 .form-group input,
 .form-group select,
 .form-group textarea {
-    width: 100%;
+    width:93%;
     padding: 10px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
