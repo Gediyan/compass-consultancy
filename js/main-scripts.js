@@ -320,7 +320,7 @@ function createPostElement(post) {
             <img src="${post.image}" alt="${post.title}" class="card-image">
             <div class="card-content">
                 <h3 class="card-title">${post.title}</h3>
-                <div class="card-date">${formatDate(post.date)}</div>
+                <div class="card-date">${new Date(post.date).toLocaleDateString()}</div>
                 <p class="card-excerpt">${post.description}</p>
                 <a href="#" class="read-more">Read More →</a>
             </div>
