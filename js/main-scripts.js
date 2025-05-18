@@ -58,28 +58,10 @@ function initCounterAnimation() {
             });
           }
   }
-
-  // Read More/Less Function
-  function initMobileMenuToggle() {
-    const toggleButton = document.querySelector('.mobile-menu-toggle');
-    const navList = document.querySelector('.nav-list');
-    
-    toggleButton.addEventListener('click', function() {
-      navList.classList.toggle('active');
-    });
-    
-    // Close menu when clicking on links (optional)
-    document.querySelectorAll('.nav-list a').forEach(link => {
-      link.addEventListener('click', () => {
-        navList.classList.remove('active');
-      });
-    });
-  }
   
   // Initialize all functions when DOM loads
   document.addEventListener('DOMContentLoaded', function() {
     initCounterAnimation();
-    initMobileMenuToggle();
     initReadMore();
     // Add more initializers here
   });
@@ -139,7 +121,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Update dropdown with user data
   function updateProfileDropdown(user) {
-      const profileIcon = document.getElementById('profileIcon');
       const dropdownProfileIcon = document.getElementById('dropdownProfileIcon');
       const dropdownUserName = document.getElementById('dropdownUserName');
       const dropdownUserEmail = document.getElementById('dropdownUserEmail');
@@ -147,11 +128,12 @@ document.addEventListener('DOMContentLoaded', function() {
       if (user) {
           // User is logged in
           if (user.profileImage) {
-              profileIcon.innerHTML = `<img src="${user.profileImage}" alt="Profile" class="profile-image">`;
+              dropdownBtn.style.backgroundImage = `url('${user.profileImage}')`;
+              dropdownBtn.style.backgroundSize = "cover";
               dropdownProfileIcon.innerHTML = `<img src="${user.profileImage}" alt="Profile" class="profile-image">`;
           } else {
               const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
-              profileIcon.textContent = initial;
+              dropdownBtn.textContent = initial;
               dropdownProfileIcon.textContent = initial;
           }
           
@@ -165,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
           accountAction.onclick = signOut;
       } else {
           // Guest state
-          profileIcon.textContent = 'G';
+          dropdownBtn.textContent = 'G';
           dropdownProfileIcon.textContent = 'G';
           dropdownUserName.textContent = 'Guest';
           dropdownUserEmail.textContent = '';
