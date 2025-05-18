@@ -11,7 +11,7 @@
     <body>
         <div class="profile-container card">
             <!-- Back button -->
-             <div class="back-to-home">
+            <div class="back-to-home">
                 <a href="../index.html" class="btn btn--secondary arrow-back">
                     <i class="material-icons">arrow_back</i> Back to Home
                 </a>
@@ -19,104 +19,204 @@
             
             <!-- Profile header -->
             <header class="profile-header">
-                <h1>Edit Profile</h1>
-                <p>Manage your account information and settings</p>
+                <h1>User Dashboard</h1>
+                <p>Manage your account and activities</p>
             </header>
 
-            <div class="profile-sections">
-                <!-- Profile Picture Section -->
-                <section class="card ">
-                    <div class="section-header">
-                        <h2><i class="material-icons">account_circle</i> Profile Picture</h2>
-                    </div>
-                    <div class="pp-image">
-                        <div class="profile-picture-container">
-                            <div class="profile-picture" id="profilePicture">
-                                <span id="profileInitial">G</span>
-                                <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
-                            </div>
-                        </div>
-                        <div class="picture-actions">
-                            <p><i class="material-icons">info</i> JPG, PNG (Max. 25MB)</p>
-                            <div class="upload-controls">
-                                <label for="profileImageUpload" class="btn btn--primary">
-                                    <i class="material-icons">photo_camera</i> Change Photo
-                                </label>
-                                <label id="deletePhotoBtn" class="btn btn--danger" style="display: none;">
-                                    <i class="material-icons">delete</i> Remove Photo
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-tab="profile">Profile</button>
+                <button class="tab-btn" data-tab="activity">Activity</button>
+                <button class="tab-btn admin-tab" data-tab="manage">Manage Website</button>
+            </div>
 
-                <!-- Personal Information Section -->
-                <section class="card">
-                    <div class="section-header">
-                        <h2><i class="material-icons">person</i> Personal Information</h2>
-                    </div>
-                    <p>Keep your personal details up to date</p>
-                    
-                    <div class="profile-info">
-                        <div class="field-group">
-                            <label for="nameInput">Full Name</label>
-                            <div class="editable-field" id="nameField">
-                                <div class="field-container">
-                                    <span class="field-value naming">Guest</span>
-                                    <input type="text" id="nameInput" class="field-input" value="Guest" style="display: none;">
+            <!-- Profile Section -->
+            <div id="profile" class="tab-content active">
+                <!-- Existing profile content remains the same -->
+                <div class="profile-sections">
+                    <!-- Profile Picture Section -->
+                    <section class="card">
+                        <div class="section-header">
+                            <h2><i class="material-icons">account_circle</i> Profile Picture</h2>
+                        </div>
+                        <div class="pp-image">
+                            <div class="profile-picture-container">
+                                <div class="profile-picture" id="profilePicture">
+                                    <span id="profileInitial">G</span>
+                                    <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
                                 </div>
-                                <button class="btn btn--secondary edit-btn"><i class="material-icons">edit</i></button>
                             </div>
+                            <div class="picture-actions">
+                                <p><i class="material-icons">info</i> JPG, PNG (Max. 25MB)</p>
+                                <div class="upload-controls">
+                                    <label for="profileImageUpload" class="btn btn--primary">
+                                        <i class="material-icons">photo_camera</i> Change Photo
+                                    </label>
+                                    <label id="deletePhotoBtn" class="btn btn--danger" style="display: none;">
+                                        <i class="material-icons">delete</i> Remove Photo
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Personal Information Section -->
+                    <section class="card">
+                        <div class="section-header">
+                            <h2><i class="material-icons">person</i> Personal Information</h2>
+                        </div>
+                        <p>Keep your personal details up to date</p>
+                        
+                        <div class="profile-info">
+                            <div class="field-group">
+                                <label for="nameInput">Full Name</label>
+                                <div class="editable-field" id="nameField">
+                                    <div class="field-container">
+                                        <span class="field-value naming">Guest</span>
+                                        <input type="text" id="nameInput" class="field-input" value="Guest" style="display: none;">
+                                    </div>
+                                    <button class="btn btn--secondary edit-btn"><i class="material-icons">edit</i></button>
+                                </div>
+                            </div>
+                            
+                            <div class="field-group">
+                                <label>Email</label>
+                                <div class="readonly-field" id="emailField">
+                                    <span class="field-value">guest@gmail.com</span>
+                                    <span class="verification-badge" id="emailVerifiedBadge" style="display: none;">
+                                        <i class="material-icons">verified</i> Verified
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="field-group">
+                                <label>Account Created</label>
+                                <div class="readonly-field" id="accountCreatedDate">
+                                    <span class="field-value">Monday</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Account Security Section -->
+                    <section class="card">
+                        <div class="section-header">
+                            <h2><i class="material-icons">security</i> Security</h2>
+                        </div>
+                        <div class="security-actions">
+                            <button class="btn btn--secondary" id="changePasswordBtn">
+                                <i class="material-icons">lock</i> Change Password
+                            </button>
+                            <button class="btn btn--secondary" id="twoFactorBtn">
+                                <i class="material-icons">enhanced_encryption</i> Two-Factor Authentication
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Danger Zone Section -->
+                    <section class="card danger-zone">
+                        <div class="section-header">
+                            <h2><i class="material-icons">warning</i> Danger Zone</h2>
+                        </div>
+                        <div class="danger-actions">
+                            <button class="btn btn--danger" id="deactivateAccountBtn">
+                                <i class="material-icons">person_off</i> Deactivate Account
+                            </button>
+                            <button class="btn btn--danger" id="deleteAccountBtn">
+                                <i class="material-icons">delete_forever</i> Delete Account
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Activity Section -->
+            <div id="activity" class="tab-content">
+                <div class="activity-sections">
+                    <section class="card">
+                        <div class="section-header">
+                            <h2><i class="material-icons">history</i> Recent Activity</h2>
+                        </div>
+                        <div class="activity-list">
+                            <!-- Activity items will be populated here -->
+                            <div class="activity-item">
+                                <i class="material-icons">login</i>
+                                <div class="activity-details">
+                                    <p>You logged in</p>
+                                    <small>2 hours ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Manage Website Section (Admin Only) -->
+            <div id="manage" class="tab-content">
+                <div class="manage-sections">
+                    <!-- Post Creation Form -->
+                    <section class="card">
+                        <div class="section-header">
+                            <h2><i class="material-icons">post_add</i> Create New Post</h2>
                         </div>
                         
-                        <div class="field-group">
-                            <label>Email</label>
-                            <div class="readonly-field" id="emailField">
-                                <span class="field-value">guest@gmail.com</span>
-                                <span class="verification-badge" id="emailVerifiedBadge" style="display: none;">
-                                    <i class="material-icons">verified</i> Verified
-                                </span>
+                        <form id="postForm">
+                            <div class="form-group">
+                                <label for="postTitle">Post Title</label>
+                                <input type="text" id="postTitle" required>
                             </div>
-                        </div>
-
-                        <div class="field-group">
-                            <label>Account Created</label>
-                            <div class="readonly-field" id="accountCreatedDate">
-                                <span class="field-value">Monday</span>
+                            
+                            <div class="form-group">
+                                <label for="postType">Post Type</label>
+                                <select id="postType" required>
+                                    <option value="">Select type</option>
+                                    <option value="news">News</option>
+                                    <option value="event">Event</option>
+                                </select>
                             </div>
+                            
+                            <div class="form-group">
+                                <label for="postDescription">Description</label>
+                                <textarea id="postDescription" rows="5" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="postDate">Date</label>
+                                <input type="date" id="postDate" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="postImage">Image</label>
+                                <input type="file" id="postImage" accept="image/*">
+                                <small>Recommended size: 600x400 pixels</small>
+                            </div>
+                            
+                            <!-- Event-specific fields (hidden by default) -->
+                            <div id="eventFields" style="display: none;">
+                                <div class="form-group">
+                                    <label for="eventLocation">Location</label>
+                                    <input type="text" id="eventLocation">
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn--primary">
+                                    <i class="material-icons">publish</i> Publish Post
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+                    
+                    <!-- Existing Posts Management -->
+                    <section class="card">
+                        <div class="section-header">
+                            <h2><i class="material-icons">list_alt</i> Manage Existing Posts</h2>
                         </div>
-                    </div>
-                </section>
-
-                <!-- Account Security Section -->
-                <section class="card">
-                    <div class="section-header">
-                        <h2><i class="material-icons">security</i> Security</h2>
-                    </div>
-                    <div class="security-actions">
-                        <button class="btn btn--secondary" id="changePasswordBtn">
-                            <i class="material-icons">lock</i> Change Password
-                        </button>
-                        <button class="btn btn--secondary" id="twoFactorBtn">
-                            <i class="material-icons">enhanced_encryption</i> Two-Factor Authentication
-                        </button>
-                    </div>
-                </section>
-
-                <!-- Danger Zone Section -->
-                <section class="card danger-zone">
-                    <div class="section-header">
-                        <h2><i class="material-icons">warning</i> Danger Zone</h2>
-                    </div>
-                    <div class="danger-actions">
-                        <button class="btn btn--danger" id="deactivateAccountBtn">
-                            <i class="material-icons">person_off</i> Deactivate Account
-                        </button>
-                        <button class="btn btn--danger" id="deleteAccountBtn">
-                            <i class="material-icons">delete_forever</i> Delete Account
-                        </button>
-                    </div>
-                </section>
+                        <div class="posts-list">
+                            <!-- Posts will be listed here -->
+                        </div>
+                    </section>
+                </div>
             </div>
 
             <!-- Action Buttons -->

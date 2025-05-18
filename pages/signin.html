@@ -81,11 +81,16 @@
 
             <!-- Sign Up Card -->
             <div class="auth-card" id="signupCard" style="display: none;">
+                <!-- Inside the signupCard div, before the form -->
+                <div class="account-type-tabs">
+                    <div class="tab active" data-account-type="customer">Customer Account</div>
+                    <div class="tab" data-account-type="staff">Staff Account</div>
+                    <div class="tab" data-account-type="admin">Admin Account</div>
+                </div>
                 <div class="auth-header">
                     <h1>Create Account</h1>
                     <p>Get started with your free account</p>
                 </div>
-
                 <form id="signupForm" class="auth-form">
                     <div class="form-group">
                         <label for="signupName">Full Name</label>
