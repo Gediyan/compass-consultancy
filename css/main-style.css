@@ -8,6 +8,8 @@
     --primary-dark: rgb(0, 106, 138);
     --get-in-touch-hover: #006080;
     --dropdown-divider-color: #ddd;
+    --welcome-gradiant-top: rgba(0, 122, 160, 0.5);
+    --welcome-gradiant-bottom:rgba(82, 81, 81, 0.5);
     --box-shadow-color: rgba(0,0,0,0.1);
     --header1-color: #222;
     --paragraph-text-color:rgb(240, 234, 234);
@@ -18,12 +20,48 @@
     --footer-link-color:#bdc3c7;
 }
 
+.dark-theme {
+    --primary-color: rgb(0, 63, 82);
+    --primary-white-color: rgb(171, 168, 168);
+    --body-bg-color:rgb(79, 79, 79);
+    --primary-dark: rgb(203, 216, 219);
+    --get-in-touch-hover: #006080;
+    --dropdown-divider-color: #ddd;
+    --welcome-gradiant-top: rgba(1, 58, 75, 0.8);
+    --welcome-gradiant-bottom:rgba(92, 91, 91, 0.8);
+    --box-shadow-color: rgba(188, 188, 188, 0.1);
+    --header1-color: #f4f4f4;
+    --paragraph-text-color:rgb(248, 230, 230);
+    --cards-bg-color: #3d3d3d;
+    --footer-section-bg-color:#373a3e;
+    --footer-paragraph-color:#cfcfcf;
+    --footer-social-link-bg-color:rgba(255, 255, 255, 0.1);
+    --footer-link-color:#bdc3c7;
+}
+
 body{
     background: var(--body-bg-color);
     color: var(--primary-white-color);
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
+}
+
+header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+    header {
+        padding: 1rem 2rem;
+    }
 }
 
 /* Base Styles */
@@ -200,22 +238,7 @@ body{
     height: auto;
 }
 
-/* Profile Icon Styles */
-.profile-icon {
-    position: relative;
-    top: -7px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: var(--primary-white-color);
-    color: var(--primary-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    cursor: pointer;
-    overflow: hidden;
-}
+
 
 .profile-icon img {
     width: 100%;
@@ -237,14 +260,14 @@ body{
 }
 
 .dropdown-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgb(255, 255, 255);
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .dropdown-content {
@@ -286,8 +309,8 @@ body{
 }
 
 .dropdown-profile-icon {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background-color: var(--primary-white-color);
     display: flex;
@@ -327,7 +350,7 @@ body{
 /* Wellcome Base Styles */
 .compass-wellcome {
     align-items: center;
-    background: linear-gradient(rgba(0, 122, 160, 0.5), rgba(82, 81, 81, 0.5)), 
+    background: linear-gradient(var(--welcome-gradiant-top), var(--welcome-gradiant-bottom)), 
                     url(../images/Poster-Photo-min.jpg);
     background-size: cover;
     background-position: center;
@@ -544,7 +567,7 @@ body{
     padding: clamp(2rem, 5vw, 4rem) 1rem; /* Responsive padding */
     overflow: hidden; /* Ensures nothing spills out */
     background-color: var(--primary-color); /* Fallback color */
-    background: linear-gradient(rgba(0, 122, 160, 0.8), rgba(82, 81, 81, 0.8)), 
+    background: linear-gradient(var(--welcome-gradiant-top), var(--welcome-gradiant-bottom)), 
                     url('../images/construction-Equipments.webp');
     background-size: cover;
     background-position: center;
@@ -636,12 +659,12 @@ body{
 .service-intro-header {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: #333;
+    color: var(--header1-color);
 }
 
 .service-intro-description {
     font-size: 1.2rem;
-    color: #666;
+    color: var(--paragraph-text-color);
     margin-bottom: 2rem;
     font-weight: normal;
 }
@@ -670,7 +693,7 @@ body{
     font-size: 1.5rem;
     color: var(--header1-color);
     margin-bottom: 1rem;
-    border-bottom: 2px solid var(--primary-color);
+    /* border-bottom: 2px solid var(--primary-color); */
     padding-bottom: 0.5rem;
 }
 
@@ -685,7 +708,7 @@ body{
 .service-card li {
     padding: 0.5rem 0;
     border-bottom: 1px solid #eee;
-    color: #444;
+    color: var(--primary-dark);
     display: block;  /* Ensures each li takes full width */
 }
 
@@ -752,6 +775,11 @@ body{
 /* Footer Sections */
 .footer-section {
     margin-bottom: 2rem;
+}
+
+/* Footer Sections */
+.footer-section h3{
+    color: var(--header1-color);
 }
 
 .footer-heading {
@@ -903,4 +931,106 @@ body{
     .footer-links a:hover {
         padding-left: 0;
     }
+}
+
+
+
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+.logo {
+    height: 40px;
+    width: auto;
+}
+
+.company-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Mobile menu toggle */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+@media (max-width: 767px) {
+    .menu-toggle {
+        display: block;
+    }
+    
+    nav {
+        display: none;
+        width: 100%;
+        order: 3;
+        margin-top: 1rem;
+    }
+    
+    nav.active {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    nav a {
+        padding: 0.8rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+@media (min-width: 768px) {
+    nav {
+        display: flex;
+        gap: 1.5rem;
+    }
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+nav a:hover::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: white;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.theme-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
