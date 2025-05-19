@@ -94,7 +94,7 @@ header {
     padding: 0.5rem;
 }
 
-@media (max-width: 823px) {
+@media (max-width: 892px) {
     header {
         padding: 0.5rem;
     }
@@ -131,7 +131,7 @@ header {
     }
 }
 
-@media (min-width: 823px) {
+@media (min-width: 892px) {
     nav {
         display: flex;
         gap: 1.5rem;
@@ -708,6 +708,10 @@ main {
     .card-title {
         white-space: normal;
     }
+    
+    .event-location {
+        white-space: normal;
+    }
 }
 
 
@@ -828,36 +832,6 @@ main {
 
 /*Service section style ends here*/
 
-/*About Page Style*/
-.about-detail h1{
-    color: black;
-}
-/*About Page Style ends here*/
-
-/*Contact Page Style*/
-.contact-detail h1{
-    color: black;
-}
-/*Contact Page Style ends here*/
-
-/*Projects Page Style*/
-.projects-detail h1{
-    color: black;
-}
-/*Projects Page Style ends here*/
-
-/*Services Page Style*/
-.services-detail h1{
-    color: black;
-}
-/*Services Page Style ends here*/
-
-/*Team Page Style*/
-.team-detail h1{
-    color: black;
-}
-/*Team Page Style ends here*/
-
 /* Why choos us */
 .why-choose-container {
     /* grid-template-columns: 1fr;
@@ -901,6 +875,38 @@ main {
         gap: 15px;
     }
 }
+
+/*About Page Style*/
+.map-section {
+    background-color: var(--primary-color);
+    height: 400px;
+    color: black;
+}
+/*About Page Style ends here*/
+
+/*Contact Page Style*/
+.contact-detail h1{
+    color: black;
+}
+/*Contact Page Style ends here*/
+
+/*Projects Page Style*/
+.projects-detail h1{
+    color: black;
+}
+/*Projects Page Style ends here*/
+
+/*Services Page Style*/
+.services-detail h1{
+    color: black;
+}
+/*Services Page Style ends here*/
+
+/*Team Page Style*/
+.team-detail h1{
+    color: black;
+}
+/*Team Page Style ends here*/
 
 /* Footer Base Styles */
 .site-footer {
