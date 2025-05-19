@@ -503,7 +503,6 @@ nav a:hover::after {
 
 main {
     padding: 1.5rem;
-    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -529,60 +528,10 @@ main {
 
 .news-container, .events-container, .service-intro-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
     gap: 1.5rem;
     margin-bottom: 3rem;
     width: 100%;
-}
-
-/* For when there's only 1 post */
-.news-container:has(> :only-child),
-.events-container:has(> :only-child) {
-    grid-template-columns: 1fr;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* For when there are 2 posts */
-.news-container:has(> :nth-child(2):last-child),
-.events-container:has(> :nth-child(2):last-child) {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 1200px;
-}
-
-/* Tablet view - ensure 2 columns when screen is wide enough */
-@media (min-width: 600px) {
-    .service-intro-container:not(:has(> :only-child)),
-    .news-container:not(:has(> :only-child)),
-    .events-container:not(:has(> :only-child)) {
-        grid-template-columns: repeat(1, 1fr);
-    }
-}
-
-/* Desktop view - 3 columns when enough posts exist */
-@media (min-width: 992px) {
-    .service-intro-container:has(> :nth-child(3)),
-    .news-container:has(> :nth-child(3)),
-    .events-container:has(> :nth-child(3)) {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .service-intro-container:has(> :nth-child(4)),
-    .news-container:has(> :nth-child(4)),
-    .events-container:has(> :nth-child(4)) {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    }
-}
-
-/* Center the grid containers */
-.service-intro-container,
-.news-container,
-.events-container {
-    max-width: 1200px;
-    margin: 0 auto 3rem;
-    padding: 0 1rem;
-    width: calc(100% - 2rem);
 }
 
 /* Style for when no posts exist */
@@ -601,7 +550,7 @@ main {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 0.3s ease;
-    min-height: 200px;
+    min-height: 300px;
 }
 
 .news-card:hover, .event-card:hover, .service-card:hover {
@@ -651,32 +600,15 @@ main {
     color: #aaa;
 }
 
-.news-card .card-excerpt {
+.card-excerpt {
     color: var(--paragraph-text-color);
-    flex: 1; /* Add this */
-    line-height: 1.5;
-    font-size: 0.95rem;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    display: flex;
+    text-align: start;
     overflow: hidden;
-    line-clamp: 3;
     text-overflow: ellipsis;
-}
-
-.event-card .card-excerpt {
-    color: var(--paragraph-text-color);
-    flex: 1; /* Add this */
-    line-height: 1.5;
-    font-size: 0.95rem;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    line-clamp: 3;
-    text-overflow: ellipsis;
+    margin-bottom: 10px;
+    line-height: 1.4; /* Adjust line height for better readability */
+    max-height: calc(1.8em * 3); /* Fallback for browsers that don't support -webkit-line-clamp */
 }
 
 .read-more {
@@ -735,21 +667,13 @@ main {
     color: #aaa;
 }
 
-
-/* Responsive Adjustments */
-@media (max-width: 1024px) {
-    .card-excerpt {
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-    }
-}
-
 @media (max-width: 768px) {
     .cards-container {
         grid-template-columns: 1fr;
     }
     
-    .card {
+    .news-card, .event-card {
+        width: 100%;
         flex-direction: column;
         min-height: auto;
     }
@@ -760,44 +684,22 @@ main {
         border-radius: 8px 8px 0 0;
     }
     
-    .card-content {
-        width: 100%;
+    .event-card .card-content {
+        width: 95%;
+    }
+    
+    .news-card .card-content {
+        width: 95%;
     }
     
     .card-title {
         white-space: normal;
     }
-    
-    .card-excerpt {
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-    }
 }
 
 @media (max-width: 500px) {
-    .card-excerpt {
-        -webkit-line-clamp: 1;
-        line-clamp: 1;
-        display: block;
-        white-space: nowrap;
-    }
-}
-
-/* Enhanced fallback for older browsers */
-@supports not (-webkit-line-clamp: 3) {
-    .card-excerpt {
-        position: relative;
-        max-height: 4.5em;
-        overflow: hidden;
-        padding-right: 1em; /* Space for ellipsis */
-    }
-    .card-excerpt:after {
-        content: '...';
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        background: var(--card-bg);
-        padding-left: 0.5em;
+    .card-content {
+        width: 100%;
     }
 }
 
