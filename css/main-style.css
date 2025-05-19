@@ -528,7 +528,7 @@ main {
 
 .news-container, .events-container, .service-intro-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
     gap: 1.5rem;
     margin-bottom: 3rem;
     width: 100%;
@@ -602,8 +602,10 @@ main {
 
 .card-excerpt {
     color: var(--paragraph-text-color);
-    display: flex;
-    text-align: start;
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3; /* Number of lines to show */
+    -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-bottom: 10px;
@@ -667,13 +669,12 @@ main {
     color: #aaa;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 768px) {
     .news-container, .events-container, .service-intro-container {
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
     
     .news-card, .event-card {
-        width: 100%;
         flex-direction: column;
         min-height: auto;
     }
@@ -684,22 +685,24 @@ main {
         border-radius: 8px 8px 0 0;
     }
     
-    .event-card .card-content {
-        width: 95%;
+    .news-card .card-content {
+        width: 100%;
+    }
+
+    .news-card .card-excerpt {
+        margin-right: 10%;
     }
     
-    .news-card .card-content {
-        width: 95%;
+    .event-card .card-content {
+        width: 100%;
+    }
+
+    .event-card .card-excerpt {
+        margin-right: 10%;
     }
     
     .card-title {
         white-space: normal;
-    }
-}
-
-@media (max-width: 500px) {
-    .card-content {
-        width: 100%;
     }
 }
 
