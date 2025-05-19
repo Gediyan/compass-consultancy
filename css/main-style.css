@@ -590,13 +590,13 @@ main {
     text-overflow: ellipsis;
 }
 
-.card-date {
+.card-meta {
     font-size: 0.85rem;
     color: #777;
     margin-bottom: 1rem;
 }
 
-.dark-theme .card-date {
+.dark-theme .card-meta {
     color: #aaa;
 }
 
@@ -652,6 +652,10 @@ main {
 .event-info {
     flex: 1;
     min-width: 0; /* Crucial for text truncation */
+}
+
+.event-location-container {
+    display: flex;
 }
 
 .event-location {
