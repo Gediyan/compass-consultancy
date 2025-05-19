@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         profileImageUpload: document.getElementById('profileImageUpload'),
         profilePicture: document.getElementById('profilePicture'),
         profileInitial: document.getElementById('profileInitial'),
+        profileDefault: document.getElementById('profileDefault'),
 
         nameField: document.getElementById('nameField'),
         emailField: document.getElementById('emailField'),
@@ -25,6 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const successNotification = document.getElementById('successNotification');
     const deletePhotoBtn = document.getElementById('deletePhotoBtn');
     const closeModal = document.querySelector('.close-modal');
+    const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+    const modalCancelBtn = document.getElementById('modalCancelBtn');
+    const confirmationModal = document.getElementById('confirmationModal');
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -32,6 +36,8 @@ document.addEventListener('DOMContentLoaded', function() {
     deletePhotoBtn.addEventListener('click', function(e) {
         e.preventDefault();
         confirmationModal.style.display = 'flex';
+        // showModal();
+        
     });
 
     closeModal.addEventListener('click', function() {
@@ -269,13 +275,14 @@ document.addEventListener('DOMContentLoaded', function() {
             img.src = currentUser.profileImage;
             img.alt = 'Profile';
             img.className = 'profile-image';
-            elements.profilePicture.insertBefore(img, elements.profileInitial);
+            elements.profileDefault.style.backgroundImage = `url('${currentUser.profileImage}')`;
+            elements.profileDefault.style.backgroundSize = "cover";
             elements.profileInitial.style.display = 'none';
             document.getElementById('deletePhotoBtn').style.display = 'block';
         } else {
             const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'G';
             elements.profileInitial.textContent = initial;
-            elements.profileInitial.style.display = 'flex';
+            elements.profilePicture.style.display = 'none';
             document.getElementById('deletePhotoBtn').style.display = 'none';
         }
     }
@@ -455,44 +462,21 @@ document.addEventListener('DOMContentLoaded', function() {
             successNotification.classList.remove('show');
         }, 3000);
     }
-});
 
-// Delete profile picture functionality
-document.getElementById('deletePhotoBtn').addEventListener('click', function() {
-    showModal(
-        'Delete Profile Picture',
-        'Are you sure you want to remove your profile picture?',
-        function() {
-            if (currentUser) {
-                currentUser.profileImage = null;
-                updateUserInStorage();
-                updateProfileDisplay();
-                this.style.display = 'none';
-            }
+    // Switch between login and signup forms
+    modalConfirmBtn.addEventListener('click', function() {
+        if (currentUser) {
+            currentUser.profileImage = null;
+            updateUserInStorage();
+            updateProfileDisplay();
+            elements.profileDefault.style.backgroundImage = 'none'
+            elements.profileInitial.style.display = 'block';
+            confirmationModal.style.display = 'none';
         }
-    );
-});
+    });
 
-// Modal function for confirmations
-function showModal(title, message, confirmCallback) {
-    const modal = document.getElementById('confirmationModal');
-    document.getElementById('modalTitle').textContent = title;
-    document.getElementById('modalMessage').textContent = message;
+    modalCancelBtn.addEventListener('click', function() {
+        confirmationModal.style.display = 'none';
+    });
     
-    modal.style.display = 'block';
-    
-    document.getElementById('modalConfirmBtn').onclick = function() {
-        confirmCallback();
-        modal.style.display = 'none';
-    };
-    
-    document.getElementById('modalCancelBtn').onclick = function() {
-        modal.style.display = 'none';
-    };
-    
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    };
-}
+});
