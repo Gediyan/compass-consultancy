@@ -162,10 +162,10 @@ nav a:hover::after {
 
     nav {
         position: fixed;
-        top: 72px;
+        top: 57px;
         left: 0;
         width: 100%;
-        background-color: var(--primary-color);
+        background-color: var(--header-bg);
         flex-direction: column;
         padding: 1rem 0;
         gap: 1rem;
