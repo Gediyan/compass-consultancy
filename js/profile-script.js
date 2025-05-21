@@ -6,61 +6,303 @@ document.addEventListener('DOMContentLoaded', function() {
         profilePicture: document.getElementById('profilePicture'),
         profileInitial: document.getElementById('profileInitial'),
         profileDefault: document.getElementById('profileDefault'),
-
-        nameField: document.getElementById('nameField'),
-        emailField: document.getElementById('emailField'),
-        accountCreated: document.getElementById('accountCreatedDate'),
-
+        
+        // User info elements
         nameValue: document.querySelector('#nameField .field-value'),
-        emailValue: document.querySelector('#emailField .field-value'),
-        accountCreatedValue: document.querySelector('#accountCreatedDate .field-value'),
-
         nameInput: document.querySelector('#nameField .field-input'),
         editBtn: document.querySelector('#nameField .btn--secondary'),
+        emailValue: document.querySelector('#emailField .field-value'),
+        accountCreatedValue: document.querySelector('#accountCreatedDate .field-value'),
         saveBtn: document.getElementById('saveChanges'),
+
+        imageEditorModal: document.getElementById('imageEditorModal'),
+        imageToCrop: document.getElementById('imageToCrop'),
+        rotateLeftBtn: document.getElementById('rotateLeftBtn'),
+        rotateRightBtn: document.getElementById('rotateRightBtn'),
+        zoomInBtn: document.getElementById('zoomInBtn'),
+        zoomOutBtn: document.getElementById('zoomOutBtn'),
+        cancelCropBtn: document.getElementById('cancelCropBtn'),
+        saveCropBtn: document.getElementById('saveCropBtn'),
+        closeModalBtn: document.querySelector('.image-close-modal')
         
     };
-
-    // Add these at the top with your other DOM elements
-    const notificationMessage = document.getElementById('notification-message');
-    const successNotification = document.getElementById('successNotification');
-    const deletePhotoBtn = document.getElementById('deletePhotoBtn');
-    const closeModal = document.querySelector('.close-modal');
+        
+    // Confirmation modal
+    const confirmationModal = document.getElementById('confirmationModal');
     const modalConfirmBtn = document.getElementById('modalConfirmBtn');
     const modalCancelBtn = document.getElementById('modalCancelBtn');
-    const confirmationModal = document.getElementById('confirmationModal');
+    const closeModal = document.querySelector('.close-modal');
+
+    // Add these at the top with your other DOM elements
+    const deletePhotoBtn = document.getElementById('deletePhotoBtn');
     const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    // Forgot password modal
-    deletePhotoBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        confirmationModal.style.display = 'flex';
-        // showModal();
-        
-    });
-
-    closeModal.addEventListener('click', function() {
-        confirmationModal.style.display = 'none';
-    });
-
-    // Tab switching functionality
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active class from all buttons and contents
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            
-            // Add active class to clicked button and corresponding content
-            btn.classList.add('active');
-            const tabId = btn.getAttribute('data-tab');
-            document.getElementById(tabId).classList.add('active');
-        });
-    });
 
     // Show/hide event fields based on post type
     const postTypeSelect = document.getElementById('postType');
     const eventFields = document.getElementById('eventFields');
+
+
+    // State variables
+    let currentUser = null; // Current user data
+    let cropper = null;
+
+    // Initialize the application
+    init();
+
+    function init() {
+        loadUserData();
+        setupEventListeners();
+        setupTabs();
+    }
+
+    function loadUserData() {
+        const sessionData = getSessionData();
+        if (!sessionData) return;
+
+        currentUser = getUserFromStorage(sessionData.userId);
+        if (!currentUser) return;
+
+        if (currentUser.accountType === 'admin') {
+            console.log('Please:', currentUser);
+            document.querySelector('.admin-tab').style.display = 'block';
+        }
+        updateProfileDisplay();
+        updateUserInfoDisplay();
+    }
+
+    function getSessionData() {
+        const SESSION_KEY = 'compass_aeped_session';
+        const sessionData = localStorage.getItem(SESSION_KEY);
+        return sessionData ? JSON.parse(sessionData) : null;
+    }
+
+    function getUserFromStorage(userId) {
+        const USERS_KEY = 'compass_aeped_users';
+        const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+        return users.find(user => user.id === userId);
+    }
+
+    function updateUserInStorage() {
+        if (!currentUser) return;
+        
+        const users = JSON.parse(localStorage.getItem('compass_aeped_users')) || [];
+        const index = users.findIndex(user => user.id === currentUser.id);
+        
+        if (index !== -1) {
+            users[index] = currentUser;
+        } else {
+            users.push(currentUser);
+        }
+        
+        localStorage.setItem('compass_aeped_users', JSON.stringify(users));
+        updateSessionData();
+    }
+
+    function updateSessionData() {
+        const session = getSessionData();
+        if (session && currentUser) {
+            session.name = currentUser.name;
+            session.profilePicture = currentUser.profileImage;
+            localStorage.setItem('compass_aeped_session', JSON.stringify(session));
+        }
+    }
+
+    // Update profile display to handle delete button visibility
+    function updateProfileDisplay() {
+        if (!currentUser) return;
+
+        // Clear previous image if exists
+        const existingImg = elements.profilePicture.querySelector('img');
+        if (existingImg) {
+            elements.profilePicture.removeChild(existingImg);
+        }
+
+        if (currentUser.profileImage) {
+            const img = document.createElement('img');
+            img.src = currentUser.profileImage;
+            img.alt = 'Profile';
+            img.className = 'profile-image';
+            elements.profileDefault.style.backgroundImage = `url('${currentUser.profileImage}')`;
+            elements.profileDefault.style.backgroundSize = "cover";
+            elements.profileInitial.style.display = 'none';
+            document.getElementById('deletePhotoBtn').style.display = 'block';
+        } else {
+            const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'G';
+            elements.profileInitial.textContent = initial;
+            elements.profilePicture.style.display = 'none';
+            document.getElementById('deletePhotoBtn').style.display = 'none';
+        }
+    }
+
+    function updateUserInfoDisplay() {
+        if (!currentUser) return;
+        
+        elements.nameValue.textContent = currentUser.name || 'Guest';
+        elements.nameInput.value = currentUser.name || 'Guest';
+        elements.emailValue.textContent = currentUser.email || 'guest@gmail.com';
+        
+        if (currentUser.createdAt) {
+            const date = new Date(currentUser.createdAt);
+            elements.accountCreatedValue.textContent = date.toLocaleDateString('en-US', {
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric'
+            });
+        }
+    }
+
+    // Event Handlers
+    function setupEventListeners() {
+        // Profile image handling
+        elements.profileImageUpload?.addEventListener('change', handleImageUpload);
+        
+        // Name editing
+        elements.editBtn?.addEventListener('click', toggleNameEdit);
+        elements.nameInput?.addEventListener('blur', saveNameChange);
+        elements.nameInput?.addEventListener('keypress', e => e.key === 'Enter' && saveNameChange());
+        elements.saveBtn?.addEventListener('click', handleSaveChanges);
+        
+        // Image editor
+        elements.rotateLeftBtn?.addEventListener('click', () => cropper?.rotate(-90));
+        elements.rotateRightBtn?.addEventListener('click', () => cropper?.rotate(90));
+        elements.zoomInBtn?.addEventListener('click', () => cropper?.zoom(0.1));
+        elements.zoomOutBtn?.addEventListener('click', () => cropper?.zoom(-0.1));
+        elements.cancelCropBtn?.addEventListener('click', closeImageEditor);
+        elements.closeModalBtn?.addEventListener('click', closeImageEditor);
+        elements.saveCropBtn?.addEventListener('click', saveCroppedImage);
+        
+        // Post management
+        elements.postTypeSelect?.addEventListener('change', toggleEventFields);
+        elements.postForm?.addEventListener('submit', handlePostSubmit);
+    }
+
+    function setupTabs() {
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                document.getElementById(btn.getAttribute('data-tab')).classList.add('active');
+                
+                if (btn.getAttribute('data-tab') === 'manage') {
+                    updatePostsList();
+                }
+            });
+        });
+    }
+
+    // Profile Photo Functions
+    function handleImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        if (!file.type.match('image.*')) {
+            showNotification('Please select an image file (JPEG, PNG, GIF)', true);
+            return;
+        }
+        
+        if (file.size > 2 * 1024 * 1024) {
+            showNotification('Image size should be less than 2MB', true);
+            return;
+        }
+        
+        const reader = new FileReader();
+        
+        reader.onload = event => {
+            elements.imageToCrop.src = event.target.result;
+            elements.imageEditorModal.style.display = 'block';
+            
+            elements.imageToCrop.onload = () => {
+                if (cropper) cropper.destroy();
+                
+                cropper = new Cropper(elements.imageToCrop, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCropArea: 0.8,
+                    responsive: true
+                });
+            };
+        };
+        
+        reader.onerror = () => showNotification('Error reading image file', true);
+        reader.readAsDataURL(file);
+    }
+
+    function saveCroppedImage() {
+        if (!cropper || !currentUser) {
+            closeImageEditor();
+            return;
+        }
+        
+        const canvas = cropper.getCroppedCanvas({
+            width: 400,
+            height: 400,
+            fillColor: '#fff'
+        });
+        
+        if (!canvas) {
+            showNotification('Error cropping image', true);
+            return;
+        }
+        
+        canvas.toBlob(blob => {
+            if (!blob) {
+                showNotification('Error processing image', true);
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = event => {
+                currentUser.profileImage = event.target.result;
+                updateProfileDisplay();
+                updateUserInStorage();
+                showNotification('Profile picture updated successfully!');
+                closeImageEditor();
+            };
+            reader.readAsDataURL(blob);
+        }, 'image/jpeg', 0.92);
+    }
+
+    function closeImageEditor() {
+        elements.imageEditorModal.style.display = 'none';
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+        // Reset file input to allow selecting the same file again
+        elements.profileImageUpload.value = '';
+    }
+
+    function toggleNameEdit() {
+        elements.nameValue.style.display = 'none';
+        elements.nameInput.style.display = 'block';
+        elements.nameInput.focus();
+    }
+
+    function saveNameChange() {
+        const newName = elements.nameInput.value.trim();
+        
+        if (newName && newName !== elements.nameValue.textContent) {
+            elements.nameValue.textContent = newName;
+            
+            if (currentUser) {
+                currentUser.name = newName;
+                updateProfileDisplay(); // Update initial if needed
+            }
+        }
+        
+        elements.nameValue.style.display = 'block';
+        elements.nameInput.style.display = 'none';
+    }
+
+    function handleSaveChanges() {
+        updateUserInStorage();
+        showNotification('Changes saved successfully!');
+        setTimeout(() => {
+            window.location.href = '../index.html';
+        }, 1000);
+    }
     
     postTypeSelect.addEventListener('change', () => {
         if (postTypeSelect.value === 'event') {
@@ -180,6 +422,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load posts when manage tab is shown
     document.querySelector('[data-tab="manage"]').addEventListener('click', updatePostsList);
 
+    // Make functions available globally
+    window.editPost = function(postId) {
+        // Implement edit functionality
+        showNotification('Edit functionality coming soon!');
+    };
+
+    window.deletePost = function(postId) {
+        if (confirm('Are you sure you want to delete this post?')) {
+            const POSTS_KEY = 'compass_aeped_posts';
+            const posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
+            const updatedPosts = posts.filter(post => post.id !== postId);
+            
+            localStorage.setItem(POSTS_KEY, JSON.stringify(updatedPosts));
+            updatePostsList();
+            showNotification('Post deleted successfully!');
+        }
+    };
+
     // Helper function to show notifications
     function showNotification(message, isError = false) {
         const notification = document.getElementById('successNotification');
@@ -200,270 +460,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 
-    // Make functions available globally
-    window.editPost = function(postId) {
-        // Implement edit functionality
-        showNotification('Edit functionality coming soon!');
-    };
-
-    window.deletePost = function(postId) {
-        if (confirm('Are you sure you want to delete this post?')) {
-            const POSTS_KEY = 'compass_aeped_posts';
-            const posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
-            const updatedPosts = posts.filter(post => post.id !== postId);
-            
-            localStorage.setItem(POSTS_KEY, JSON.stringify(updatedPosts));
-            updatePostsList();
-            showNotification('Post deleted successfully!');
-        }
-    };
-
-    // Current user data
-    let currentUser = null;
-
-    // Initialize
-    initProfile();
-
-    function initProfile() {
-        loadUserData();
-        setupEventListeners();
-    }
-
-    function loadUserData() {
-        const sessionData = getSessionData();
+    // Forgot password modal
+    deletePhotoBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        confirmationModal.style.display = 'flex';
         
-        if (sessionData) {
-            console.log('User found:', currentUser);
-            currentUser = getUserFromStorage(sessionData.userId);
-            
-            if (currentUser) {
-                console.log('User found:', currentUser);
-                if (currentUser.accountType === 'admin') {
-                    console.log('Please:', currentUser);
-                    document.querySelector('.admin-tab').style.display = 'block';
-                }
-                updateProfileDisplay();
-                updateUserInfoDisplay();
-            } 
-        } 
-    }
+    });
 
-    function getSessionData() {
-        const SESSION_KEY = 'compass_aeped_session';
-        const sessionData = localStorage.getItem(SESSION_KEY);
-        return sessionData ? JSON.parse(sessionData) : null;
-    }
+    closeModal.addEventListener('click', function() {
+        confirmationModal.style.display = 'none';
+    });
 
-    function getUserFromStorage(userId) {
-        const USERS_KEY = 'compass_aeped_users';
-        const users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-        return users.find(user => user.id === userId);
-    }
-
-    // Update profile display to handle delete button visibility
-    function updateProfileDisplay() {
-        if (!currentUser) return;
-
-        // Clear previous image if exists
-        const existingImg = elements.profilePicture.querySelector('img');
-        if (existingImg) {
-            elements.profilePicture.removeChild(existingImg);
-        }
-
-        if (currentUser.profileImage) {
-            const img = document.createElement('img');
-            img.src = currentUser.profileImage;
-            img.alt = 'Profile';
-            img.className = 'profile-image';
-            elements.profileDefault.style.backgroundImage = `url('${currentUser.profileImage}')`;
-            elements.profileDefault.style.backgroundSize = "cover";
-            elements.profileInitial.style.display = 'none';
-            document.getElementById('deletePhotoBtn').style.display = 'block';
-        } else {
-            const initial = currentUser.name ? currentUser.name.charAt(0).toUpperCase() : 'G';
-            elements.profileInitial.textContent = initial;
-            elements.profilePicture.style.display = 'none';
-            document.getElementById('deletePhotoBtn').style.display = 'none';
-        }
-    }
-
-    function updateUserInfoDisplay() {
-        if (!currentUser) return;
-        
-        if (elements.nameValue && elements.nameInput) {
-            elements.nameValue.textContent = currentUser.name || 'Guest';
-            elements.nameInput.value = currentUser.name || 'Guest';
-        }
-        
-        if (elements.emailValue) {
-            elements.emailValue.textContent = currentUser.email || 'guest@gmail.com';
-        }
-        
-        if (elements.accountCreatedValue) {
-            const dateValue = currentUser.createdAt;
-            const date = new Date(dateValue);
-            const options = {year: 'numeric', month: 'long', day: 'numeric',
-                // hour: '2-digit',
-                // minute: '2-digit',
-                // second: '2-digit',
-                // timeZoneName: 'short'
-                };
-            elements.accountCreatedValue.textContent = date.toLocaleString('en-US', options) || '';
-        }
-    }
-
-    function setupEventListeners() {
-        // Profile image upload
-        if (elements.profileImageUpload) {
-            elements.profileImageUpload.addEventListener('change', handleImageUpload);
-        }
-
-        // Name editing
-        if (elements.editBtn) {
-            elements.editBtn.addEventListener('click', toggleNameEdit);
-        }
-
-        if (elements.nameInput) {
-            elements.nameInput.addEventListener('blur', saveNameChange);
-            elements.nameInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') saveNameChange();
-            });
-        }
-
-        // Save changes
-        if (elements.saveBtn) {
-            elements.saveBtn.addEventListener('click', handleSaveChanges);
-        }
-    }
-
-    function handleImageUpload(e) {
-        const file = e.target.files[0];
-        
-        if (!file) {
-            showNotification('Please select an image file (JPEG, PNG, GIF)', true);
-            return;
-        }
-
-        // Validate file type
-        if (!file.type.match('image.*')) {
-            showNotification('Please select an image file (JPEG, PNG, GIF)', true);
-            return;
-        }
-
-        // Validate file size (2MB max)
-        if (file.size > 2 * 1024 * 1024) {
-            showNotification('Image size should be less than 25MB', true);
-            return;
-        }
-
-        const reader = new FileReader();
-        
-        reader.onload = function(event) {
-            
-            // Update current user
-            if (currentUser) {
-                currentUser.profileImage = event.target.result;
-                updateProfileDisplay();
-                showNotification('Profile picture updated successfully!');
-            }
-            
-            // Reset input to allow same file to be selected again
-            elements.profileImageUpload.value = '';
-        };
-        
-        reader.onerror = function() {
-            showNotification('Error reading image file', true);
-        };
-        
-        reader.readAsDataURL(file);
-    }
-
-    function toggleNameEdit() {
-        elements.nameValue.style.display = 'none';
-        elements.nameInput.style.display = 'block';
-        elements.nameInput.focus();
-    }
-
-    function saveNameChange() {
-        const newName = elements.nameInput.value.trim();
-        
-        if (newName && newName !== elements.nameValue.textContent) {
-            elements.nameValue.textContent = newName;
-            
-            if (currentUser) {
-                currentUser.name = newName;
-                updateProfileDisplay(); // Update initial if needed
-            }
-        }
-        
-        elements.nameValue.style.display = 'block';
-        elements.nameInput.style.display = 'none';
-    }
-
-    function handleSaveChanges() {
-        updateUserInStorage();
-        showNotification('Changes saved successfully!');
-        setTimeout(() => {
-            window.location.href = '../index.html';
-        }, 1000);
-    }
-
-    function updateUserInStorage() {
-        if (!currentUser) return;
-        
-        try {
-            const USERS_KEY = 'compass_aeped_users';
-            let users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
-            
-            const index = users.findIndex(user => user.id === currentUser.id);
-            if (index !== -1) {
-                users[index] = currentUser;
-            } else {
-                users.push(currentUser);
-            }
-            
-            localStorage.setItem(USERS_KEY, JSON.stringify(users));
-            
-            // Update session data if needed
-            updateSessionData();
-        } catch (e) {
-            showNotification('Error updating user storage', true);
-        }
-    }
-
-    function updateSessionData() {
-        const SESSION_KEY = 'compass_aeped_session';
-        const session = getSessionData();
-        
-        if (session) {
-            session.name = currentUser.name;
-            session.profilePicture = currentUser.profilePicture;
-            localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-        }
-    }
-
-    // Show notification
-    function showNotification(message, isError = false) {
-        // Reset any existing notifications
-        successNotification.classList.remove('show', 'error');
-        
-        // Force reflow to ensure animation restarts
-        void successNotification.offsetWidth;
-        
-        // Set message and style
-        notificationMessage.textContent = message;
-        successNotification.classList.add('show');
-        if (isError) {
-            successNotification.classList.add('error');
-        }
-        
-        // Auto-hide after 3 seconds
-        setTimeout(() => {
-            successNotification.classList.remove('show');
-        }, 3000);
-    }
-
-    // Switch between login and signup forms
     modalConfirmBtn.addEventListener('click', function() {
         if (currentUser) {
             currentUser.profileImage = null;
