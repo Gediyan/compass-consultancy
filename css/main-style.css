@@ -19,6 +19,8 @@
     --paragraph-text-bg:#d2cece;
     --cards-bg-color: #fff;
     --read-more-btn-color: #3498db;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
     --footer-header1-color: rgb(130, 212, 236);
     --footer-section-bg-color:#2c3e50;
     --footer-paragraph-color:#ecf0f1;
@@ -49,6 +51,7 @@
     --footer-paragraph-color:#cfcfcf;
     --footer-social-link-bg-color:rgba(255, 255, 255, 0.1);
     --footer-link-color:#bdc3c7;
+    --shadow: 0 4px 6px rgba(222, 221, 221, 0.1);
 }
 
 body{
@@ -60,111 +63,57 @@ body{
 }
 
 header {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
     background-color: var(--header-bg);
     color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .logo-container {
     display: flex;
     align-items: center;
     gap: 1rem;
-    flex: 1;
-    min-width: 200px;
 }
 
 .logo {
-    height: 40px;
+    height: 50px;
     width: auto;
 }
 
-/* Mobile menu toggle */
+.company-name h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
 .menu-toggle {
-    display: none;
     background: none;
     border: none;
     color: white;
-    font-size: 1rem;
+    font-size: 1.5rem;
     cursor: pointer;
-    padding: 0.5rem;
+    display: none;
 }
 
-@media (max-width: 892px) {
-    header {
-        padding: 0.5rem;
-    }
-
-    .logo {
-        height: 30px;
-    }
-    
-    .company-name h1{
-        font-size: 0.8rem;
-    }
-
-    
-    .menu-toggle {
-        display: block;
-    }
-    
-    nav {
-        display: none;
-        width: 100%;
-        order: 3;
-        margin-top: 1rem;
-    }
-    
-    nav.active {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    nav a {
-        padding: 0.8rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-}
-
-@media (min-width: 892px) {
-    nav {
-        display: flex;
-        gap: 1.5rem;
-    }
-    
-    .company-name h1{
-        font-size: 1rem;
-    }
-}
-
-@media (min-width: 950px) {
-    
-    .company-name h1{
-        font-size: 1.5rem;
-    }
+nav {
+    display: flex;
+    gap: 1.5rem;
 }
 
 nav a {
     color: white;
     text-decoration: none;
     font-weight: 500;
-    padding: 0.5rem 0;
-    position: relative;
+    transition: var(--transition);
 }
 
-nav a:hover::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: white;
+nav a:hover {
+    color: var(--secondary-color);
 }
 
 .header-actions {
@@ -179,13 +128,30 @@ nav a:hover::after {
     color: white;
     font-size: 1.2rem;
     cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: background-color 0.2s;
 }
 
-.theme-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+/* Responsive Design */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    nav {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background-color: var(--primary-color);
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+        gap: 1rem;
+        display: none;
+    }
+
+    nav.active {
+        display: flex;
+    }
 }
 
 .profile-initial {
@@ -195,33 +161,38 @@ nav a:hover::after {
 
 
 /* Profile Dropdown Styles */
+
 .profile-dropdown {
     position: relative;
-    display: inline-block;
 }
 
 .dropdown-btn {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-color: rgb(255, 255, 255);
+    color: white;
+    border: none;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    font-weight: bold;
 }
 
 .dropdown-content {
-    display: none;
     position: absolute;
     right: 0;
+    top: 50px;
     background-color: var(--dropdown-bg);
-    min-width: 240px;
-    box-shadow: 0 8px 16px var(--box-shadow-color);
+    min-width: 250px;
+    box-shadow: var(--box-shadow-color);
     border-radius: 8px;
-    z-index: 1000;
-    padding: 10px 0;
-    margin-top: 10px;
+    padding: 1rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 100;
 }
 
 .dropdown-content.show {
@@ -236,9 +207,11 @@ nav a:hover::after {
 
 .dropdown-profile-info {
     display: flex;
+    gap: 1rem;
     align-items: center;
-    padding: 10px 10px;
-    margin-bottom: 10px;
+    padding-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
 }
 
 .dropdown-profile-icon img {
@@ -249,25 +222,27 @@ nav a:hover::after {
 }
 
 .dropdown-profile-icon {
-    width: 36px;
-    height: 36px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background-color: var(--primary-white-color);
+    color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 12px;
+    font-size: 1.5rem;
     font-weight: bold;
-    color: var(--primary-color);
 }
 
 .dropdown-content a {
     color: var(--primary-white-color);
-    padding: 10px 16px;
     text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 4px;
     display: flex;
     align-items: center;
-    transition: background-color 0.2s;
+    gap: 0.5rem;
+    transition: var(--transition);
 }
 
 .dropdown-content a:hover {
@@ -518,6 +493,10 @@ main {
     color: var(--primary-color);
     border-bottom: 2px solid var(--primary-color);
     padding-bottom: 0.5rem;
+}
+
+.section p{
+    color: var(--paragraph-text-color);
 }
 
 @media (min-width: 768px) {
@@ -834,8 +813,6 @@ main {
 
 /* Why choos us */
 .why-choose-container {
-    /* grid-template-columns: 1fr;
-    max-width: 600px; */
     margin-left: auto;
     margin-right: auto;
 }
@@ -877,10 +854,151 @@ main {
 }
 
 /*About Page Style*/
-.map-section {
-    background-color: var(--primary-color);
-    height: 400px;
-    color: black;
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/about-hero.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 5rem 2rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    border-radius: 8px;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.card {
+    background-color: var(--cards-bg-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card h3 i {
+    color: var(--secondary-color);
+}
+
+.card p {
+    color: var(--paragraph-text-color);
+}
+
+.card ul {
+    color: var(--paragraph-text-color);
+}
+
+/* Map Section */
+.map-container {
+    position: relative;
+    height: 600px;
+    margin: 2rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.ethiopia-map {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.location-pin {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: var(--accent-color);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    animation: bounce 1.5s infinite;
+    cursor: pointer;
+}
+
+.location-pin::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    border-radius: 50%;
+    top: 25%;
+    left: 25%;
+}
+
+.location-info {
+    position: absolute;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    max-width: 250px;
+    display: none;
+    z-index: 10;
+}
+
+.location-info h4 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+/* Animation */
+@keyframes bounce {
+    0% { transform: rotate(-45deg) translateY(0); }
+    50% { transform: rotate(-45deg) translateY(-10px); }
+    100% { transform: rotate(-45deg) translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease forwards;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .map-container {
+        height: 400px;
+    }
 }
 /*About Page Style ends here*/
 
