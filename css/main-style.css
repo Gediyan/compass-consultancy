@@ -888,6 +888,12 @@ main {
     gap: 2rem;
 }
 
+.team-leaders{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
 .card {
     background-color: var(--cards-bg-color);
     padding: 1.5rem;
