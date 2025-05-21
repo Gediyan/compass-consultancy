@@ -1,81 +1,206 @@
 <!DOCTYPE html>
-<html>
-    <head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compass AEPED</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main-style.css">
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="../images/logo-700px-01.png" alt="Company Logo" class="logo">
+            <div class="company-name"><h1>Compass AEPED</h1></div>
+        </div>
         
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Compass AEPED</title>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <link rel="stylesheet" href="../css/main-style.css">
-    </head>
-    <body>
-        <header>
-            <div class="logo-container">
-                <img src="../images/logo-700px-01.png" alt="Company Logo" class="logo">
-                <div class="company-name"><h1>Compass AEPED</h1></div>
-            </div>
-            
-            <button class="menu-toggle" id="menuToggle">☰</button>
-            
-            <nav id="mainNav">
-                <a href="../index.html">Home</a>
-                <a href="team.html">News & Events</a>
-                <a href="about.html">About</a>
-                <a href="services.html">Services</a>
-                <a href="projects.html">Projects</a>
-                <a href="team.html">Team</a>
-                <a href="contact.html">Contact</a>
-            </nav>
-            
-            <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle">🌓</button>
-            
-                <!-- Profile Dropdown -->
-                <div class="profile-dropdown">
-                    <button class="dropdown-btn" id="profileDropdownBtn"></button>
-                    <div class="dropdown-content" id="profileDropdown">
-                        <div class="dropdown-profile-info">
-                            <div class="dropdown-profile-icon" id="dropdownProfileIcon">G</div>
-                            <div>
-                                <div id="dropdownUserName">Guest</div>
-                                <div id="dropdownUserEmail"></div>
-                            </div>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        
+        <nav id="mainNav">
+            <a href="../index.html">Home</a>
+            <a href="team.html">News & Events</a>
+            <a href="about.html">About</a>
+            <a href="services.html">Services</a>
+            <a href="projects.html">Projects</a>
+            <a href="team.html">Team</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle">🌓</button>
+        
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown">
+                <button class="dropdown-btn" id="profileDropdownBtn"></button>
+                <div class="dropdown-content" id="profileDropdown">
+                    <div class="dropdown-profile-info">
+                        <div class="dropdown-profile-icon" id="dropdownProfileIcon">G</div>
+                        <div>
+                            <div id="dropdownUserName">Guest</div>
+                            <div id="dropdownUserEmail"></div>
                         </div>
-                        <a href="#" id="profileAction"><i class="material-icons">account_circle</i> Profile</a>
-                        <a href="#"><i class="material-icons">settings</i> Settings</a>
-                        <a href="#"><i class="material-icons">favorite</i> Favorites</a>
-                        <div class="divider"></div>
-                        <a href="#" id="accountAction"><i class="material-icons">account_circle</i> Sign In</a>
                     </div>
+                    <a href="#" id="profileAction"><i class="material-icons">account_circle</i> Profile</a>
+                    <a href="#"><i class="material-icons">settings</i> Settings</a>
+                    <a href="#"><i class="material-icons">favorite</i> Favorites</a>
+                    <div class="divider"></div>
+                    <a href="#" id="accountAction"><i class="material-icons">account_circle</i> Sign In</a>
                 </div>
             </div>
-        </header>
-        <section class="map-section">
-          <h1>About</h1>
-        </section>
-        <main>
-            <h1>About</h1>
-            <div class="card about-us">
-                aaaa
-            </div>
-            <div>b</div>
-            <div>c</div>
-        </main>
-        
-        <div id="footer-container"></div>
+        </div>
+    </header>
 
-        <script>
-            fetch('../footer.html')
-              .then(response => response.text())
-              .then(html => {
-                document.getElementById('footer-container').innerHTML = html;
-              });
-          </script>
-        <!-- Add this in your head section or before the closing body tag -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        <!-- At the bottom of your HTML, before </body> -->
-        <script src="../js/main-scripts.js"></script>
-    </body>
+    <main class="container">
+        <section class="hero">
+            <h1>Our Story, Values, and Vision</h1>
+            <p>Compass AEPED is dedicated to creating sustainable solutions that empower communities and transform lives across Ethiopia.</p>
+        </section>
+
+        <section class="section fade-in">
+            <h2 class="section-title">ESTABLISHMENT</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3><i class="material-icons">business</i> Our Foundation</h3>
+                    <p>Compass AEPED was established in 2010 with a mission to address critical development challenges in Ethiopia. Founded by a group of passionate development professionals, we've grown from a small initiative to a nationally recognized organization.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="material-icons">assignment</i> Company Details</h3>
+                    <p><strong>Legal Name:</strong> Compass Agricultural and Environmental Protection for Economic Development<br>
+                    <strong>Registration:</strong> FDRE Agency for Civil Society Organization #1234<br>
+                    <strong>Tax ID:</strong> 0000123456789<br>
+                    <strong>Founded:</strong> January 15, 2010</p>
+                </div>
+                <div class="card">
+                    <h3><i class="material-icons">fingerprint</i> Identification</h3>
+                    <p>We are a non-profit, non-governmental organization committed to sustainable development. Our work is guided by Ethiopian laws and international best practices in the development sector.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section fade-in">
+            <h2 class="section-title">OUR FOOTPRINT</h2>
+            <p>With regional offices and project sites across Ethiopia, our impact reaches every corner of the country:</p>
+            
+            <div class="map-container">
+                <!-- Ethiopia SVG Map -->
+                <svg class="ethiopia-map" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Simplified Ethiopia map with regional boundaries -->
+                    <path id="ET-HA" title="Harari People" d="M494.01,310.19L494.92,309.65L495.36,308.61L495.05,307.64L494.49,306.68L494.16,305.68L494.29,305L494.92,303.85L495.03,303.22L495.05,302.64L495.25,301.25L495.24,300.78L494.43,299.6L493.29,299.71L492.04,300.33L490.86,300.73L489.46,300.36L488.5,299.73L487.61,299.66L486.43,300.97L484.82,303.72L484.29,305.17L484.01,306.79L484.15,307.97L484.96,308.14L486.06,307.91L487.09,307.86L487.56,308.12L488.36,308.89L488.79,309.12L489.52,309.03L490.26,308.69L490.98,308.43L491.69,308.6L493.19,309.93L494.01,310.19z"/>
+                    <path id="ET-DD" title="Dire Dawa" d="M498.93,281.47L496.88,279.19L494.31,278.22L491.58,278.55L489.08,280.19L482.91,286.41L481.92,286.61L480.52,286.08L476.43,283.84L475,283.44L473.64,283.76L471.08,285.41L470.01,285.38L468.12,285.81L466.93,288.79L466.46,292.42L466.74,294.8L468.4,294.04L469.92,294.14L471.45,294.38L473.11,294.04L473.79,293.97L475.28,294.51L475.99,294.67L476.62,294.61L477.2,294.45L480.23,293.1L481.67,293.14L484.84,294.74L485.76,293.55L487.29,292.35L488.61,291.11L488.84,289.83L487.83,288.18L487.61,287.51L487.88,287.04L488.62,286.53L490.2,285.65L491.5,285.17L494.21,284.94L495.11,284.51L495.92,283.68L497.92,282.04L498.93,281.47z"/>
+                    <path id="ET-SO" title="Somali" d="M347.78,620.47L349.48,620.38L350.37,618.98L351.54,615.42L352.91,613.77L356.41,610.57L360.6,606.74L361.62,605.39L362.5,603.75L363.99,599.81L365.03,597.02L366.11,595.7L370.67,593.49L375.26,591.28L380.43,588.78L382.84,587.57L383.08,587.26L383.04,586.93L383.09,586.72L383.61,586.77L383.76,586.86L383.92,586.9L384.07,586.89L389.47,585.01L393.67,583.54L393.96,583.27L394.27,582.41L394.58,582.13L401.46,579.47L407.09,577.31L411.52,575.6L414.88,573.39L416.05,574.94L419.26,577.13L420.57,578.62L421.47,580.27L422.02,580.82L422.99,581.31L425.53,582.18L426.39,582.69L427.78,583.98L431.2,588.78L433.57,590.62L436.15,591.67L438.94,
+                    592L444.38,591.69L450.36,591.34L453.03,590.59L454.44,590.51L458.71,589.46L459.56,589.52L460.97,590.1L461.73,590.24L462.5,590.07L464.76,588.78L467.29,589.6L469.64,590.85L472.01,591.31L474.63,589.83L475.34,588.78L476.08,588.18L476.36,587.52L476.31,585.88L476.68,584.84L477.62,584.01L481.39,581.69L484.4,579.29L486.24,578.36L487.97,577.92L492.58,577.88L496.6,577.83L502.87,576.77L511.04,575.37L519.05,574L522.84,573.35L525.07,572.46L527.06,571.15L527.12,571.08L528.69,569.32L529.5,567.6L530.44,563.86L531.16,562.06L531.51,561.49L531.93,560.97L535.93,557.68L540.39,554L546.44,551.12L552.53,548.23L558.52,545.38L562.2,543.63L568.17,542.25L572.22,541.32L577.48,
+                    540.11L579.07,539.74L583.72,538.09L585.67,537.62L588.88,537.81L591.64,537.97L594.4,538.13L597.17,538.29L599.92,538.45L602.69,538.61L605.45,538.77L608.21,538.93L610.97,539.09L613.73,539.25L616.5,539.41L619.13,539.57L619.25,539.57L622.02,539.73L624.78,539.89L627.54,540.05L630.3,540.21L633.06,540.37L635.95,540.54L637.49,539.89L641.71,535.33L641.72,535.33L644.75,532L650.47,525.73L656.19,519.46L661.9,513.18L667.62,506.91L668.24,506.23L673.34,500.64L679.05,494.36L684.77,488.08L690.48,481.81L693.73,478.46L696.98,475.11L700.23,471.76L703.48,468.41L706.74,465.05L709.99,461.7L713.23,458.35L716.48,455L718.78,452.77L719.9,451.68L720.99,450.63L723.37,448.31L725.76,445.99L726.85,444.94L729.44,442.43L732.03,439.91L734.61,437.4L737.2,434.89L739.8,432.37L742.38,429.85L744.97,427.34L747.56,424.82L750.14,422.3L752.74,419.78L755.33,417.27L757.91,414.75L760.51,412.23L763.1,409.72L765.69,407.2L768.28,404.68L770.87,402.16L773.46,399.64L775.55,397.6L776.04,397.12L778.63,394.6L781.23,392.08L783.82,389.56L786.4,387.04L788.99,384.52L791.58,382L794.17,379.48L796.77,376.96L799.36,374.44L791.76,374.44L782.03,374.44L775.08,374.44L766.69,374.44L758.4,374.44L750.81,374.44L746.07,374.44L742.95,372.87L739.58,371.74L735.12,370.22L730.64,368.71L726.17,367.19L721.69,365.68L717.22,364.17L712.75,362.65L708.27,361.14L703.8,359.63L699.33,358.12L694.86,356.6L690.39,355.09L685.91,353.57L681.45,352.06L676.97,350.55L672.5,349.03L668.02,347.52L668.02,347.52L663.32,345.96L658.63,344.4L653.93,342.84L649.23,341.29L644.53,339.72L639.84,338.17L635.14,336.61L630.45,335.05L625.75,333.49L621.06,331.93L616.35,330.37L611.66,328.81L606.96,327.25L602.27,325.69L597.57,324.13L592.87,322.57L588.6,321.15L586.51,319.92L582.79,316.52L576.01,310.3L571.26,305.95L567.16,302.19L566.4,301.77L565.54,301.83L564.24,302.33L563.25,302.23L559.15,299.75L556.37,298.08L555.69,297.23L555.46,296.22L555.32,294.41L555,293.44L553.79,290.99L553.3,290.51L552.23,289.79L551.72,289.32L551.36,288.74L550.86,287.56L550.34,287.03L549.9,286.81L548.46,286.44L547.3,285.15L546.58,283.02L545.03,274.4L544.02,272.66L542.02,271.76L539.6,271.33L537.65,270.54L536.17,269.05L535.15,266.54L534.71,264.76L534.03,262.99L533.08,261.39L531.81,260.09L526.7,256.76L525.32,255.08L523.82,251.78L522.82,248.3L522.14,243.36L521.56,241.88L520.74,240.81L517.8,237.93L516.38,235.68L515.31,233.25L515.24,232.1L515.94,231.59L517,231.27L518.04,230.68L518.67,229.78L519.07,228.71L519.58,226.5L520.08,225.19L520.71,224.32L522.62,222.77L523.45,221.88L523.79,221.05L524,220.15L524.42,219.07L525.24,218.21L527.47,217.27L528.37,216.51L528.77,215.59L529.31,213.38L529.98,212.22L529.14,211.93L528.61,212.39L528.08,213.04L527.29,213.33L526.59,213.22L525.27,212.83L523.07,212.61L521.88,212.35L520.98,211.58L519.63,208.62L518.61,208.24L517.34,208.19L513.56,207.29L513.16,207.32L511.11,207.48L506.32,208.94L502.78,211.29L501.63,211.83L500.83,211.79L500,211.51L498.79,211.31L497.05,211.9L496.6,211.95L495.64,211.91L495.19,211.96L493.29,212.82L492.56,213L491.56,212.99L488.82,212.36L485.88,212.68L484.45,213.16L482.8,214.84L481.33,215.21L478.31,215.34L477.95,215.49L477.71,215.76L477.43,215.96L476.96,215.89L476.64,215.63L476.51,215.3L476.32,215.03L470.03,213.74L468.7,213.24L468.31,212.72L468.3,212.73L467.74,212.98L466.84,213.54L465.83,213.94L464.3,214.09L443.04,213.94L441.88,214.32L440.81,215.42L440.38,216.8L440.18,218.28L439.86,219.67L438.35,222.16L434.23,226.22L432.39,228.47L431.91,229.55L431.8,230.58L432.11,232.83L432.08,234.33L424.44,263.8L424.45,265.15L424.91,266.52L425.79,267.3L428.14,268.25L428.63,268.99L427.85,270.19L421.12,276.05L418.2,279.34L413.46,286.7L412.67,288.72L411.7,292.63L411.22,296.38L411.51,296.23L411.72,296.16L411.96,296.16L412.31,296.23L415.28,296.24L417.9,295.72L420.38,295.7L422.92,297.2L423.42,298.3L422.7,299L421.37,299.37L420.04,299.45L417.65,298.93L416.69,299.07L416.49,300.15L416.81,301.51L417.3,302.63L418.09,303.42L419.29,303.8L420.41,303.75L421.73,303.47L424.07,302.64L425.75,301.54L426.31,301.25L426.88,301.13L427.48,301.12L428.06,301.04L428.56,300.76L429.53,299.91L430.57,299.2L431.68,298.61L434.24,297.67L435.47,297.09L436.62,296.37L437.77,295.47L439.19,293.94L439.77,293.56L441.85,293.06L444.13,293.16L448.53,294.03L452.6,295.48L453.75,295.56L454.71,295.06L456.58,293.44L457.65,292.88L458.88,292.58L460.25,292.62L461.44,292.62L462.14,293.36L462.88,294.44L464.04,295L465.39,295.1L466.74,294.8L466.46,292.42L466.93,288.79L468.12,285.81L470.01,285.38L471.08,285.41L473.64,283.76L475,283.44L476.43,283.84L480.52,286.08L481.92,286.61L482.91,286.41L489.08,280.19L491.58,278.55L494.31,278.22L496.88,279.19L498.93,281.47L501.05,282.12L501.72,284.43L501.38,289.72L503.07,290.05L505,292.02L506.72,294.5L510.16,301.4L510.3,301.86L510.39,303.09L510.53,303.93L512.31,309.03L512.91,310.1L513.89,311.08L514.1,311.51L513.99,312.95L514.1,313.91L515.07,316.05L518.34,321.28L522.04,325.36L523.11,326.33L525.45,328.04L526.42,328.98L526.87,331.14L525.16,336.16L525.73,338.58L528.44,341.41L529.03,342.49L529.33,343.81L529.47,345.27L529.42,346.74L528.95,349.36L528.87,350.8L528.55,352.05L527.64,352.77L522.93,353.99L521.81,354.58L520.39,356.63L518.26,364.46L516.37,366.68L514.57,366.31L512.96,364.36L511.68,361.83L510.73,359.01L509.17,350L507.59,347.73L504.55,346.46L498.17,345.24L497.45,344.56L495.36,340.71L491.79,341.68L486.76,345.97L484.55,348.26L482.48,350.9L482.09,352.19L482.4,355.33L482.32,356.75L481.67,358.2L478.69,362.41L477.61,365.03L477.1,368.03L476.37,381.05L476.53,382.41L477.03,383.69L477.98,385.27L478.27,387.62L477.37,390.64L474.93,396.12L474.18,398.32L474.03,399.35L474.1,400.56L474.58,403.42L475,405.02L475.5,405.85L491.81,412.26L492.18,412.68L492.86,416.04L492.61,418.59L491.86,421.02L490.8,422.68L490.59,423.11L490.54,423.72L490.6,424.9L490.5,425.6L490.24,426.19L489.51,427.3L488.87,428.98L488.75,428.95L488.56,429.23L488.2,429.51L487.93,429.92L488.05,430.6L486.27,431.56L485.71,432.34L485.51,433.73L485.39,434.03L484.9,434.98L484.78,435.56L484.98,436.75L484.9,437.29L484.42,437.96L484.97,438.96L484.45,440.2L482.96,442.39L482.05,446.13L481.51,447.15L480.81,448.2L480.65,448.63L480.39,449.12L480,449.69L478.62,451.11L478.24,451.39L477.11,452.01L475.89,452.5L474.64,452.79L473.36,452.83L472.54,451.07L470.46,451.29L468.16,452.61L466.68,454.2L464.87,457.79L464.05,458.77L462.04,460.14L461.21,460.9L460.61,462.12L451.94,453.25L450.86,452.43L449.64,451.78L448.34,451.35L445.66,450.92L439.04,447.41L436.52,445.68L433.97,444.49L431.39,444.62L430.1,445.38L428.98,446.44L426.34,449.99L423.23,453.02L422.38,454.17L420.29,457.93L419.93,459.12L420.37,461.7L420.21,463.92L420.51,465.15L420.94,466.38L421.21,467.5L421.27,468.87L421.21,470.25L421.02,471.62L420.69,472.95L420.31,475.71L421.04,485.91L420.95,490.17L421.08,491.72L421.46,493.16L423.34,497.72L419.46,500.59L411.71,504.9L403.32,512.5L402.36,512.93L400.97,513.18L400.59,513.42L400.13,513.62L397.65,513.62L393.69,514.53L391.48,514.73L389.83,515.09L388.46,515.04L388.01,515.09L385.31,516.05L384.17,516.19L380.33,515.43L378.42,514.64L376.91,513.77L376.1,513.81L374.96,514.66L369.89,521.97L366.63,530.41L364.62,534.35L363.52,538.72L361.95,543.1L360.94,548.94L360.77,552.08L360.44,553.5L352.08,572.91L350.1,575.38L349.75,576.08L348.63,580.78L346.93,585.31L346.68,586.42L346.79,587.48L347.47,589.7L345.93,593.02L338.64,605.49L336.92,607.7L334.84,609.05L330.32,611L325.97,613.37L326.34,613.78L325.72,614.33L330.52,616.54L332.59,616.98L334.62,616.93L336.69,615.74L337.03,615.54L337.73,615.58L337.98,616.14L337.49,617.12L344.14,617.32L345.78,617.87L346.24,618.47L346.53,619.19L346.93,619.91L347.78,620.47z"/>
+                    <!-- Regional boundaries would be more detailed in a real implementation -->
+                    <text x="400" y="420" text-anchor="middle" font-size="24" fill="#2c3e50">Ethiopia</text>
+                </svg>
+                
+                <!-- Location Pins -->
+                <div class="location-pin" style="top: 30%; left: 45%;" data-location="addis"></div>
+                <div class="location-pin" style="top: 50%; left: 55%;" data-location="hawassa"></div>
+                <div class="location-pin" style="top: 40%; left: 35%;" data-location="bahirdar"></div>
+                <div class="location-pin" style="top: 60%; left: 40%;" data-location="jimma"></div>
+                <div class="location-pin" style="top: 70%; left: 50%;" data-location="arbaminch"></div>
+                
+                <!-- Location Info Boxes -->
+                <div class="location-info" id="addis-info">
+                    <h4>Addis Ababa</h4>
+                    <p>Headquarters and main office. Our central hub for coordination and administration.</p>
+                </div>
+                <div class="location-info" id="hawassa-info">
+                    <h4>Hawassa</h4>
+                    <p>Regional office serving Southern Nations, Nationalities, and Peoples' Region.</p>
+                </div>
+                <div class="location-info" id="bahirdar-info">
+                    <h4>Bahir Dar</h4>
+                    <p>Amhara Regional office focusing on agricultural development projects.</p>
+                </div>
+                <div class="location-info" id="jimma-info">
+                    <h4>Jimma</h4>
+                    <p>Oromia Regional office specializing in environmental protection initiatives.</p>
+                </div>
+                <div class="location-info" id="arbaminch-info">
+                    <h4>Arba Minch</h4>
+                    <p>Field office managing our lake conservation and fisheries projects.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section fade-in">
+            <h2 class="section-title">OUR ETHOS</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3><i class="material-icons">star</i> Core Values</h3>
+                    <ul>
+                        <li><strong>Integrity:</strong> We maintain the highest ethical standards</li>
+                        <li><strong>Innovation:</strong> We embrace creative solutions</li>
+                        <li><strong>Impact:</strong> We measure success by lives changed</li>
+                        <li><strong>Inclusion:</strong> We value every voice and perspective</li>
+                        <li><strong>Sustainability:</strong> We build for future generations</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3><i class="material-icons">visibility</i> Vision</h3>
+                    <p>To be Ethiopia's leading catalyst for sustainable development, where communities thrive in harmony with their environment.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="material-icons">directions</i> Mission</h3>
+                    <p>To empower Ethiopian communities through integrated agricultural development, environmental protection, and economic empowerment programs that are sustainable, scalable, and transformative.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="material-icons">gavel</i> Commitment to Trustworthiness</h3>
+                    <p>We are accountable to our beneficiaries, partners, and donors. Our financials are independently audited annually, and we maintain transparency in all our operations through regular reporting and open communication.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section fade-in">
+            <h2 class="section-title">CORE PRINCIPLES</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3><i class="material-icons">eco</i> Sustainability</h3>
+                    <p>All our programs are designed with long-term viability in mind. We train local champions to continue initiatives and ensure environmental protection is central to all projects.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="material-icons">fingerprint</i> Identity</h3>
+                    <p>We respect and celebrate Ethiopia's diverse cultures. Our approaches are locally adapted while maintaining international standards of excellence.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="material-icons">group</i> Inclusivity</h3>
+                    <p>We actively engage women, youth, and marginalized groups in all aspects of our work, ensuring no one is left behind in Ethiopia's development journey.</p>
+                </div>
+                <div class="card">
+                    <h3><i class="material-icons">adjust</i> Flexibility</h3>
+                    <p>We remain adaptable to changing circumstances, whether environmental shifts, policy changes, or community needs, ensuring our interventions remain relevant and effective.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section fade-in">
+            <h2 class="section-title">CORE PRINCIPLES</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="dropdown-profile-icon" id="dropdownProfileIcon">G</div>
+                    <h3><i class="material-icons">eco</i> Sustainability</h3>
+                    <p>All our programs are designed with long-term viability in mind. We train local champions to continue initiatives and ensure environmental protection is central to all projects.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+        
+    <div id="footer-container"></div>
+
+    <script>
+        fetch('../footer.html')
+            .then(response => response.text())
+            .then(html => {
+            document.getElementById('footer-container').innerHTML = html;
+            });
+        </script>
+    <!-- Add this in your head section or before the closing body tag -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- At the bottom of your HTML, before </body> -->
+    <script src="../js/main-scripts.js"></script>
+</body>
 </html>
