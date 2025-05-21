@@ -572,3 +572,14 @@ body {
     font-size: 24px;
     cursor: pointer;
 }
+
+/* Danger Button */
+.btn--image-editor {
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.btn--image-editor:hover {
+    background-color: #e9ecef;
+}
