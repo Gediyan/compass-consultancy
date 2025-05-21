@@ -251,6 +251,20 @@ document.addEventListener('DOMContentLoaded', function() {
         themeToggle.textContent = isDark ? '🌞' : '🌓';
     });
 
+    // Location pin interactions
+    const locationPins = document.querySelectorAll('.location-pin');
+    locationPins.forEach(pin => {
+        pin.addEventListener('mouseover', function() {
+            const location = this.getAttribute('data-location');
+            document.getElementById(`${location}-info`).style.display = 'block';
+        });
+        
+        pin.addEventListener('mouseout', function() {
+            const location = this.getAttribute('data-location');
+            document.getElementById(`${location}-info`).style.display = 'none';
+        });
+    });
+
     // Mobile menu toggle functionality
     const menuToggle = document.getElementById('menuToggle');
     const mainNav = document.getElementById('mainNav');
