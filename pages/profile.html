@@ -230,6 +230,36 @@
             </div>
         </div>
 
+        <div id="imageEditorModal" class="image-modal">
+            <div class="image-modal-content">
+                <div class="image-modal-header">
+                    <h3>Edit Profile Picture</h3>
+                    <button class="image-close-modal">&times;</button>
+                </div>
+                <div class="image-modal-body">
+                    <div class="image-container">
+                        <img id="imageToCrop" src="" alt="Profile picture to crop">
+                    </div>
+                </div>
+                <div class="image-modal-footer">
+                    <button id="rotateLeftBtn" class="btn btn--secondary">
+                        <i class="material-icons">rotate_left</i>
+                    </button>
+                    <button id="rotateRightBtn" class="btn btn--secondary">
+                        <i class="material-icons">rotate_right</i>
+                    </button>
+                    <button id="zoomInBtn" class="btn btn--secondary">
+                        <i class="material-icons">zoom_in</i>
+                    </button>
+                    <button id="zoomOutBtn" class="btn btn--secondary">
+                        <i class="material-icons">zoom_out</i>
+                    </button>
+                    <button id="cancelCropBtn" class="btn btn--danger">Cancel</button>
+                    <button id="saveCropBtn" class="btn btn--primary">Save</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Confirmation Modal -->
         <div class="modal" id="confirmationModal">
             <div class="modal-content">
@@ -247,6 +277,9 @@
             <i class="material-icons" id="notification-icon">check_circle</i>
             <span id="notification-message"></span>
         </div>
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
         <script src="../js/profile-script.js"></script>
     </body>
