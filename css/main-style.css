@@ -539,7 +539,7 @@ main {
     grid-column: 1 / -1;
     text-align: center;
     padding: 2rem;
-    color: var(--light-text);
+    color: var(--paragraph-text-color);
     font-style: italic;
 }
 
