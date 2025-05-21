@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Location pin interactions
-    const locationPins = document.querySelectorAll('.location-pin');
+    const locationPins = document.querySelectorAll('.footprint-pin');
     locationPins.forEach(pin => {
         pin.addEventListener('mouseover', function() {
             const location = this.getAttribute('data-location');

@@ -2,6 +2,7 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
 
 :root {
+    --accent-color: #e74c3c;
     --header-bg: rgb(0, 122, 160);
     --primary-color: rgb(0, 122, 160);
     --primary-white-color: white;
@@ -29,6 +30,7 @@
 }
 
 .dark-theme {
+    --accent-color: #e74c3c;
     --header-bg: rgb(0, 63, 82);
     --primary-color: #3498db;
     --primary-white-color: rgb(171, 168, 168);
@@ -970,7 +972,8 @@ main {
 }
 
 .card h3 i {
-    color: var(--text-gray);
+    color: var(--primary-color);
+    padding: 10px;
 }
 
 .card p {
@@ -998,7 +1001,25 @@ main {
     object-fit: contain;
 }
 
-.location-pin {
+#ET-HA {
+    stroke: var(--paragraph-text-color);
+    stroke-width: 2px;
+    fill: var(--primary-white-color);
+}
+
+#ET-DD {
+    stroke: var(--paragraph-text-color);
+    stroke-width: 2px;
+    fill: var(--primary-white-color);
+}
+
+#ET-SO {
+    stroke: var(--paragraph-text-color);
+    stroke-width: 2px;
+    fill: var(--primary-white-color);
+}
+
+.footprint-pin {
     position: absolute;
     width: 20px;
     height: 20px;
@@ -1009,12 +1030,12 @@ main {
     cursor: pointer;
 }
 
-.location-pin::after {
+.footprint-pin::after {
     content: '';
     position: absolute;
     width: 10px;
     height: 10px;
-    background-color: white;
+    background-color: var(--primary-white-color);
     border-radius: 50%;
     top: 25%;
     left: 25%;
@@ -1032,7 +1053,7 @@ main {
 }
 
 .location-info h4 {
-    color: var(--primary-color);
+    color: var(--header-bg);
     margin-bottom: 0.5rem;
 }
 
