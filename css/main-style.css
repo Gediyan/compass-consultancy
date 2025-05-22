@@ -7,7 +7,7 @@
     --primary-color: rgb(0, 122, 160);
     --primary-white-color: white;
     --body-bg-color:#f9f9f9;
-    --primary-dark: rgb(0, 106, 138);
+    --list-color: rgb(0, 106, 138);
     --text-gray:rgb(130, 128, 128);
     --get-in-touch-hover: #006080;
     --dropdown-bg: rgb(0, 122, 160);
@@ -35,7 +35,7 @@
     --primary-color: #3498db;
     --primary-white-color: rgb(171, 168, 168);
     --body-bg-color:#121212;
-    --primary-dark: rgb(203, 216, 219);
+    --list-color: rgb(203, 216, 219);
     --text-gray:rgb(188, 185, 185);
     --get-in-touch-hover: #006080;
     --dropdown-bg: rgb(39, 43, 44);
@@ -831,7 +831,7 @@ main {
 .service-card li {
     padding: 0.5rem 0;
     border-bottom: 1px solid #eee;
-    color: var(--primary-dark);
+    color: var(--list-color);
     display: block;  /* Ensures each li takes full width */
 }
 
@@ -1230,6 +1230,21 @@ main {
 
 .contact-link:hover {
     transform: translateY(-3px);
+}
+
+.contact-link a {
+    color: var(--footer-link-color);
+    font-size: 1rem;
+}
+
+.contact-link {
+    color: var(--footer-link-color);
+    font-size: 1rem;
+}
+
+#openStatus {
+    margin-left: 5px;
+    font-weight: bold;
 }
 
 /* Copyright */

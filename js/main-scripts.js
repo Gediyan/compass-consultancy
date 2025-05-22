@@ -412,3 +412,41 @@ function getTimeAgo(date) {
 
 // Call loadPosts when the page loads
 document.addEventListener('DOMContentLoaded', loadPosts);
+
+// Call office open status when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const openStatus = document.getElementById('openStatus');
+    
+    function checkBusinessHours() {
+        const now = new Date();
+        const day = now.getDay(); // 0 (Sun) to 6 (Sat)
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        
+        // Convert current time to minutes since midnight for easier comparison
+        const currentTime = hours * 60 + minutes;
+        
+        // Business hours in minutes since midnight
+        const openTime = 8 * 60 + 30;  // 8:30 AM
+        const closeTime = 17 * 60 + 30; // 5:30 PM
+        
+        // Check if it's a weekday (Monday=1 to Saturday=6) and within business hours
+        const isOpen = (day >= 1 && day <= 6) && 
+                      (currentTime >= openTime && currentTime < closeTime);
+        
+        // Update the status display
+        if (isOpen) {
+            openStatus.textContent = "(Open)";
+            openStatus.style.color = "green";
+        } else {
+            openStatus.textContent = "(Closed)";
+            openStatus.style.color = "red";
+        }
+    }
+    
+    // Check immediately
+    checkBusinessHours();
+    
+    // Update every minute to handle changes
+    setInterval(checkBusinessHours, 60000);
+});

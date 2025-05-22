@@ -40,6 +40,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Show/hide event fields based on post type
     const postTypeSelect = document.getElementById('postType');
     const eventFields = document.getElementById('eventFields');
+    
+    // Handle post submission
+    const postForm = document.getElementById('postForm');
 
 
     // State variables
@@ -173,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Post management
         elements.postTypeSelect?.addEventListener('change', toggleEventFields);
-        elements.postForm?.addEventListener('submit', handlePostSubmit);
     }
 
     function setupTabs() {
@@ -311,65 +313,105 @@ document.addEventListener('DOMContentLoaded', function() {
             eventFields.style.display = 'none';
         }
     });
-
-    // Handle post submission
-    // const postForm = document.getElementById('postForm');
     
-    // In your postForm submit handler:
+    // Submit handler (updated to handle both create and update)
     postForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        // Get form values
-        const title = document.getElementById('postTitle').value;
-        const type = document.getElementById('postType').value;
-        const description = document.getElementById('postDescription').value;
-        const date = document.getElementById('postDate').value;
-        const imageFile = document.getElementById('postImage').files[0];
-        let location = '';
-        
-        if (type === 'event') {
-            location = document.getElementById('eventLocation').value;
-        }
-
-        // Convert image to base64 if exists
-        let imageBase64 = 'https://via.placeholder.com/600x400'; // Default placeholder
-        // In your postForm submit handler:
-        if (imageFile) {
-            // Check image size (e.g., max 2MB)
-            if (imageFile.size > 2 * 1024 * 1024) {
-                showNotification('Image size should be less than 2MB', true);
+        try {
+            // Get form values
+            const title = document.getElementById('postTitle').value.trim();
+            const type = document.getElementById('postType').value;
+            const description = document.getElementById('postDescription').value.trim();
+            const date = document.getElementById('postDate').value;
+            const imageFile = document.getElementById('postImage').files[0];
+            const postId = this.dataset.editingId || Date.now().toString(); // Use existing ID if editing
+            let location = '';
+            
+            // Validate required fields
+            if (!title || !description || !date) {
+                showNotification('Please fill in all required fields', true);
                 return;
             }
-            imageBase64 = await convertToBase64(imageFile);
+
+            if (type === 'event') {
+                location = document.getElementById('eventLocation').value.trim();
+            }
+
+            // Handle image
+            let imageBase64 = document.getElementById('currentImage')?.value;
+
+            if (imageFile) {
+                // Check image size (e.g., max 2MB)
+                if (imageFile.size > 2 * 1024 * 1024) {
+                    showNotification('Image size should be less than 2MB', true);
+                    return;
+                } 
+                
+                // Check if image is valid type
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!validTypes.includes(imageFile.type)) {
+                    showNotification('Please upload a valid image (JPEG, PNG, GIF)', true);
+                    return;
+                }
+                
+                imageBase64 = await convertToBase64(imageFile);
+            } else if (imageBase64 === '') {
+                // Explicit empty string means user wants to remove the image
+                imageBase64 = 'https://via.placeholder.com/600x400';
+            } else if (!imageBase64) {
+                // No current image and no new image - use placeholder
+                imageBase64 = 'https://via.placeholder.com/600x400';
+            }
+            
+            // Create/update post object
+            const newPost = {
+                id: postId,
+                title,
+                type,
+                description,
+                date,
+                location, // This now contains the address
+                coordinates: selectedCoords, // Add this line to store coordinates
+                createdAt: this.dataset.editingId ? 
+                    JSON.parse(localStorage.getItem('compass_aeped_posts'))
+                        .find(p => p.id === postId).createdAt : 
+                    new Date().toISOString(),
+                image: imageBase64
+            };
+            
+            // Save to localStorage
+            const POSTS_KEY = 'compass_aeped_posts';
+            let posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
+            
+            if (this.dataset.editingId) {
+                // Update existing post
+                posts = posts.map(post => post.id === postId ? newPost : post);
+            } else {
+                // Add new post
+                posts.push(newPost);
+            }
+            
+            try {
+                localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
+            } catch (error) {
+                if (error.name === 'QuotaExceededError') {
+                    showNotification('Storage limit exceeded. Please reduce image size or remove some posts.', true);
+                    return;
+                }
+                throw error;
+            }
+            
+            // Show success message
+            showNotification(`Post ${this.dataset.editingId ? 'updated' : 'published'} successfully!`);
+            
+            // Reset form
+            resetForm();
+            updatePostsList();
+        } catch (error) {
+            console.error('Error submitting post:', error);
+            showNotification('An error occurred while saving the post', true);
         }
-        
-        // Create new post object
-        const newPost = {
-            id: Date.now().toString(),
-            title,
-            type,
-            description,
-            date,
-            location,
-            createdAt: new Date().toISOString(),
-            image: imageBase64 // Now storing base64 string
-        };
-        
-        // Save to localStorage
-        const POSTS_KEY = 'compass_aeped_posts';
-        const posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
-        posts.push(newPost);
-        localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
-        
-        // Show success message
-        showNotification('Post published successfully!');
-        
-        // Reset form
-        postForm.reset();
-        eventFields.style.display = 'none';
-        
-        // Update posts list
-        updatePostsList();
     });
 
     // Helper function to convert file to base64
@@ -380,6 +422,88 @@ document.addEventListener('DOMContentLoaded', function() {
             reader.onload = () => resolve(reader.result);
             reader.onerror = error => reject(error);
         });
+    }
+
+    // Function to get selected coordinate
+    const selectOnMapBtn = document.getElementById('selectOnMapBtn');
+    const eventLocationInput = document.getElementById('eventLocation');
+    
+    // Store selected coordinates for later use if needed
+    let selectedCoords = null;
+    
+    selectOnMapBtn.addEventListener('click', function() {
+        // First try to get current location to center the map
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    openMapWithCoords(position.coords.latitude, position.coords.longitude);
+                },
+                () => {
+                    // Default to Addis Ababa coordinates if geolocation fails
+                    openMapWithCoords(9.0054, 38.7636);
+                }
+            );
+        } else {
+            // Default to Addis Ababa coordinates if geolocation not supported
+            openMapWithCoords(9.0054, 38.7636);
+        }
+    });
+    
+    function openMapWithCoords(lat, lng) {
+        // Open Google Maps with a marker at the specified location
+        // Using the "mapaction" URL parameter to allow selecting a location
+        const mapsUrl = `https://www.google.com/maps/@?api=1&map_action=map&center=${lat},${lng}&zoom=15&basemap=terrain`;
+        
+        // Open in a new window
+        const mapWindow = window.open(mapsUrl, 'MapSelection', 'width=800,height=600');
+        
+        // Listen for message from the map window
+        window.addEventListener('message', function receiveMessage(event) {
+            // Check origin for security
+            if (event.origin !== "https://www.google.com") return;
+            
+            if (event.data && event.data.type === 'location_selected') {
+                const location = event.data.location;
+                selectedCoords = { lat: location.lat, lng: location.lng };
+                
+                // Get address using reverse geocoding
+                reverseGeocode(location.lat, location.lng)
+                    .then(address => {
+                        eventLocationInput.value = address;
+                        showNotification('Location selected successfully!');
+                    })
+                    .catch(error => {
+                        console.error('Geocoding error:', error);
+                        eventLocationInput.value = `${location.lat}, ${location.lng}`;
+                        showNotification('Location selected (could not get address)');
+                    });
+                
+                // Clean up event listener
+                window.removeEventListener('message', receiveMessage);
+                mapWindow.close();
+            }
+        });
+        
+        // Add a fallback in case the message doesn't come through
+        setTimeout(() => {
+            const fallbackAddress = prompt('Please copy and paste the address from Google Maps:');
+            if (fallbackAddress) {
+                eventLocationInput.value = fallbackAddress;
+                showNotification('Location added successfully!');
+            }
+        }, 3000);
+    }
+    
+    async function reverseGeocode(lat, lng) {
+        // Use Google Maps Geocoding API
+        const apiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace with your API key
+        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`);
+        const data = await response.json();
+        
+        if (data.status === 'OK' && data.results.length > 0) {
+            return data.results[0].formatted_address;
+        }
+        throw new Error('No address found');
     }
 
     // Function to update posts list
@@ -404,6 +528,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="post-info">
                     <h3>${post.title}</h3>
                     <p>${post.type === 'news' ? 'News' : 'Event'} • ${new Date(post.date).toLocaleDateString()}</p>
+                    <p class="post-description">${post.description}</p>
+                    ${post.location ? `<p class="post-location"><i class="fas fa-map-marker-alt"></i> ${post.location}</p>` : ''}
                     <div class="post-actions">
                         <button class="btn btn--secondary" onclick="editPost('${post.id}')">
                             <i class="material-icons">edit</i> Edit
@@ -419,15 +545,116 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Load posts when manage tab is shown
-    document.querySelector('[data-tab="manage"]').addEventListener('click', updatePostsList);
+    // Global variable to track current edit state
+    let currentlyEditing = null;
 
-    // Make functions available globally
+    // Edit post function
     window.editPost = function(postId) {
-        // Implement edit functionality
-        showNotification('Edit functionality coming soon!');
+        // Check if we're already editing this post
+        if (currentlyEditing === postId) {
+            showNotification('You are already editing this post');
+            return;
+        }
+
+        resetForm(); // Clear previous edit state
+
+        const POSTS_KEY = 'compass_aeped_posts';
+        const posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
+        const postToEdit = posts.find(post => post.id === postId);
+
+        if (!postToEdit) {
+            showNotification('Post not found', true);
+            return;
+        }
+
+        // Fill form with post data
+        document.getElementById('postTitle').value = postToEdit.title;
+        document.getElementById('postType').value = postToEdit.type;
+        document.getElementById('postDescription').value = postToEdit.description;
+        document.getElementById('postDate').value = postToEdit.date;
+
+        // Handle location field
+        const eventLocationField = document.getElementById('eventLocation');
+        if (postToEdit.type === 'event') {
+            eventLocationField.value = postToEdit.location || '';
+            document.getElementById('eventFields').style.display = 'block';
+        } else {
+            document.getElementById('eventFields').style.display = 'none';
+        }
+
+        // Store original image reference
+        const currentImageInput = document.createElement('input');
+        currentImageInput.type = 'hidden';
+        currentImageInput.id = 'currentImage';
+        currentImageInput.value = postToEdit.image;
+        postForm.appendChild(currentImageInput);
+
+        // Show image preview with remove option
+        const imagePreview = document.createElement('div');
+        imagePreview.className = 'image-preview';
+        imagePreview.innerHTML = `
+            <p>Current Image:</p>
+            <img src="${postToEdit.image}" alt="Current post image" style="max-width: 200px;">
+            <div style="margin-top: 8px;">
+                <button type="button" class="btn btn--small btn--danger" onclick="removeCurrentImage()">
+                    <i class="material-icons">delete</i> Remove Image
+                </button>
+            </div>
+        `;
+        document.getElementById('postImage').parentNode.appendChild(imagePreview);
+
+        // Set edit mode
+        postForm.dataset.editingId = postId;
+        currentlyEditing = postId;
+        document.querySelector('button[type="submit"]').textContent = 'Update Post';
+
+        // Scroll to form
+        postForm.scrollIntoView({ behavior: 'smooth' });
     };
 
+    // Function to remove current image during editing
+    window.removeCurrentImage = function() {
+        document.getElementById('currentImage').value = ''; // Empty value indicates removal
+        const imagePreview = document.querySelector('.image-preview');
+        if (imagePreview) {
+            imagePreview.innerHTML = `
+                <p style="color: red;">Image will be removed when updated</p>
+                <button type="button" class="btn btn--small" onclick="restoreCurrentImage()">
+                    <i class="material-icons">undo</i> Undo Removal
+                </button>
+            `;
+        }
+        document.getElementById('postImage').value = ''; // Clear file input
+        showNotification('Current image will be removed when you update the post');
+    };
+
+    // Add restore image function
+    window.restoreCurrentImage = function() {
+        const postId = postForm.dataset.editingId;
+        if (!postId) return;
+        
+        const POSTS_KEY = 'compass_aeped_posts';
+        const posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
+        const post = posts.find(p => p.id === postId);
+        
+        if (post && post.image) {
+            document.getElementById('currentImage').value = post.image;
+            const imagePreview = document.querySelector('.image-preview');
+            if (imagePreview) {
+                imagePreview.innerHTML = `
+                    <p>Current Image:</p>
+                    <img src="${post.image}" alt="Current post image" style="max-width: 200px;">
+                    <div style="margin-top: 8px;">
+                        <button type="button" class="btn btn--small btn--danger" onclick="removeCurrentImage()">
+                            <i class="material-icons">delete</i> Remove Image
+                        </button>
+                    </div>
+                `;
+            }
+        }
+    };
+
+    // Delete post function
     window.deletePost = function(postId) {
         if (confirm('Are you sure you want to delete this post?')) {
             const POSTS_KEY = 'compass_aeped_posts';
@@ -439,6 +666,29 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification('Post deleted successfully!');
         }
     };
+
+    // Reset form function
+    function resetForm() {
+        postForm.reset();
+        postForm.removeAttribute('data-editing-id');
+        currentlyEditing = null;
+        document.getElementById('eventFields').style.display = 'none';
+        document.querySelector('button[type="submit"]').textContent = 'Publish Post';
+        
+        // Remove current image input if exists
+        const currentImage = document.getElementById('currentImage');
+        if (currentImage) currentImage.remove();
+        
+        // Remove image preview if exists
+        const imagePreview = document.querySelector('.image-preview');
+        if (imagePreview) imagePreview.remove();
+    }
+
+    // Initialize post type toggle
+    document.getElementById('postType').addEventListener('change', function() {
+        document.getElementById('eventFields').style.display = 
+            this.value === 'event' ? 'block' : 'none';
+    });
 
     // Helper function to show notifications
     function showNotification(message, isError = false) {
@@ -484,6 +734,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     modalCancelBtn.addEventListener('click', function() {
         confirmationModal.style.display = 'none';
+    });
+    
+    // When user clicks outside modal
+    window.addEventListener('click', function(event) {
+        if (event.target == confirmationModal) {
+            confirmationModal.style.display = "none";
+        }
     });
     
 });
