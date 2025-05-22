@@ -67,17 +67,22 @@
         <script>
             // Load footer and dispatch event when done
             fetch('../footer.html')
-                .then(response => response.text())
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.text();
+                })
                 .then(html => {
-                    document.getElementById('footer-container').innerHTML = html;
-                    // Create and dispatch custom event
-                    const event = new CustomEvent('footerLoaded', {
-                        detail: { time: new Date() }
-                    });
-                    document.dispatchEvent(event);
+                    const container = document.getElementById('footer-container');
+                    if (!container) throw new Error('Footer container not found');
+                    container.innerHTML = html;
+                    document.dispatchEvent(new CustomEvent('footerLoaded'));
                 })
                 .catch(error => {
-                    console.error('Error loading footer:', error);
+                    console.error('Footer loading failed:', error);
+                    // Fallback content
+                    document.getElementById('footer-container').innerHTML = `
+                    <footer>© ${new Date().getFullYear()} Compass AEPED</footer>
+                    `;
                 });
           </script>
         <!-- Add this in your head section or before the closing body tag -->
