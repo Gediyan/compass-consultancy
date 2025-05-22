@@ -65,12 +65,21 @@
         <div id="footer-container"></div>
 
         <script>
+            // Load footer and dispatch event when done
             fetch('../footer.html')
-              .then(response => response.text())
-              .then(html => {
-                document.getElementById('footer-container').innerHTML = html;
-              });
-          </script>
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('footer-container').innerHTML = html;
+                    // Create and dispatch custom event
+                    const event = new CustomEvent('footerLoaded', {
+                        detail: { time: new Date() }
+                    });
+                    document.dispatchEvent(event);
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                });
+        </script>
         <!-- Add this in your head section or before the closing body tag -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <!-- At the bottom of your HTML, before </body> -->

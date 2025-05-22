@@ -1242,9 +1242,21 @@ main {
     font-size: 1rem;
 }
 
+/* Add this to your main CSS file */
 #openStatus {
-    margin-left: 5px;
+    margin-left: 8px;
     font-weight: bold;
+    font-size: 0.9em;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.05);
+}
+
+/* For the working hours line */
+.contact-items.working-hour {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 /* Copyright */
