@@ -498,11 +498,59 @@ body {
     transform: translateY(-5px);
 }
 
+.post-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
+    height: 180px;
+}
+
+.post-image-container:hover .post-image {
+    transform: scale(1.05);
+}
+
 .post-image {
     width: 100%;
-    height: 150px;
+    height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
+
+.image-count-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.post-meta {
+    display: flex;
+    gap: 10px;
+    margin: 8px 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.post-type {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.post-type.news {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.post-type.event {
+    background-color: #f3e5f5;
+    color: #8e24aa;
+}
+
 
 .post-info {
     padding: 15px;
@@ -515,14 +563,19 @@ body {
 }
 
 .post-description {
-    color: #555;
-    margin: 8px 0;
+    color: #444;
+    margin: 10px 0;
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .post-location {
     color: #666;
     font-size: 0.9em;
-    margin: 5px 0;
+    margin: 8px 0;
 }
 
 .post-location i {
@@ -553,6 +606,103 @@ body {
 .image-preview img {
     display: block;
     margin-top: 5px;
+}
+
+.image-previews {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.image-preview-item {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.image-preview-item:hover .remove-btn {
+    opacity: 1;
+}
+
+.marked-for-removal {
+    opacity: 0.5;
+    border: 1px dashed #ff0000;
+}
+
+.marked-for-removal img {
+    opacity: 0.7;
+}
+
+.removal-notice {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+    padding: 2px;
+    font-size: 12px;
+}
+
+.undo-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #4CAF50 !important;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.add-more-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.undo-btn {
+    background: #4CAF50 !important;
 }
 
 .image-modal {

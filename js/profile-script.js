@@ -313,71 +313,89 @@ document.addEventListener('DOMContentLoaded', function() {
             eventFields.style.display = 'none';
         }
     });
+
+    // Add these variables at the top of your script
+    let selectedImages = [];
+
+    // Image selection handler
+    document.getElementById('postImages').addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        
+        files.forEach(file => {
+            if (!file.type.match('image.*')) {
+                showNotification(`Skipped ${file.name} - not an image file`, true);
+                return;
+            }
+            
+            if (file.size > 2 * 1024 * 1024) {
+                showNotification(`Skipped ${file.name} - file too large (max 2MB)`, true);
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedImages.push({
+                    id: `new-${Date.now()}`,
+                    data: e.target.result,
+                    file: file,
+                    isExisting: false
+                });
+                updateImagePreviews();
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        // Reset file input to allow selecting same files again
+        e.target.value = '';
+    });
+
+    // Handle image removal
+    document.getElementById('imagePreviews').addEventListener('click', function(e) {
+        const removeBtn = e.target.closest('.remove-btn');
+        if (removeBtn) {
+            const index = parseInt(removeBtn.dataset.index);
+            removeCurrentImage(index);
+        }
+    });
     
     // Submit handler (updated to handle both create and update)
     postForm.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+    
         try {
             // Get form values
             const title = document.getElementById('postTitle').value.trim();
             const type = document.getElementById('postType').value;
             const description = document.getElementById('postDescription').value.trim();
             const date = document.getElementById('postDate').value;
-            const imageFile = document.getElementById('postImage').files[0];
-            const postId = this.dataset.editingId || Date.now().toString(); // Use existing ID if editing
             let location = '';
             
-            // Validate required fields
-            if (!title || !description || !date) {
-                showNotification('Please fill in all required fields', true);
-                return;
-            }
-
             if (type === 'event') {
                 location = document.getElementById('eventLocation').value.trim();
             }
 
-            // Handle image
-            let imageBase64 = document.getElementById('currentImage')?.value;
-
-            if (imageFile) {
-                // Check image size (e.g., max 2MB)
-                if (imageFile.size > 2 * 1024 * 1024) {
-                    showNotification('Image size should be less than 2MB', true);
-                    return;
-                } 
-                
-                // Check if image is valid type
-                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
-                if (!validTypes.includes(imageFile.type)) {
-                    showNotification('Please upload a valid image (JPEG, PNG, GIF)', true);
-                    return;
-                }
-                
-                imageBase64 = await convertToBase64(imageFile);
-            } else if (imageBase64 === '') {
-                // Explicit empty string means user wants to remove the image
-                imageBase64 = 'https://via.placeholder.com/600x400';
-            } else if (!imageBase64) {
-                // No current image and no new image - use placeholder
-                imageBase64 = 'https://via.placeholder.com/600x400';
-            }
+            // Filter out images marked for removal
+            const finalImages = selectedImages
+                .filter(img => !img.remove)
+                .map(img => img.data);
+            
+            // Ensure we have at least one image
+            const images = finalImages.length > 0 ? finalImages : ['https://via.placeholder.com/600x400'];
             
             // Create/update post object
             const newPost = {
-                id: postId,
+                id: this.dataset.editingId || Date.now().toString(),
                 title,
                 type,
                 description,
                 date,
-                location, // This now contains the address
-                coordinates: selectedCoords, // Add this line to store coordinates
+                location,
+                images: images,
+                mainImage: images[0],
                 createdAt: this.dataset.editingId ? 
                     JSON.parse(localStorage.getItem('compass_aeped_posts'))
-                        .find(p => p.id === postId).createdAt : 
-                    new Date().toISOString(),
-                image: imageBase64
+                        .find(p => p.id === this.dataset.editingId).createdAt : 
+                    new Date().toISOString()
             };
             
             // Save to localStorage
@@ -385,44 +403,23 @@ document.addEventListener('DOMContentLoaded', function() {
             let posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
             
             if (this.dataset.editingId) {
-                // Update existing post
-                posts = posts.map(post => post.id === postId ? newPost : post);
+                posts = posts.map(post => post.id === this.dataset.editingId ? newPost : post);
             } else {
-                // Add new post
                 posts.push(newPost);
             }
             
-            try {
-                localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
-            } catch (error) {
-                if (error.name === 'QuotaExceededError') {
-                    showNotification('Storage limit exceeded. Please reduce image size or remove some posts.', true);
-                    return;
-                }
-                throw error;
-            }
+            localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
             
-            // Show success message
-            showNotification(`Post ${this.dataset.editingId ? 'updated' : 'published'} successfully!`);
-            
-            // Reset form
+            // Reset form and show success
             resetForm();
+            showNotification(`Post ${this.dataset.editingId ? 'updated' : 'published'} successfully!`);
             updatePostsList();
+            
         } catch (error) {
             console.error('Error submitting post:', error);
             showNotification('An error occurred while saving the post', true);
         }
     });
-
-    // Helper function to convert file to base64
-    function convertToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-        });
-    }
 
     // Function to get selected coordinate
     const selectOnMapBtn = document.getElementById('selectOnMapBtn');
@@ -506,7 +503,6 @@ document.addEventListener('DOMContentLoaded', function() {
         throw new Error('No address found');
     }
 
-    // Function to update posts list
     function updatePostsList() {
         const POSTS_KEY = 'compass_aeped_posts';
         const posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
@@ -519,15 +515,31 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        // Sort posts by date (newest first)
+        posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
         posts.forEach(post => {
             const postCard = document.createElement('div');
             postCard.className = 'post-card';
             
+            // Use mainImage if available, otherwise fall back to image
+            const displayImage = post.mainImage || post.image || 'https://via.placeholder.com/600x400';
+            
+            // Add badge if multiple images exist
+            const imageBadge = post.images && post.images.length > 1 ? 
+                `<span class="image-count-badge">${post.images.length} images</span>` : '';
+            
             postCard.innerHTML = `
-                <img src="${post.image}" alt="${post.title}" class="post-image">
+                <div class="post-image-container">
+                    <img src="${displayImage}" alt="${post.title}" class="post-image">
+                    ${imageBadge}
+                </div>
                 <div class="post-info">
                     <h3>${post.title}</h3>
-                    <p>${post.type === 'news' ? 'News' : 'Event'} • ${new Date(post.date).toLocaleDateString()}</p>
+                    <div class="post-meta">
+                        <span class="post-type ${post.type}">${post.type === 'news' ? 'News' : 'Event'}</span>
+                        <span class="post-date">${new Date(post.date).toLocaleDateString()}</span>
+                    </div>
                     <p class="post-description">${post.description}</p>
                     ${post.location ? `<p class="post-location"><i class="fas fa-map-marker-alt"></i> ${post.location}</p>` : ''}
                     <div class="post-actions">
@@ -550,7 +562,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Edit post function
     window.editPost = function(postId) {
-        // Check if we're already editing this post
         if (currentlyEditing === postId) {
             showNotification('You are already editing this post');
             return;
@@ -574,34 +585,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('postDate').value = postToEdit.date;
 
         // Handle location field
-        const eventLocationField = document.getElementById('eventLocation');
         if (postToEdit.type === 'event') {
-            eventLocationField.value = postToEdit.location || '';
+            document.getElementById('eventLocation').value = postToEdit.location || '';
             document.getElementById('eventFields').style.display = 'block';
-        } else {
-            document.getElementById('eventFields').style.display = 'none';
         }
 
-        // Store original image reference
-        const currentImageInput = document.createElement('input');
-        currentImageInput.type = 'hidden';
-        currentImageInput.id = 'currentImage';
-        currentImageInput.value = postToEdit.image;
-        postForm.appendChild(currentImageInput);
+        // Store original images reference
+        const currentImagesInput = document.createElement('input');
+        currentImagesInput.type = 'hidden';
+        currentImagesInput.id = 'currentImages';
+        currentImagesInput.value = JSON.stringify(postToEdit.images || [postToEdit.image]);
+        postForm.appendChild(currentImagesInput);
 
-        // Show image preview with remove option
-        const imagePreview = document.createElement('div');
-        imagePreview.className = 'image-preview';
-        imagePreview.innerHTML = `
-            <p>Current Image:</p>
-            <img src="${postToEdit.image}" alt="Current post image" style="max-width: 200px;">
-            <div style="margin-top: 8px;">
-                <button type="button" class="btn btn--small btn--danger" onclick="removeCurrentImage()">
-                    <i class="material-icons">delete</i> Remove Image
-                </button>
-            </div>
-        `;
-        document.getElementById('postImage').parentNode.appendChild(imagePreview);
+        // Initialize selectedImages with existing images
+        selectedImages = (postToEdit.images || [postToEdit.image]).map((img, index) => ({
+            id: `existing-${index}`,
+            data: img,
+            isExisting: true
+        }));
+
+        // Display image previews
+        updateImagePreviews();
 
         // Set edit mode
         postForm.dataset.editingId = postId;
@@ -612,46 +616,64 @@ document.addEventListener('DOMContentLoaded', function() {
         postForm.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // Function to remove current image during editing
-    window.removeCurrentImage = function() {
-        document.getElementById('currentImage').value = ''; // Empty value indicates removal
-        const imagePreview = document.querySelector('.image-preview');
-        if (imagePreview) {
-            imagePreview.innerHTML = `
-                <p style="color: red;">Image will be removed when updated</p>
-                <button type="button" class="btn btn--small" onclick="restoreCurrentImage()">
-                    <i class="material-icons">undo</i> Undo Removal
-                </button>
-            `;
-        }
-        document.getElementById('postImage').value = ''; // Clear file input
-        showNotification('Current image will be removed when you update the post');
-    };
+    // Update image previews display
+    function updateImagePreviews() {
+        const previewContainer = document.getElementById('imagePreviews');
+        previewContainer.innerHTML = '';
 
-    // Add restore image function
-    window.restoreCurrentImage = function() {
-        const postId = postForm.dataset.editingId;
-        if (!postId) return;
-        
-        const POSTS_KEY = 'compass_aeped_posts';
-        const posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
-        const post = posts.find(p => p.id === postId);
-        
-        if (post && post.image) {
-            document.getElementById('currentImage').value = post.image;
-            const imagePreview = document.querySelector('.image-preview');
-            if (imagePreview) {
-                imagePreview.innerHTML = `
-                    <p>Current Image:</p>
-                    <img src="${post.image}" alt="Current post image" style="max-width: 200px;">
-                    <div style="margin-top: 8px;">
-                        <button type="button" class="btn btn--small btn--danger" onclick="removeCurrentImage()">
-                            <i class="material-icons">delete</i> Remove Image
-                        </button>
-                    </div>
+        selectedImages.forEach((img, index) => {
+            const previewItem = document.createElement('div');
+            previewItem.className = 'image-preview-item';
+            
+            if (img.remove) {
+                // Show "will be removed" state
+                previewItem.classList.add('marked-for-removal');
+                previewItem.innerHTML = `
+                    <img src="${img.data}" alt="Marked for removal">
+                    <button class="undo-btn" onclick="removeCurrentImage(${index})">
+                        <i class="material-icons">undo</i>
+                    </button>
+                    <span class="removal-notice">Will be removed</span>
+                `;
+            } else {
+                // Show normal image with remove option
+                previewItem.innerHTML = `
+                    <img src="${img.data}" alt="Preview image ${index + 1}">
+                    <button class="remove-btn" onclick="removeCurrentImage(${index})">
+                        <i class="material-icons">close</i>
+                    </button>
                 `;
             }
+            previewContainer.appendChild(previewItem);
+        });
+
+        // Add "Add more images" button if we have space
+        if (selectedImages.filter(img => !img.remove).length < 10) {
+            const addMoreBtn = document.createElement('button');
+            addMoreBtn.type = 'button';
+            addMoreBtn.className = 'btn btn--secondary add-more-btn';
+            addMoreBtn.innerHTML = '<i class="material-icons">add</i> Add More Images';
+            addMoreBtn.addEventListener('click', () => document.getElementById('postImages').click());
+            previewContainer.appendChild(addMoreBtn);
         }
+    }
+
+    window.removeCurrentImage = function(index) {
+        // Toggle removal state
+        if (selectedImages[index].remove) {
+            // If already marked, undo the removal
+            delete selectedImages[index].remove;
+        } else {
+            // Mark for removal
+            selectedImages[index].remove = true;
+        }
+        updateImagePreviews();
+    };
+
+    // Add this undo function
+    window.undoRemoveImage = function(index) {
+        delete selectedImages[index].remove;
+        updateImagePreviews();
     };
 
     // Delete post function
@@ -671,19 +693,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function resetForm() {
         postForm.reset();
         postForm.removeAttribute('data-editing-id');
-        currentlyEditing = null;
         document.getElementById('eventFields').style.display = 'none';
         document.querySelector('button[type="submit"]').textContent = 'Publish Post';
-        
-        // Remove current image input if exists
-        const currentImage = document.getElementById('currentImage');
-        if (currentImage) currentImage.remove();
-        
-        // Remove image preview if exists
-        const imagePreview = document.querySelector('.image-preview');
-        if (imagePreview) imagePreview.remove();
+        document.getElementById('imagePreviews').innerHTML = '';
+        selectedImages = [];
+        currentlyEditing = null;
     }
-
+fz
     // Initialize post type toggle
     document.getElementById('postType').addEventListener('change', function() {
         document.getElementById('eventFields').style.display = 

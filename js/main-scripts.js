@@ -303,12 +303,14 @@ function loadPosts() {
     const newsPosts = posts.filter(post => post.type === 'news')
                           .sort((a, b) => new Date(b.date) - new Date(a.date));
     const eventPosts = posts.filter(post => post.type === 'event')
-                          .sort((a, b) => new Date(a.date) - new Date(b.date)); // Events sorted chronologically
+                          .sort((a, b) => new Date(a.date) - new Date(b.date));
     
     // Handle news posts
     if (newsPosts.length > 0) {
         newsPosts.forEach(post => {
-            newsContainer.appendChild(createPostElement(post));
+            const postElement = createPostElement(post);
+            addPostNavigation(postElement, post.id);
+            newsContainer.appendChild(postElement);
         });
     } else {
         newsContainer.innerHTML = '<p class="no-posts">No news articles found.</p>';
@@ -317,27 +319,116 @@ function loadPosts() {
     // Handle event posts
     if (eventPosts.length > 0) {
         eventPosts.forEach(post => {
-            eventsContainer.appendChild(createPostElement(post));
+            const postElement = createPostElement(post);
+            addPostNavigation(postElement, post.id);
+            eventsContainer.appendChild(postElement);
         });
     } else {
         eventsContainer.innerHTML = '<p class="no-posts">No upcoming events found.</p>';
     }
 }
 
-// Helper function to create post element
+// Helper function to add navigation to post elements
+function addPostNavigation(postElement, postId) {
+    const readMoreBtn = postElement.querySelector('.read-more');
+    if (readMoreBtn) {
+        readMoreBtn.href = `pages/news-events.html#post-${postId}`;
+        readMoreBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateToPost(postId);
+        });
+    }
+    
+    // Make entire card clickable if desired (optional)
+    postElement.style.cursor = 'pointer';
+    postElement.addEventListener('click', (e) => {
+        // Don't navigate if clicking on the read more button (to avoid double trigger)
+        if (!e.target.closest('.read-more')) {
+            navigateToPost(postId);
+        }
+    });
+}
+
+// Function to navigate to post on news-events page
+function navigateToPost(postId) {
+    // Check if we're already on the news-events page
+    if (window.location.pathname.includes('pages/news-events.html')) {
+        // Scroll to the post
+        const postElement = document.getElementById(`post-${postId}`);
+        if (postElement) {
+            postElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+            
+            // Optional: Add highlight effect
+            postElement.style.animation = 'highlight 2s';
+            setTimeout(() => {
+                postElement.style.animation = '';
+            }, 2000);
+        }
+    } else {
+        // Navigate to news-events page with hash
+        window.location.href = `pages/news-events.html#post-${postId}`;
+    }
+}
+
+// Add this CSS for the highlight effect (optional)
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes highlight {
+        0% { background-color: rgba(255, 255, 0, 0.3); }
+        100% { background-color: transparent; }
+    }
+`;
+document.head.appendChild(style);
+
+// Update news-events page to handle hash on load
+if (window.location.pathname.includes('pages/news-events.html')) {
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load posts first
+        const POSTS_KEY = 'compass_aeped_posts';
+        const posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
+        posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        displayFeaturedPosts(posts.slice(0, 3));
+        displayAllPosts(posts);
+        initSlideshows();
+        
+        // Check for hash and scroll to post
+        if (window.location.hash) {
+            const postId = window.location.hash.substring(1); // Remove # from #post-123
+            const postElement = document.getElementById(postId);
+            if (postElement) {
+                setTimeout(() => {
+                    postElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Optional highlight
+                    postElement.style.animation = 'highlight 2s';
+                }, 500); // Small delay to allow posts to render
+            }
+        }
+    });
+}
+
+// Helper function to create post element (updated with better link styling)
 function createPostElement(post) {
     const element = document.createElement('div');
     element.className = post.type === 'news' ? 'news-card' : 'event-card';
 
     // Calculate time ago
-    const postDate = new Date(post.createdAt || post.date); // Fallback to post.date if createdAt doesn't exist
+    const postDate = new Date(post.createdAt || post.date);
     const timeAgo = getTimeAgo(postDate);
+    const displayImage = post.mainImage || post.image || 'https://via.placeholder.com/600x400';
     
     if (post.type === 'news') {
         const newsDate = new Date(post.date);
         const localDate = newsDate.toLocaleDateString();
         element.innerHTML = `
-            <img src="${post.image}" alt="${post.title}" class="card-image">
+            <img src="${displayImage}" alt="${post.title}" class="card-image">
             <div class="card-content">
                 <h3 class="card-title">${post.title}</h3>
                 <div class="card-meta">
@@ -345,7 +436,7 @@ function createPostElement(post) {
                     <span class="card-time-ago">• ${timeAgo}</span>
                 </div>
                 <p class="card-excerpt">${post.description}</p>
-                <a href="#" class="read-more">Read More →</a>
+                <a href="pages/news-events.html#post-${post.id}" class="read-more">Read More →</a>
             </div>
         `;
     } else {
@@ -355,7 +446,7 @@ function createPostElement(post) {
         const month = eventDate.toLocaleString('default', { month: 'short' });
         
         element.innerHTML = `
-            <img src="${post.image}" alt="${post.title}" class="card-image">
+            <img src="${displayImage}" alt="${post.title}" class="card-image">
             <div class="card-content">
                 <div class="event-details">
                     <div class="event-date">
@@ -374,7 +465,7 @@ function createPostElement(post) {
                     </div>
                 </div>
                 <p class="card-excerpt">${post.description}</p>
-                <a href="#" class="read-more">Learn More →</a>
+                <a href="pages/news-events.html#post-${post.id}" class="read-more">Learn More →</a>
             </div>
         `;
     }
@@ -480,5 +571,227 @@ function initializeBusinessHours() {
     // Clean up interval when page unloads
     window.addEventListener('beforeunload', function() {
         clearInterval(intervalId);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const POSTS_KEY = 'compass_aeped_posts';
+    const posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
+    
+    // Sort posts by date (newest first)
+    posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    // Display featured posts (latest 3)
+    displayFeaturedPosts(posts.slice(0, 3));
+    
+    // Display all posts
+    displayAllPosts(posts);
+            
+    // Initialize all slideshows
+    initSlideshows();
+});
+
+function displayFeaturedPosts(posts) {
+    const container = document.getElementById('featuredPosts');
+    container.innerHTML = '';
+    
+    posts.forEach(post => {
+        const postCard = document.createElement('div');
+        postCard.className = 'preview-card';
+        
+        postCard.innerHTML = `
+            <div class="preview-card-bg" style="background-image: url('${post.mainImage || post.image || 'https://via.placeholder.com/600x400'}')"></div>
+            <div class="preview-card-content">
+                <span class="post-type ${post.type}">${post.type === 'news' ? 'News' : 'Event'}</span>
+                <h3>${post.title}</h3>
+                <div class="post-meta">
+                    <span>${new Date(post.date).toLocaleDateString()}</span>
+                    ${post.location ? `<span><i class="fas fa-map-marker-alt"></i> ${post.location}</span>` : ''}
+                </div>
+            </div>
+        `;
+        
+        // Make the card clickable to scroll to the full post
+        postCard.addEventListener('click', () => {
+            document.getElementById(`post-${post.id}`).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+        
+        container.appendChild(postCard);
+    });
+}
+        
+function displayAllPosts(posts) {
+    const container = document.getElementById('allPosts');
+    container.innerHTML = '';
+    
+    if (posts.length === 0) {
+        container.innerHTML = '<p>No posts available yet.</p>';
+        return;
+    }
+    
+    posts.forEach(post => {
+        const postElement = document.createElement('article');
+        postElement.className = 'post-detail';
+        postElement.id = `post-${post.id}`;
+        
+        // Get all images for this post
+        const images = post.images || [post.image || 'https://via.placeholder.com/600x400'];
+        
+        // Generate slideshow HTML if multiple images exist
+        let slideshowHTML = '';
+        let dotsHTML = '';
+        
+        if (images.length > 1) {
+            slideshowHTML = images.map((img, index) => `
+                <img src="${img}" alt="${post.title} - Image ${index + 1}" 
+                        class="main-image-slide ${index === 0 ? 'active' : ''}" 
+                        data-post="${post.id}" 
+                        data-index="${index}">
+            `).join('');
+            
+            dotsHTML = images.map((_, index) => `
+                <div class="dot ${index === 0 ? 'active' : ''}" 
+                        data-post="${post.id}" 
+                        data-index="${index}"></div>
+            `).join('');
+        } else {
+            slideshowHTML = `
+                <img src="${images[0]}" alt="${post.title}" class="main-image-slide active">
+            `;
+        }
+        
+        postElement.innerHTML = `
+            <div class="post-header">
+                <h2 class="post-title">${post.title}</h2>
+                <div class="post-meta-detail">
+                    <span class="post-type ${post.type}">${post.type === 'news' ? 'News' : 'Event'}</span>
+                    <span><i class="far fa-calendar-alt"></i> ${new Date(post.date).toLocaleDateString()}</span>
+                    ${post.location ? `<span><i class="fas fa-map-marker-alt"></i> ${post.location}</span>` : ''}
+                </div>
+            </div>
+            
+            <div class="image-gallery">
+                <div class="main-image-container">
+                    ${slideshowHTML}
+                    
+                    ${images.length > 1 ? `
+                    <div class="gallery-nav">
+                        <button class="gallery-nav-btn prev-btn" data-post="${post.id}">
+                            <i class="material-icons">chevron_left</i>
+                        </button>
+                        <button class="gallery-nav-btn next-btn" data-post="${post.id}">
+                            <i class="material-icons">chevron_right</i>
+                        </button>
+                    </div>
+                    ` : ''}
+                </div>
+                
+                ${images.length > 1 ? `
+                <div class="gallery-controls">
+                    <div class="gallery-dots">
+                        ${dotsHTML}
+                    </div>
+                </div>
+                ` : ''}
+            </div>
+            
+            <div class="post-content">
+                <p>${post.description}</p>
+            </div>
+            
+            ${post.location ? `
+            <div class="post-location">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>${post.location}</span>
+            </div>
+            ` : ''}
+        `;
+        
+        container.appendChild(postElement);
+    });
+}
+
+function initSlideshows() {
+    // Initialize all slideshows with auto-rotation
+    document.querySelectorAll('.main-image-container').forEach(container => {
+        const postId = container.querySelector('.main-image-slide')?.dataset.post;
+        if (!postId) return;
+        
+        const slides = container.querySelectorAll('.main-image-slide');
+        if (slides.length <= 1) return;
+        
+        // Auto-rotation variables
+        let currentIndex = 0;
+        let intervalId;
+        const rotationInterval = 5000; // 5 seconds
+        
+        // Function to show specific slide
+        const showSlide = (index) => {
+            // Wrap around if needed
+            if (index >= slides.length) index = 0;
+            if (index < 0) index = slides.length - 1;
+            
+            // Update slides
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            
+            // Update dots
+            const dots = document.querySelectorAll(`.dot[data-post="${postId}"]`);
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index]?.classList.add('active');
+            
+            currentIndex = index;
+        };
+        
+        // Auto-rotation function
+        const startRotation = () => {
+            intervalId = setInterval(() => {
+                showSlide(currentIndex + 1);
+            }, rotationInterval);
+        };
+        
+        // Start auto-rotation
+        startRotation();
+        
+        // Pause on hover
+        container.addEventListener('mouseenter', () => {
+            clearInterval(intervalId);
+        });
+        
+        container.addEventListener('mouseleave', () => {
+            startRotation();
+        });
+        
+        // Navigation buttons
+        const prevBtn = container.querySelector('.prev-btn');
+        const nextBtn = container.querySelector('.next-btn');
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                clearInterval(intervalId);
+                showSlide(currentIndex - 1);
+                startRotation();
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                clearInterval(intervalId);
+                showSlide(currentIndex + 1);
+                startRotation();
+            });
+        }
+        
+        // Dot navigation
+        document.querySelectorAll(`.dot[data-post="${postId}"]`).forEach(dot => {
+            dot.addEventListener('click', () => {
+                const index = parseInt(dot.dataset.index);
+                clearInterval(intervalId);
+                showSlide(index);
+                startRotation();
+            });
+        });
     });
 }
