@@ -128,12 +128,13 @@ document.addEventListener('DOMContentLoaded', function() {
       if (user) {
           // User is logged in
           if (user.profileImage) {
-              dropdownBtn.style.backgroundImage = `url('${user.profileImage}')`;
-              dropdownBtn.style.backgroundSize = "cover";
+              dropdownBtn.innerHTML = `<img src="${user.profileImage}" alt="Profile" class="profile-image">`;
+              profileDropdownBtn.innerHTML = `<img src="${user.profileImage}" alt="Profile" class="profile-image">`;
               dropdownProfileIcon.innerHTML = `<img src="${user.profileImage}" alt="Profile" class="profile-image">`;
           } else {
               const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
               dropdownBtn.textContent = initial;
+              profileDropdownBtn.textContent = initial;
               dropdownProfileIcon.textContent = initial;
           }
           
@@ -422,50 +423,68 @@ function createPostElement(post) {
     // Calculate time ago
     const postDate = new Date(post.createdAt || post.date);
     const timeAgo = getTimeAgo(postDate);
-    const displayImage = post.mainImage || post.image || 'https://via.placeholder.com/600x400';
+    const displayImage = post.mainImage || post.image || 'images/image-placeholder.jpg';
     
+    const day = postDate.getDate();
+    const month = postDate.toLocaleString('default', { month: 'short' });
+    const weekday = postDate.toLocaleString('default', { weekday: 'short' });
+    const time = postDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     if (post.type === 'news') {
-        const newsDate = new Date(post.date);
-        const localDate = newsDate.toLocaleDateString();
         element.innerHTML = `
-            <img src="${displayImage}" alt="${post.title}" class="card-image">
-            <div class="card-content">
-                <h3 class="card-title">${post.title}</h3>
-                <div class="card-meta">
-                    <span class="card-date">${localDate}</span>
-                    <span class="card-time-ago">• ${timeAgo}</span>
+            <img src="${displayImage}" alt="${post.title}" class="news-card-image">
+            <div class="post-card__content">
+                <div class="post-card__header">
+                    <h2 class="card-title">${post.title}</h2>
+                    <div class="post-card__meta">
+                        <span class="post-card__time">
+                            <i class="far fa-clock"></i> ${time}
+                        </span>
+                        <span class="post-card__weekday">${weekday}</span>
+                    </div>
                 </div>
-                <p class="card-excerpt">${post.description}</p>
-                <a href="pages/news-events.html#post-${post.id}" class="read-more">Read More →</a>
+                <p class="post-card__description">${post.description}</p>
+                <div class="post-card__footer">
+                    <span class="post-card__posted-time">Posted ${timeAgo}</span>
+                    <a href="pages/news-events.html#post-${post.id}" class="post-card__cta">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         `;
     } else {
-        // For events
-        const eventDate = new Date(post.date);
-        const day = eventDate.getDate();
-        const month = eventDate.toLocaleString('default', { month: 'short' });
-        
+        // Enhanced event card implementation
         element.innerHTML = `
-            <img src="${displayImage}" alt="${post.title}" class="card-image">
-            <div class="card-content">
-                <div class="event-details">
-                    <div class="event-date">
-                        <span class="event-day">${day}</span>
-                        <span class="event-month">${month}</span>
-                    </div>
-                    <div class="event-info">
-                        <h3 class="card-title">${post.title}</h3>
-                        <div class="event-location-container">
-                            <div class="location-pin">📍 </div>
-                            <div class="event-location"> ${post.location || 'Location not specified'}</div>
-                        </div>
-                        <div class="card-meta">
-                            <span class="card-time-ago">• ${timeAgo}</span>
-                        </div>
+            <div class="event-card__image-container">
+                <img src="${displayImage}" alt="${post.title}" class="event-card-image">
+                <div class="event-card__date-badge">
+                    <span class="event-card__day">${day}</span>
+                    <span class="event-card__month">${month}</span>
+                </div>
+            </div>
+            <div class="post-card__content">
+                <div class="post-card__header">
+                    <h2 class="card-title">${post.title}</h2>
+                    <div class="post-card__meta">
+                        <span class="post-card__time">
+                            <i class="far fa-clock"></i> ${time}
+                        </span>
+                        <span class="post-card__weekday">${weekday}</span>
                     </div>
                 </div>
-                <p class="card-excerpt">${post.description}</p>
-                <a href="pages/news-events.html#post-${post.id}" class="read-more">Learn More →</a>
+                <div class="event-card__details">
+                    <div class="event-card__location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${post.location || 'Location to be announced'}</span>
+                    </div>
+                    <p class="post-card__description">${post.description}</p>
+                </div>
+                <div class="post-card__footer">
+                    <span class="post-card__posted-time">Posted ${timeAgo}</span>
+                    <a href="pages/news-events.html#post-${post.id}" class="post-card__cta">
+                        Learn More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         `;
     }
@@ -582,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
     posts.sort((a, b) => new Date(b.date) - new Date(a.date));
     
     // Display featured posts (latest 3)
-    displayFeaturedPosts(posts.slice(0, 3));
+    postSlideshow(posts.slice(0, 3));
     
     // Display all posts
     displayAllPosts(posts);
@@ -591,43 +610,106 @@ document.addEventListener('DOMContentLoaded', function() {
     initSlideshows();
 });
 
-function displayFeaturedPosts(posts) {
+function postSlideshow(posts) {
     const container = document.getElementById('featuredPosts');
     container.innerHTML = '';
     
-    posts.forEach(post => {
+    // Create slideshow container
+    const slideshow = document.createElement('div');
+    slideshow.className = 'preview-slideshow';
+    
+    // Create controls container
+    const controls = document.createElement('div');
+    controls.className = 'slideshow-controls';
+    
+    // Add posts as slides
+    posts.forEach((post, index) => {
         const postCard = document.createElement('div');
         postCard.className = 'preview-card';
         
         postCard.innerHTML = `
-            <div class="preview-card-bg" style="background-image: url('${post.mainImage || post.image || 'https://via.placeholder.com/600x400'}')"></div>
+            <div class="preview-card-bg" style="background-image: url('${post.mainImage || post.image || 'images/image-placeholder.jpg'}')"></div>
             <div class="preview-card-content">
                 <span class="post-type ${post.type}">${post.type === 'news' ? 'News' : 'Event'}</span>
                 <h3>${post.title}</h3>
                 <div class="post-meta">
-                    <span>${new Date(post.date).toLocaleDateString()}</span>
+                    <span><i class="far fa-calendar-alt"></i> ${new Date(post.date).toLocaleDateString()}</span>
                     ${post.location ? `<span><i class="fas fa-map-marker-alt"></i> ${post.location}</span>` : ''}
                 </div>
             </div>
         `;
         
-        // Make the card clickable to scroll to the full post
+        // Make the card clickable
         postCard.addEventListener('click', () => {
-            document.getElementById(`post-${post.id}`).scrollIntoView({
+            document.getElementById(`post-${post.id}`)?.scrollIntoView({
                 behavior: 'smooth'
             });
         });
         
-        container.appendChild(postCard);
+        slideshow.appendChild(postCard);
+        
+        // Add control dot
+        const dot = document.createElement('div');
+        dot.className = 'slide-dot';
+        dot.dataset.index = index;
+        controls.appendChild(dot);
+    });
+    
+    container.appendChild(slideshow);
+    container.appendChild(controls);
+    
+    // Auto-rotate slides
+    let currentSlide = 0;
+    const slideCount = posts.length;
+    const dots = document.querySelectorAll('.slide-dot');
+    
+    function updateSlide() {
+        slideshow.style.transform = `translateX(-${currentSlide * 100}%)`;
+        
+        // Update dots
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentSlide);
+        });
+    }
+    
+    // Set first slide as active
+    dots[0]?.classList.add('active');
+    
+    // Auto-rotation
+    const rotationInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % slideCount;
+        updateSlide();
+    }, 5000); // Change slide every 5 seconds
+    
+    // Dot navigation
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            currentSlide = parseInt(dot.dataset.index);
+            updateSlide();
+            // Reset timer when manually navigating
+            clearInterval(rotationInterval);
+        });
+    });
+    
+    // Pause on hover
+    container.addEventListener('mouseenter', () => {
+        clearInterval(rotationInterval);
+    });
+    
+    container.addEventListener('mouseleave', () => {
+        rotationInterval = setInterval(() => {
+            currentSlide = (currentSlide + 1) % slideCount;
+            updateSlide();
+        }, 5000);
     });
 }
-        
+
 function displayAllPosts(posts) {
     const container = document.getElementById('allPosts');
     container.innerHTML = '';
     
     if (posts.length === 0) {
-        container.innerHTML = '<p>No posts available yet.</p>';
+        container.innerHTML = '<p class="no-posts">No posts available yet.</p>';
         return;
     }
     
@@ -637,30 +719,20 @@ function displayAllPosts(posts) {
         postElement.id = `post-${post.id}`;
         
         // Get all images for this post
-        const images = post.images || [post.image || 'https://via.placeholder.com/600x400'];
+        const images = post.images || [post.image || 'images/image-placeholder.jpg'];
         
-        // Generate slideshow HTML if multiple images exist
-        let slideshowHTML = '';
-        let dotsHTML = '';
+        // Generate slideshow HTML
+        const slideshowHTML = images.map((img, index) => `
+            <img src="${img}" alt="${post.title} - Image ${index + 1}" 
+                 class="main-image-slide ${index === 0 ? 'active' : ''}" 
+                 data-index="${index}">
+        `).join('');
         
-        if (images.length > 1) {
-            slideshowHTML = images.map((img, index) => `
-                <img src="${img}" alt="${post.title} - Image ${index + 1}" 
-                        class="main-image-slide ${index === 0 ? 'active' : ''}" 
-                        data-post="${post.id}" 
-                        data-index="${index}">
-            `).join('');
-            
-            dotsHTML = images.map((_, index) => `
-                <div class="dot ${index === 0 ? 'active' : ''}" 
-                        data-post="${post.id}" 
-                        data-index="${index}"></div>
-            `).join('');
-        } else {
-            slideshowHTML = `
-                <img src="${images[0]}" alt="${post.title}" class="main-image-slide active">
-            `;
-        }
+        // Generate dots HTML if multiple images
+        const dotsHTML = images.length > 1 ? images.map((_, index) => `
+            <div class="slide-dot ${index === 0 ? 'active' : ''}" 
+                 data-index="${index}"></div>
+        `).join('') : '';
         
         postElement.innerHTML = `
             <div class="post-header">
@@ -673,28 +745,16 @@ function displayAllPosts(posts) {
             </div>
             
             <div class="image-gallery">
-                <div class="main-image-container">
+                <div class="main-image-container" data-post-id="${post.id}">
                     ${slideshowHTML}
-                    
                     ${images.length > 1 ? `
-                    <div class="gallery-nav">
-                        <button class="gallery-nav-btn prev-btn" data-post="${post.id}">
-                            <i class="material-icons">chevron_left</i>
-                        </button>
-                        <button class="gallery-nav-btn next-btn" data-post="${post.id}">
-                            <i class="material-icons">chevron_right</i>
-                        </button>
+                    <div class="gallery-controls">
+                        <div class="slide-dots">
+                            ${dotsHTML}
+                        </div>
                     </div>
                     ` : ''}
                 </div>
-                
-                ${images.length > 1 ? `
-                <div class="gallery-controls">
-                    <div class="gallery-dots">
-                        ${dotsHTML}
-                    </div>
-                </div>
-                ` : ''}
             </div>
             
             <div class="post-content">
@@ -714,22 +774,17 @@ function displayAllPosts(posts) {
 }
 
 function initSlideshows() {
-    // Initialize all slideshows with auto-rotation
     document.querySelectorAll('.main-image-container').forEach(container => {
-        const postId = container.querySelector('.main-image-slide')?.dataset.post;
-        if (!postId) return;
-        
         const slides = container.querySelectorAll('.main-image-slide');
         if (slides.length <= 1) return;
         
-        // Auto-rotation variables
+        const dots = container.querySelectorAll('.slide-dot');
         let currentIndex = 0;
         let intervalId;
         const rotationInterval = 5000; // 5 seconds
         
-        // Function to show specific slide
         const showSlide = (index) => {
-            // Wrap around if needed
+            // Handle wrap-around
             if (index >= slides.length) index = 0;
             if (index < 0) index = slides.length - 1;
             
@@ -738,7 +793,6 @@ function initSlideshows() {
             slides[index].classList.add('active');
             
             // Update dots
-            const dots = document.querySelectorAll(`.dot[data-post="${postId}"]`);
             dots.forEach(dot => dot.classList.remove('active'));
             dots[index]?.classList.add('active');
             
@@ -764,34 +818,40 @@ function initSlideshows() {
             startRotation();
         });
         
-        // Navigation buttons
-        const prevBtn = container.querySelector('.prev-btn');
-        const nextBtn = container.querySelector('.next-btn');
-        
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => {
-                clearInterval(intervalId);
-                showSlide(currentIndex - 1);
-                startRotation();
-            });
-        }
-        
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                clearInterval(intervalId);
-                showSlide(currentIndex + 1);
-                startRotation();
-            });
-        }
-        
         // Dot navigation
-        document.querySelectorAll(`.dot[data-post="${postId}"]`).forEach(dot => {
-            dot.addEventListener('click', () => {
+        dots.forEach(dot => {
+            dot.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const index = parseInt(dot.dataset.index);
                 clearInterval(intervalId);
                 showSlide(index);
                 startRotation();
             });
         });
+        
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        container.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        
+        container.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+        
+        const handleSwipe = () => {
+            clearInterval(intervalId);
+            if (touchStartX - touchEndX > 50) {
+                // Swipe left - next
+                showSlide(currentIndex + 1);
+            } else if (touchEndX - touchStartX > 50) {
+                // Swipe right - previous
+                showSlide(currentIndex - 1);
+            }
+            startRotation();
+        };
     });
 }

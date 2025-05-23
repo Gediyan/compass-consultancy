@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .map(img => img.data);
             
             // Ensure we have at least one image
-            const images = finalImages.length > 0 ? finalImages : ['https://via.placeholder.com/600x400'];
+            const images = finalImages.length > 0 ? finalImages : ['images/image-placeholder.jpg'];
             
             // Create/update post object
             const newPost = {
@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function() {
             postCard.className = 'post-card';
             
             // Use mainImage if available, otherwise fall back to image
-            const displayImage = post.mainImage || post.image || 'https://via.placeholder.com/600x400';
+            const displayImage = post.mainImage || post.image || 'images/image-placeholder.jpg';
             
             // Add badge if multiple images exist
             const imageBadge = post.images && post.images.length > 1 ? 
