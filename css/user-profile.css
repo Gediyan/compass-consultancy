@@ -146,10 +146,6 @@ body {
 
 /* Buttons */
 .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
     padding: 12px;
     border-radius: 6px;
     font-size: 0.95rem;
@@ -753,8 +749,8 @@ body {
 
 .image-modal-footer {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    justify-content: space-evenly;
+    align-items: center;
     margin-top: 15px;
 }
 
@@ -767,11 +763,18 @@ body {
 
 /* Danger Button */
 .btn--image-editor {
-    background-color: var(--light-bg);
+    background: none;
+    border: none;
     color: var(--text-color);
-    border-color: var(--border-color);
 }
 
 .btn--image-editor:hover {
     background-color: #e9ecef;
+}
+
+
+@media (max-width: 768px) {
+    .btn--image-editor {
+        width: 15%;
+    }
 }

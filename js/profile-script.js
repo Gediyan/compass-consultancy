@@ -699,7 +699,7 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedImages = [];
         currentlyEditing = null;
     }
-fz
+
     // Initialize post type toggle
     document.getElementById('postType').addEventListener('change', function() {
         document.getElementById('eventFields').style.display = 

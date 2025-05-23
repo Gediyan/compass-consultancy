@@ -254,7 +254,7 @@ nav a:hover::after {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: var(--primary-white-color);
+    background-color: white;
     color: var(--primary-color);
     display: flex;
     cursor: pointer;
