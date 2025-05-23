@@ -1342,6 +1342,11 @@ main {
     .preview-card-content {
         padding: 20px;
     }
+
+    .post-meta-detail {
+        flex-direction: column;
+        gap: 10px;
+    }
 }
 
 .main-image-container {
