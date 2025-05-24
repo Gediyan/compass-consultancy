@@ -982,6 +982,7 @@ main {
 }
 
 
+
 /* Testimonials Section */
 
 .testimonials-carousel {
@@ -1182,6 +1183,7 @@ blockquote p:after {
 @media (max-width: 768px) {
     .testimonial-card {
         flex: 0 0 calc(100% - 30px);
+        max-width: 300px;
     }
     
     .section-title {
@@ -1194,6 +1196,10 @@ blockquote p:after {
 }
 
 @media (max-width: 480px) {
+    .testimonial-card {
+        max-width: 250px;
+        flex: 0 0 calc(100% - 30px);
+    }
     .client-info {
         flex-direction: column;
         text-align: center;
