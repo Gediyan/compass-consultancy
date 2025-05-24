@@ -17,10 +17,10 @@
     --box-shadow-color: rgba(0,0,0,0.1);
     --header1-color: #222;
     --paragraph-text-color:#333;
-    --paragraph-text-bg:#d2cece;
     --cards-bg-color: #fff;
     --post-card-description: #555;
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --stat-container-bg: rgba(88, 87, 87, 0.4);
     --transition: all 0.3s ease;
     --footer-header1-color: rgb(130, 212, 236);
     --footer-section-bg-color:#2c3e50;
@@ -45,15 +45,15 @@
     --box-shadow-color: rgba(188, 188, 188, 0.1);
     --header1-color: #f4f4f4;
     --paragraph-text-color:#f0f0f0;
-    --paragraph-text-bg:#615e5e;
     --cards-bg-color: #2d2d2d;
     --post-card-description: #b5b6b7;
+    --shadow: 0 4px 6px rgba(222, 221, 221, 0.1);
+    --stat-container-bg: rgba(0, 0, 0, 0.4);
     --footer-header1-color: rgb(209, 235, 243);
     --footer-section-bg-color:#373a3e;
     --footer-paragraph-color:#cfcfcf;
     --footer-social-link-bg-color:rgba(255, 255, 255, 0.1);
     --footer-link-color:#bdc3c7;
-    --shadow: 0 4px 6px rgba(222, 221, 221, 0.1);
 }
 
 body{
@@ -141,7 +141,7 @@ nav a:hover::after {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 807px) {
     header {
         padding: 0.5rem;
     }
@@ -160,6 +160,8 @@ nav a:hover::after {
     }
     .menu-toggle {
         display: block;
+        position: fixed;
+        left: 70%;
     }
 
     nav {
@@ -184,16 +186,16 @@ nav a:hover::after {
     }
 }
 
-.profile-initial {
-    display: block;
-    font-size: 18px;
-}
-
 
 /* Profile Dropdown Styles */
 
 .profile-dropdown {
     position: relative;
+}
+
+.profile-initial {
+    display: block;
+    font-size: 18px;
 }
 
 .dropdown-content {
@@ -304,11 +306,10 @@ nav a:hover::after {
 .compass-welcome {
     background-color: var(--primary-color);
     position: relative;
-    min-height: clamp(300px, 60vh, 600px);
+    min-height: clamp(250px, 50vh, 500px);
     overflow: hidden;
 }
 
-/* Content Container - Adjust spacing */
 .welcome-content-container {
     display: flex;
     flex-direction: row;
@@ -316,7 +317,15 @@ nav a:hover::after {
     max-width: 1400px;
     margin: 0 auto;
     padding: 2rem;
-    gap: 4rem; /* Increased gap between logo and text */
+}
+
+.wellcome-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
 }
 
 .slideshow-container {
@@ -347,8 +356,6 @@ nav a:hover::after {
     z-index: 1;
 }
 
-/* Background Image Solution */
-
 .slide-bg {
     position: absolute;
     width: 100%;
@@ -363,20 +370,12 @@ nav a:hover::after {
     transform: scale(1.05);
 }
 
-.wellcome-container {
-    position: relative;
-    max-width: 800px;
-}
-
-/* Text Content - Adjust width to accommodate larger logo */
 .text-content {
     background-color: rgba(0,0,0,0.6);
     backdrop-filter: blur(5px);
-    padding: 2.5rem; /* Slightly more padding */
+    padding: 2.5rem;
     border-radius: 8px;
     text-align: left;
-    flex: 1; /* Takes remaining space */
-    max-width: 700px; /* Adjusted width */
 }
 
 .text-content h1 {
@@ -393,6 +392,7 @@ nav a:hover::after {
     line-height: 1.6;
     color: var(--primary-white-color);
     font-weight: 300;
+    text-align: justify;
 }
 
 /* Slide Navigation */
@@ -421,173 +421,16 @@ nav a:hover::after {
     background: var(--primary-white-color);
 }
 
-/* Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Permanent Logo */
-
-/* Logo Container - Now aligned left */
-
-/* Logo Container - Increased Size */
-.logo-wrapper {
-    flex-shrink: 0;
-    width: clamp(200px, 30vw, 350px); /* Increased from 150px/25vw/300px */
-    margin-right: 3rem;
-    position: relative;
-    z-index: 10;
-}
-
-/* Logo SVG - Ensure it scales properly */
-.logo-svg {
-    width: 100%;
-    height: auto;
-    max-width: 100%; /* Ensures it doesn't overflow container */
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-}
-
-.point-o {
-    fill: none;
-    stroke: #ffffff;
-    stroke-linejoin: round;
-    stroke-width: 1.5px;
-}
-
-.arrow {
-    fill: #ffffff;
-}
-
-.inner-arc, .outer-arc {
-    fill: none;
-    stroke: #ffffff;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-.upper-arrow-line, .bottom-arrow-line, .underline {
-    fill: none;
-    stroke: #ffffff;
-    stroke-linecap: round;
-}
-
-.upper-arrow-line, .bottom-arrow-line, .underline {
-    stroke-width: 1.5px;
-}
-
-.outer-arc {
-    stroke-width: 2px;
-}
-
-.logo-svg {
-    width: 100%;
-    height: auto;
-}
-
-/* Animation for the logo arrow */
-@keyframes rotateArrow {
-    0%, 100% {
-        transform: rotate(-15deg);
-        transform-origin: 60.2px 103px; /* Approximate centroid */
-    }
-    50% {
-        transform: rotate(15deg);
-        transform-origin: 60.2px 103px;
-    }
-}
-
-#Center_Circle_Arrow {
-    animation: rotateArrow 5s ease-in-out infinite;
-}
-
-.wellcome-intro-text {
-    margin-bottom: 10px;
-    line-height: 1.6;
-}
-
-.Text_1_C {
-    fill: inherit;
-}
-
-/* Text coloring animation - Light mode */
-@keyframes colorText {
-    0%, 100% { fill: #00ff33; }
-    25% { fill: #ffff00; }
-    50% { fill: #FF0000; }
-}
-
-/* Stagger the text animations */
-#Text_1_C path:nth-child(1) {
-    animation: colorText 5s ease-in-out infinite;
-    animation-delay: 0s;
-}
-#Text_1_C path:nth-child(2) {
-    animation: colorText 5s ease-in-out infinite;
-    animation-delay: 0.2s;
-}
-#Text_1_C path:nth-child(3) {
-    animation: colorText 5s ease-in-out infinite;
-    animation-delay: 0.4s;
-}
-#Text_1_C path:nth-child(4) {
-    animation: colorText 5s ease-in-out infinite;
-    animation-delay: 0.6s;
-}
-#Text_1_C path:nth-child(5) {
-    animation: colorText 5s ease-in-out infinite;
-    animation-delay: 0.8s;
-}
-#Text_1_C path:nth-child(6) {
-    animation: colorText 5s ease-in-out infinite;
-    animation-delay: 1s;
-}
-#Text_1_C path:nth-child(7) {
-    animation: colorText 5s ease-in-out infinite;
-    animation-delay: 1.2s;
-}
-#Text_1_C path:nth-child(8) {
-    animation: colorText 5s ease-in-out infinite;
-    animation-delay: 1.4s;
-}
-#Text_1_C path:nth-child(9) {
-    animation: colorText 5s ease-in-out infinite;
-    animation-delay: 1.6s;
-}
-#Text_1_C path:nth-child(10) {
-    animation: colorText 5s ease-in-out infinite;
-    animation-delay: 1.8s;
-}
-#Text_1_C path:nth-child(11) {
-    animation: colorText 5s ease-in-out infinite;
-    animation-delay: 2s;
-}
-
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-    .logo-wrapper {
-        width: clamp(180px, 25vw, 300px); /* Slightly smaller on tablets */
-    }
+
     .welcome-content-container {
         gap: 2.5rem;
     }
 }
 
 @media (max-width: 768px) {
-    .compass-welcome {
-        min-height: clamp(500px, 40vh, 1000px);
-    }
 
-    .logo-wrapper {
-        width: clamp(150px, 35vw, 250px); /* Larger relative size on mobile */
-        margin-bottom: 2rem;
-    }
     .welcome-content-container {
         flex-direction: column;
         gap: 1rem;
@@ -595,17 +438,13 @@ nav a:hover::after {
     .text-content {
         padding: 1.8rem;
     }
+
+    .text-content h3{
+        text-align: start;
+    }
 }
 
 @media (max-width: 500px) {
-
-    .logo-wrapper {
-        width: clamp(120px, 45vw, 200px); /* Larger relative size on mobile */
-        margin-bottom: 0.5rem;
-    }
-    .welcome-content-container {
-        gap: 0.5rem;
-    }
     .text-content {
         padding: 1rem;
     }
@@ -621,8 +460,8 @@ nav a:hover::after {
 }
 /*Welcome section ends here*/
 
-/* News and Event section */
 
+/* News and Event section */
 
 main {
     padding: 1.5rem;
@@ -636,21 +475,25 @@ main {
 }
 
 .section-title {
-    font-size: 1.5rem;
     margin-bottom: 1.5rem;
-    color: var(--primary-color);
+    position: relative;
+}
+
+.section-title h2 {
     border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 0.5rem;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: 700;
 }
 
-.section p{
+.section-title .section-title-description {
     color: var(--paragraph-text-color);
-}
-
-@media (min-width: 768px) {
-    .section-title {
-        font-size: 1.8rem;
-    }
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+    display: inline-block;
 }
 
 .news-container, .events-container, .service-intro-container {
@@ -719,7 +562,6 @@ main {
 
 .event-card__image-container {
     position: relative;
-    /* height: 100%; */
     overflow: hidden;
 }
 
@@ -903,7 +745,7 @@ main {
     overflow: hidden; /* Ensures nothing spills out */
     background-color: var(--primary-color); /* Fallback color */
     background: linear-gradient(var(--welcome-gradient-top), var(--welcome-gradient-bottom)), 
-                    url('../images/construction-Equipments.webp');
+                    url('../images/construction-Equipments.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -920,6 +762,9 @@ main {
     gap: clamp(1rem, 3vw, 2rem); /* Responsive gap */
     padding: 1rem 0;
     margin: 2 auto; /* Center container */
+    background-color: var(--stat-container-bg);
+    backdrop-filter: blur(5px);
+    border-radius: 8px;
 }
 
 /* Rest of your existing styles remain the same */
@@ -972,13 +817,6 @@ main {
 
 /* Service intro section style starts here*/
 
-.section-title-description {
-    font-size: 1rem;
-    color: var(--text-gray);
-    margin-bottom: 2rem;
-    font-weight: normal;
-}
-
 /* Style each service card */
 .service-card {
     flex: 1;
@@ -1013,44 +851,109 @@ main {
 /*Service section style ends here*/
 
 /* Why choos us */
-.why-choose-container {
-    margin-left: auto;
-    margin-right: auto;
+
+/* Why Choose Us Section */
+.why-choose-us {
+    padding: 5rem 2rem;
+    position: relative;
+    overflow: hidden;
 }
 
-.why-choose-detail {
+.section-header {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.section-header h2 {
+    border-bottom: 2px solid var(--primary-color);
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.section-header .section-subtitle {
+    color: var(--paragraph-text-color);
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+    display: inline-block;
+}
+
+/* Benefits Grid */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 0 auto 3rem;
+}
+
+.benefit-card {
+    background: var(--cards-bg-color);
+    box-shadow: 0 4px 6px var(--box-shadow-color);
+    padding: 2.5rem 2rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.benefit-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.benefit-card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--footer-header1-color);
+    transition: height 0.3s ease;
+}
+
+.benefit-card:hover:before {
+    height: 10px;
+}
+
+.benefit-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 1.5rem;
     display: flex;
-    align-items: start;
-    gap: 2px;
-}
-
-.check-box {
-    font-size: h6;
-    width: 30px;
+    align-items: center;
+    justify-content: center;
+    background: rgba(58, 134, 255, 0.1);
+    border-radius: 50%;
     color: var(--primary-color);
 }
 
-.expert-items {
-    color: var(--text-gray);
+.benefit-icon svg {
+    width: 30px;
+    height: 30px;
 }
 
-.team-working {
-    border-radius: 6px;
-    object-fit: cover;
+.benefit-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
 }
 
-.why-choose-items {
-    display: flex;
-    justify-content: space-between;
-    gap: 2px;
+.benefit-card p {
+    color: var(--paragraph-text-color);
+    line-height: 1.6;
+    font-size: 0.95rem;
 }
 
-@media (max-width: 600px){
-    
-    .why-choose-items {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
+/* Responsive */
+@media (max-width: 768px) {
+    .benefits-grid {
+        grid-template-columns: 1fr;
     }
 }
 
