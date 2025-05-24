@@ -3,7 +3,7 @@
 // Counter Animation Function
 function initCounterAnimation() {
     const counters = document.querySelectorAll('.counter');
-    const animationDuration = 2000;
+    const animationDuration = 5000;
     let animationStarted = false;
   
     const observer = new IntersectionObserver((entries) => {
@@ -300,8 +300,8 @@ function loadPosts() {
     const eventsContainer = document.querySelector('.events-container');
     
     // Clear existing content
-    newsContainer.innerHTML = '';
-    eventsContainer.innerHTML = '';
+    if (newsContainer) newsContainer.innerHTML = '';
+    if (eventsContainer) eventsContainer.innerHTML = '';
     
     // Filter and sort posts
     const newsPosts = posts.filter(post => post.type === 'news')
@@ -314,10 +314,10 @@ function loadPosts() {
         newsPosts.forEach(post => {
             const postElement = createPostElement(post);
             addPostNavigation(postElement, post.id);
-            newsContainer.appendChild(postElement);
+            if (newsContainer) newsContainer.appendChild(postElement);
         });
     } else {
-        newsContainer.innerHTML = '<p class="no-posts">No news articles found.</p>';
+        if (newsContainer) newsContainer.innerHTML = '<p class="no-posts">No news articles found.</p>';
     }
     
     // Handle event posts
@@ -325,10 +325,10 @@ function loadPosts() {
         eventPosts.forEach(post => {
             const postElement = createPostElement(post);
             addPostNavigation(postElement, post.id);
-            eventsContainer.appendChild(postElement);
+            if (eventsContainer) eventsContainer.appendChild(postElement);
         });
     } else {
-        eventsContainer.innerHTML = '<p class="no-posts">No upcoming events found.</p>';
+        if (eventsContainer) eventsContainer.innerHTML = '<p class="no-posts">No upcoming events found.</p>';
     }
 }
 
@@ -395,7 +395,6 @@ if (window.location.pathname.includes('pages/news-events.html')) {
         const posts = JSON.parse(localStorage.getItem(POSTS_KEY)) || [];
         posts.sort((a, b) => new Date(b.date) - new Date(a.date));
         
-        displayFeaturedPosts(posts.slice(0, 3));
         displayAllPosts(posts);
         initSlideshows();
         
@@ -570,12 +569,6 @@ function initializeBusinessHours() {
         // Update the status display
         openStatus.textContent = isOpen ? "(Open)" : "(Closed)";
         openStatus.style.color = isOpen ? "#4CAF50" : "#F44336"; // Green/Red colors
-        
-        // For debugging (view in browser console)
-        console.log(`Business hours check: 
-            Day ${day} (${getDayName(day)}), 
-            Time ${hours}:${minutes < 10 ? '0' + minutes : minutes}, 
-            Status: ${isOpen ? 'OPEN' : 'CLOSED'}`);
     }
     
     // Helper function for debugging
@@ -603,11 +596,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sort posts by date (newest first)
     posts.sort((a, b) => new Date(b.date) - new Date(a.date));
     
-    // Display featured posts (latest 3)
-    postSlideshow(posts.slice(0, 3));
-    
     // Display all posts
     displayAllPosts(posts);
+    
+    // Display featured posts (latest 3)
+    postSlideshow(posts.slice(0, 3));
             
     // Initialize all slideshows
     initSlideshows();
@@ -615,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function postSlideshow(posts) {
     const container = document.getElementById('featuredPosts');
-    container.innerHTML = '';
+    if (container) container.innerHTML = '';
     
     // Create slideshow container
     const slideshow = document.createElement('div');
@@ -658,8 +651,10 @@ function postSlideshow(posts) {
         controls.appendChild(dot);
     });
     
-    container.appendChild(slideshow);
-    container.appendChild(controls);
+    if (container) {
+        container.appendChild(slideshow);
+        container.appendChild(controls);
+    }
     
     // Auto-rotate slides
     let currentSlide = 0;
@@ -679,7 +674,7 @@ function postSlideshow(posts) {
     dots[0]?.classList.add('active');
     
     // Auto-rotation
-    const rotationInterval = setInterval(() => {
+    let rotationInterval = setInterval(() => {
         currentSlide = (currentSlide + 1) % slideCount;
         updateSlide();
     }, 5000); // Change slide every 5 seconds
@@ -695,21 +690,24 @@ function postSlideshow(posts) {
     });
     
     // Pause on hover
-    container.addEventListener('mouseenter', () => {
-        clearInterval(rotationInterval);
-    });
-    
-    container.addEventListener('mouseleave', () => {
-        rotationInterval = setInterval(() => {
-            currentSlide = (currentSlide + 1) % slideCount;
-            updateSlide();
-        }, 5000);
-    });
+    if (container){
+        container.addEventListener('mouseenter', () => {
+            clearInterval(rotationInterval);
+        });
+        
+        container.addEventListener('mouseleave', () => {
+            rotationInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % slideCount;
+                updateSlide();
+            }, 5000);
+        });
+    }
 }
 
 function displayAllPosts(posts) {
     const container = document.getElementById('allPosts');
-    container.innerHTML = '';
+    // Safely clear only if elements exist
+    if (container) container.innerHTML = '';
     
     if (posts.length === 0) {
         container.innerHTML = '<p class="no-posts">No posts available yet.</p>';
@@ -772,7 +770,7 @@ function displayAllPosts(posts) {
             ` : ''}
         `;
         
-        container.appendChild(postElement);
+        if (container) container.appendChild(postElement);
     });
 }
 
@@ -784,7 +782,7 @@ function initSlideshows() {
         const dots = container.querySelectorAll('.slide-dot');
         let currentIndex = 0;
         let intervalId;
-        const rotationInterval = 5000; // 5 seconds
+        let rotationInterval = 5000; // 5 seconds
         
         const showSlide = (index) => {
             // Handle wrap-around
@@ -866,7 +864,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const navButtons = document.querySelectorAll('.slide-nav-btn');
     let currentSlide = 0;
     let slideInterval;
-    const slideDuration = 6000; // 6 seconds per slide
+    let slideDuration = 6000; // 6 seconds per slide
     
     function showSlide(index) {
         // Reset all slides
@@ -879,12 +877,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Set new current slide
         currentSlide = (index + slides.length) % slides.length;
-        slides[currentSlide].classList.add('active');
-        navButtons[currentSlide].classList.add('active');
+        if (slides.length > 0) {
+            slides[currentSlide].classList.add('active');
+            navButtons[currentSlide].classList.add('active');
         
-        // Set previous slide for transition effect
-        const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-        slides[prevIndex].classList.add('prev');
+            // Set previous slide for transition effect
+            const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+            slides[prevIndex].classList.add('prev');
+        }
     }
     
     function nextSlide() {
@@ -898,8 +898,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Pause on hover
     const slideshow = document.querySelector('.slideshow-container');
-    slideshow.addEventListener('mouseenter', () => clearInterval(slideInterval));
-    slideshow.addEventListener('mouseleave', startSlideShow);
+    if (slideInterval) {
+        slideshow.addEventListener('mouseenter', () => clearInterval(slideInterval));
+        slideshow.addEventListener('mouseleave', startSlideShow);
+    }
     
     // Navigation buttons
     navButtons.forEach((button, index) => {
@@ -913,4 +915,89 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize
     showSlide(0);
     startSlideShow();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const track = document.querySelector('.testimonials-track');
+    const cards = document.querySelectorAll('.testimonial-card');
+    const prevBtn = document.querySelector('.previous');
+    const nextBtn = document.querySelector('.next');
+    let currentPosition = 0;
+    let visibleCards = 3;
+    let cardWidth = 0;
+
+    // Calculate the width of each card including margins
+    function calculateCardWidth() {
+        if (cards.length === 0) return 0;
+        
+        const cardStyle = window.getComputedStyle(cards[currentPosition]);
+        const margin = parseFloat(cardStyle.marginLeft) + parseFloat(cardStyle.marginRight);
+        return cards[0].offsetWidth + margin;
+    }
+
+    // Update the number of visible cards based on screen size
+    function updateVisibleCards() {
+        if (window.innerWidth <= 768) {
+            visibleCards = 1;
+        } else if (window.innerWidth <= 1080) {
+            visibleCards = 2;
+        } else {
+            visibleCards = 3;
+        }
+        cardWidth = calculateCardWidth();
+    }
+
+    // Update the carousel position
+    function updateCarousel() {
+        if (!track) return;
+        
+        const translateValue = -currentPosition * cardWidth;
+        track.style.transform = `translateX(${translateValue}px)`;
+        
+        // Update button states
+        if (prevBtn) prevBtn.disabled = currentPosition <= 0;
+        if (nextBtn) nextBtn.disabled = currentPosition >= cards.length - visibleCards;
+    }
+
+    // Go to previous slide
+    function prevSlide() {
+        console.log('Prev clicked - Before:', visibleCards, 'cardWidth:', cardWidth);
+        if (currentPosition > 0) {
+            currentPosition--;
+            updateCarousel();
+        }
+    }
+
+    // Go to next slide
+    function nextSlide() {
+        console.log('next clicked - Before:', visibleCards, 'cardWidth:', cardWidth);
+        if (currentPosition < cards.length - visibleCards) {
+            currentPosition++;
+            updateCarousel();
+        }
+    }
+
+    // Initialize the carousel
+    function initCarousel() {
+        updateVisibleCards();
+        updateCarousel();
+        
+        // Add event listeners
+        if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+        if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+        
+        window.addEventListener('resize', function() {
+            const oldVisibleCards = visibleCards;
+            updateVisibleCards();
+            
+            // Only update if visible cards changed
+            if (visibleCards !== oldVisibleCards) {
+                currentPosition = Math.min(currentPosition, cards.length - visibleCards);
+                updateCarousel();
+            }
+        });
+    }
+
+    // Start the carousel
+    initCarousel();
 });
