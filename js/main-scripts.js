@@ -709,7 +709,7 @@ function displayAllPosts(posts) {
     // Safely clear only if elements exist
     if (container) container.innerHTML = '';
     
-    if (posts.length === 0) {
+    if (posts.length === 0 && container) {
         container.innerHTML = '<p class="no-posts">No posts available yet.</p>';
         return;
     }
@@ -917,7 +917,80 @@ document.addEventListener('DOMContentLoaded', function() {
     startSlideShow();
 });
 
+const TestimonialDB = {
+    // Key for localStorage
+    STORAGE_KEY: 'compass_aeped_testimonials',
+    
+    // Get all testimonials
+    getAll: function() {
+        const testimonials = localStorage.getItem(this.STORAGE_KEY);
+        return testimonials ? JSON.parse(testimonials) : [];
+    },
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('loadTestimonials');
+    function loadTestimonials() {
+        const testimonials = TestimonialDB.getAll();
+        const testimonialsTrack = document.querySelector('.testimonials-track');
+        
+        if (testimonials.length === 0) {
+            testimonialsTrack.innerHTML = `
+                <div class="empty-state">
+                    <i class="material-icons">format_quote</i>
+                    <p>No testimonials yet. Create your first one!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        testimonialsTrack.innerHTML = '';
+        testimonials.forEach(testimonial => {
+            const testimonialItem = createTestimonialItem(testimonial);
+            testimonialsTrack.appendChild(testimonialItem);
+        });
+    }
+
+    function createTestimonialItem(testimonial) {
+        const stars = '★'.repeat(testimonial.rating) + '☆'.repeat(5 - testimonial.rating);
+        const date = new Date(testimonial.createdAt).toLocaleDateString();
+        const imageCount = testimonial.images ? testimonial.images.length : 0;
+
+        // Add badge if multiple images exist
+        const imageBadge = imageCount > 0 ? 
+            `<span class="image-count-badge">${imageCount} images</span>` : '';
+        
+        const element = document.createElement('div');
+        element.className = 'testimonial-card';
+        element.dataset.id = testimonial.id;
+        element.innerHTML = `
+            <div class="testimonial-content">
+                <div class="rating" title="${testimonial.rating} out of 5 stars">
+                    <span class="star">${stars}</span>
+                </div>
+                <blockquote class="testimonial-quote"><p>${testimonial.quote}</p></blockquote>
+            </div>
+            <div class="client-info">
+                <div class="client-avatar">
+                    <img src="${testimonial.avatar || '../images/image-placeholder.jpg'}" alt="${testimonial.name}" class="client-avatar-image">
+                </div>
+                <div class="client-details">
+                    <h3 class="client-name">${testimonial.name}</h3>
+                    <p class="client-position">${testimonial.position}</p>
+                    <small class="testimonial-date">${date}</small>
+                </div>
+            </div>
+        `;
+        
+        return element;
+    }
+
+    // Load testimonials when the Home page shown
+    loadTestimonials();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('calculateCardWidth');
     const track = document.querySelector('.testimonials-track');
     const cards = document.querySelectorAll('.testimonial-card');
     const prevBtn = document.querySelector('.previous');

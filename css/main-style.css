@@ -1002,9 +1002,9 @@ main {
     margin: 0 10px;
     min-width: 0;
     max-width: 400px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    background: var(--cards-bg-color);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px var(--box-shadow-color);
     padding: 2rem;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -1029,13 +1029,13 @@ main {
     display: inline-block;
 }
 
-blockquote {
+.testimonial-quote {
     margin: 0;
     padding: 0;
     position: relative;
 }
 
-blockquote p {
+.testimonial-quote p {
     color: #34495e;
     font-size: 1rem;
     line-height: 1.6;
@@ -1044,8 +1044,8 @@ blockquote p {
     padding-left: 1.5rem;
 }
 
-blockquote p:before,
-blockquote p:after {
+.testimonial-quote p:before,
+.testimonial-quote p:after {
     color: #3498db;
     font-size: 3rem;
     line-height: 1;
@@ -1053,13 +1053,13 @@ blockquote p:after {
     opacity: 0.2;
 }
 
-blockquote p:before {
+.testimonial-quote p:before {
     content: "“";
     top: -0.5rem;
     left: -0.5rem;
 }
 
-blockquote p:after {
+.testimonial-quote p:after {
     content: "”";
     bottom: -2rem;
     right: 0;
@@ -1067,23 +1067,29 @@ blockquote p:after {
 
 .client-info {
     display: flex;
-    align-items: center;
-    margin-top: 1.5rem;
+    flex-direction: column;
+    align-items: start;
 }
 
 .client-avatar {
-    width: 60px;
-    height: 60px;
-    /* border-radius: 50%; */
+    position: relative;
     overflow: hidden;
-    margin-right: 1rem;
-    border: 3px solid #ecf0f1;
+    border-radius: 8px 8px 0 0;
+    width: 100%;
+    height: 200px;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
-.client-avatar img {
+.client-avatar:hover .client-avatar-image {
+    transform: scale(1.05);
+}
+
+.client-avatar-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
 .client-details {

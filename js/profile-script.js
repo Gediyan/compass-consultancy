@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!currentUser) return;
 
         if (currentUser.accountType === 'admin') {
-            console.log('Please:', currentUser);
             document.querySelector('.admin-tab').style.display = 'block';
         }
         updateProfileDisplay();
@@ -764,7 +763,7 @@ function showNotification(message, isError = false) {
 // Database functions
 const TestimonialDB = {
     // Key for localStorage
-    STORAGE_KEY: 'website_testimonials',
+    STORAGE_KEY: 'compass_aeped_testimonials',
     
     // Get all testimonials
     getAll: function() {
@@ -848,26 +847,113 @@ function loadTestimonials() {
     });
 }
 
-// Preview avatar image when selected
-document.getElementById('clientAvatar').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    const preview = document.getElementById('avatarPreview');
+
+// Add these variables at the top of your script
+let selectedClientImages = [];
+
+// Image selection handler
+document.getElementById('clientImages').addEventListener('change', function(e) {
+    const files = Array.from(e.target.files);
     
-    if (file) {
+    files.forEach(file => {
+        if (!file.type.match('image.*')) {
+            showNotification(`Skipped ${file.name} - not an image file`, true);
+            return;
+        }
+        
+        if (file.size > 2 * 1024 * 1024) {
+            showNotification(`Skipped ${file.name} - file too large (max 2MB)`, true);
+            return;
+        }
+        
         const reader = new FileReader();
         reader.onload = function(e) {
-            preview.innerHTML = `<img src="${e.target.result}" alt="Avatar Preview">`;
+            selectedClientImages.push({
+                id: `new-${Date.now()}`,
+                data: e.target.result,
+                file: file.name,
+                isExisting: false
+            });
+            updateClientImagePreviews();
         };
         reader.readAsDataURL(file);
-    } else {
-        preview.innerHTML = '';
-    }
+    });
+    
+    // Reset file input to allow selecting same files again
+    e.target.value = '';
 });
+
+
+
+function updateClientImagePreviews() {
+    const previewContainer = document.getElementById('testimonialImagePreviews');
+    previewContainer.innerHTML = '';
+
+    selectedClientImages.forEach((img, index) => {
+        const previewItem = document.createElement('div');
+        previewItem.className = 'image-preview-item';
+        
+        if (img.remove) {
+            // Show "will be removed" state
+            previewItem.classList.add('marked-for-removal');
+            previewItem.innerHTML = `
+                <img src="${img.data}" alt="Marked for removal">
+                <button class="undo-btn" onclick="removeClientCurrentImage(${index})">
+                    <i class="material-icons">undo</i>
+                </button>
+                <span class="removal-notice">Will be removed</span>
+            `;
+        } else {
+            // Show normal image with remove option
+            previewItem.innerHTML = `
+                <img src="${img.data}" alt="Preview image ${index + 1}">
+                <button class="remove-btn" onclick="removeClientCurrentImage(${index})">
+                    <i class="material-icons">close</i>
+                </button>
+                <span class="image-name">${img.file}</span>
+            `;
+        }
+        previewContainer.appendChild(previewItem);
+    });
+
+    // Add "Add more images" button if we have space
+    if (selectedClientImages.filter(img => !img.remove).length < 10) {
+        const addMoreBtn = document.createElement('button');
+        addMoreBtn.type = 'button';
+        addMoreBtn.className = 'btn btn--secondary add-more-btn';
+        addMoreBtn.innerHTML = '<i class="material-icons">add</i> Add More Images';
+        addMoreBtn.addEventListener('click', () => document.getElementById('clientImages').click());
+        previewContainer.appendChild(addMoreBtn);
+    }
+}
+
+window.removeClientCurrentImage = function(index) {
+    // Toggle removal state
+    if (selectedClientImages[index].remove) {
+        // If already marked, undo the removal
+        delete selectedClientImages[index].remove;
+    } else {
+        // Mark for removal
+        selectedClientImages[index].remove = true;
+    }
+    updateClientImagePreviews();
+};
+
+// Add this undo function
+window.undoRemoveImage = function(index) {
+    delete selectedClientImages[index].remove;
+    updateClientImagePreviews();
+};
 
 // Function to create testimonial item HTML
 function createTestimonialItem(testimonial) {
     const stars = '★'.repeat(testimonial.rating) + '☆'.repeat(5 - testimonial.rating);
     const date = new Date(testimonial.createdAt).toLocaleDateString();
+    const imageCount = testimonial.images ? testimonial.images.length : 0;
+
+    // Add badge if multiple images exist
+    const imageBadge = imageCount > 0 ? 
+        `<span class="image-count-badge">${imageCount} images</span>` : '';
     
     const element = document.createElement('div');
     element.className = 'testimonial-item';
@@ -879,7 +965,8 @@ function createTestimonialItem(testimonial) {
         <blockquote class="testimonial-quote">${testimonial.quote}</blockquote>
         <div class="client-info">
             <div class="client-avatar">
-                <img src="${testimonial.avatar || 'default-avatar.jpg'}" alt="${testimonial.name}">
+                <img src="${testimonial.avatar || '../images/image-placeholder.jpg'}" alt="${testimonial.name}" class="client-avatar-image">
+                ${imageBadge}
             </div>
             <div class="client-details">
                 <h4>${testimonial.name}</h4>
@@ -904,6 +991,10 @@ function createTestimonialItem(testimonial) {
 document.querySelector('.testimonials-list').addEventListener('click', function(e) {
     const testimonialItem = e.target.closest('.testimonial-item');
     if (!testimonialItem) return;
+
+    if (!editingTestimonial) {
+        selectedClientImages = []
+    };
     
     const testimonialId = testimonialItem.getAttribute('data-id');
     
@@ -937,34 +1028,6 @@ document.querySelector('.testimonials-list').addEventListener('click', function(
     }
 });
 
-// Populate form for editing
-function populateEditForm(testimonial) {
-    document.getElementById('testimonialRating').value = testimonial.rating;
-    document.getElementById('testimonialQuote').value = testimonial.quote;
-    document.getElementById('clientName').value = testimonial.name;
-    document.getElementById('clientPosition').value = testimonial.position;
-    
-    // Handle avatar preview
-    const preview = document.getElementById('avatarPreview');
-    if (testimonial.avatar) {
-        preview.innerHTML = `<img src="${testimonial.avatar}" alt="Avatar Preview">`;
-    } else {
-        preview.innerHTML = '';
-    }
-    
-    // Scroll to form
-    document.querySelector('#testimonialForm').scrollIntoView({ behavior: 'smooth' });
-    
-    // Change form to update mode
-    const form = document.getElementById('testimonialForm');
-    form.dataset.editId = testimonial.id;
-    form.querySelector('button[type="submit"]').innerHTML = '<i class="material-icons">save</i> Update Testimonial';
-    
-    // Update form submit handler temporarily
-    form.removeEventListener('submit', handleFormSubmit);
-    form.addEventListener('submit', handleUpdateSubmit);
-}
-
 // Handle form submission for new testimonials
 async function handleFormSubmit(e) {
     e.preventDefault();
@@ -973,13 +1036,13 @@ async function handleFormSubmit(e) {
     const quote = document.getElementById('testimonialQuote').value;
     const name = document.getElementById('clientName').value;
     const position = document.getElementById('clientPosition').value;
-    const avatarFile = document.getElementById('clientAvatar').files[0];
+
+    // Filter out images marked for removal
+    const finalImages = selectedClientImages .filter(img => !img.remove) .map(img => img.data);
+    const fileName = selectedClientImages .filter(filesName => !filesName.remove) .map(filesName => filesName.file);
     
-    // Convert image to base64 for storage
-    let avatarBase64 = '';
-    if (avatarFile) {
-        avatarBase64 = await convertImageToBase64(avatarFile);
-    }
+    // Ensure we have at least one image
+    const imagesBase64 = finalImages.length > 0 ? finalImages : ['../images/image-placeholder.jpg'];
     
     // Create testimonial object
     const testimonial = {
@@ -987,8 +1050,10 @@ async function handleFormSubmit(e) {
         quote,
         name,
         position,
-        avatar: avatarBase64 || 'default-avatar.jpg',
-        createdAt: new Date().toISOString()
+        avatar: imagesBase64[0] || '../images/image-placeholder.jpg', // First image as avatar
+        images: imagesBase64,
+        createdAt: new Date().toISOString(),
+        fileNameArray: fileName
     };
     
     // Save to database
@@ -999,24 +1064,70 @@ async function handleFormSubmit(e) {
     
     // Reset form
     this.reset();
-    document.getElementById('avatarPreview').innerHTML = '';
+    selectedClientImages = []
+    document.getElementById('testimonialImagePreviews').innerHTML = '';
     
     // Show success message
     showNotification('Testimonial saved successfully!');
 }
 
-// Convert image file to base64
-function convertImageToBase64(file) {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(file);
-    });
+let editingTestimonial = null;
+
+// Populate form for editing with enhanced image management
+function populateEditForm(testimonial) {
+
+    if (editingTestimonial === testimonial.id) {
+        showNotification('You are already editing this testimony');
+        return;
+    }
+
+    // Reset form
+    const form = document.getElementById('testimonialForm');
+    form.reset();
+
+    if (!testimonial) {
+        showNotification('Testimony not found', true);
+        return;
+    }
+
+    document.getElementById('testimonialRating').value = testimonial.rating;
+    document.getElementById('testimonialQuote').value = testimonial.quote;
+    document.getElementById('clientName').value = testimonial.name;
+    document.getElementById('clientPosition').value = testimonial.position;
+
+    // Store original images reference
+    const currentTestimonialImagesInput = document.createElement('input');
+    currentTestimonialImagesInput.type = 'hidden';
+    currentTestimonialImagesInput.id = 'currentImages';
+    currentTestimonialImagesInput.value = JSON.stringify(testimonial.images);
+    form.appendChild(currentTestimonialImagesInput);
+
+    // Initialize selectedImages with existing images
+    selectedClientImages = (testimonial.images).map((img, index) => ({
+        id: `existing-${index}`,
+        data: img,
+        file: testimonial.fileNameArray[index],
+        isExisting: true
+    }));
+
+    // Display image previews
+    updateClientImagePreviews();
+    
+    // Change form to update mode
+    form.dataset.editId = testimonial.id;
+    editingTestimonial = testimonial.id;
+    form.querySelector('button[type="submit"]').innerHTML = '<i class="material-icons">save</i> Update Testimonial';
+
+    // Scroll to form
+    form.scrollIntoView({ behavior: 'smooth' });
+
+    // Update form submit handler temporarily
+    form.removeEventListener('submit', handleFormSubmit);
+    form.addEventListener('submit', handleUpdateSubmit);
 }
 
-// Handle form submission for updates
-function handleUpdateSubmit(e) {
+// Handle form submission for updates with image management
+async function handleUpdateSubmit(e) {
     e.preventDefault();
     
     const form = e.target;
@@ -1027,7 +1138,15 @@ function handleUpdateSubmit(e) {
     const quote = document.getElementById('testimonialQuote').value;
     const name = document.getElementById('clientName').value;
     const position = document.getElementById('clientPosition').value;
-    const avatarFile = document.getElementById('clientAvatar').files[0];
+
+    
+
+    // Filter out images marked for removal
+    const finalImages = selectedClientImages .filter(img => !img.remove) .map(img => img.data);
+    const fileName = selectedClientImages .filter(filesName => !filesName.remove) .map(filesName => filesName.file);
+    
+    // Ensure we have at least one image
+    const imagesBase64 = finalImages.length > 0 ? finalImages : ['../images/image-placeholder.jpg'];
     
     // Prepare updated data
     const updatedData = {
@@ -1035,21 +1154,20 @@ function handleUpdateSubmit(e) {
         quote,
         name,
         position,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        fileNameArray: fileName
     };
     
-    // If new image was selected, convert and add to update
-    if (avatarFile) {
-        convertImageToBase64(avatarFile).then(avatarBase64 => {
-            updatedData.avatar = avatarBase64;
-            completeUpdate(testimonialId, updatedData, form);
-        });
-    } else {
-        completeUpdate(testimonialId, updatedData, form);
+    // Add new images
+    updatedData.images = imagesBase64;
+    
+    // Set avatar (first image that's not being removed, or first new image)
+    if (imagesBase64.length > 0) {
+        updatedData.avatar = imagesBase64[0];
+    } else if (updatedData.images.length > 0) {
+        updatedData.avatar = updatedData.images[0];
     }
-}
-
-function completeUpdate(testimonialId, updatedData, form) {
+    
     // Update in database
     const isUpdated = TestimonialDB.update(testimonialId, updatedData);
     
@@ -1059,7 +1177,8 @@ function completeUpdate(testimonialId, updatedData, form) {
         
         // Reset form
         form.reset();
-        document.getElementById('avatarPreview').innerHTML = '';
+        editingTestimonial = '';
+        document.getElementById('testimonialImagePreviews').innerHTML = '';
         delete form.dataset.editId;
         form.querySelector('button[type="submit"]').innerHTML = '<i class="material-icons">save</i> Save Testimonial';
         
@@ -1072,6 +1191,7 @@ function completeUpdate(testimonialId, updatedData, form) {
         showNotification('Failed to update testimonial!', true);
     }
 }
+
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', () => {
