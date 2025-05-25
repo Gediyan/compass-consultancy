@@ -954,11 +954,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function createTestimonialItem(testimonial) {
         const stars = '★'.repeat(testimonial.rating) + '☆'.repeat(5 - testimonial.rating);
         const date = new Date(testimonial.createdAt).toLocaleDateString();
-        const imageCount = testimonial.images ? testimonial.images.length : 0;
-
-        // Add badge if multiple images exist
-        const imageBadge = imageCount > 0 ? 
-            `<span class="image-count-badge">${imageCount} images</span>` : '';
+        const testimonialImages = testimonial.images || [];
         
         const element = document.createElement('div');
         element.className = 'testimonial-card';
@@ -972,7 +968,12 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="client-info">
                 <div class="client-avatar">
-                    <img src="${testimonial.avatar || '../images/image-placeholder.jpg'}" alt="${testimonial.name}" class="client-avatar-image">
+                    <img src="${testimonial.avatar || '../images/image-placeholder.jpg'}" 
+                        alt="${testimonial.name}" 
+                        class="client-avatar-image"
+                        data-testimonial-id="${testimonial.id}">
+                    ${testimonialImages.length > 1 ? 
+                        `<span class="image-count-badge">${testimonialImages.length}</span>` : ''}
                 </div>
                 <div class="client-details">
                     <h3 class="client-name">${testimonial.name}</h3>
@@ -982,7 +983,152 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
+        // Add click handler for avatar image
+        const avatarImage = element.querySelector('.client-avatar-image');
+        avatarImage.addEventListener('click', () => {
+            openImagePopup(testimonial);
+        });
+        
         return element;
+    }
+
+    function openImagePopup(testimonial) {
+        const testimonialImages = testimonial.images || [];
+        if (testimonialImages.length === 0) return;
+        
+        // Create popup overlay
+        const popupOverlay = document.createElement('div');
+        popupOverlay.className = 'testimonial-image-popup-overlay';
+        
+        // Create popup content
+        const popupContent = document.createElement('div');
+        popupContent.className = 'testimonial-image-popup';
+        
+        // Create main image container
+        const imageContainer = document.createElement('div');
+        imageContainer.className = 'popup-image-container';
+        
+        // Create image element
+        const currentImage = document.createElement('img');
+        currentImage.className = 'popup-main-image';
+        currentImage.src = testimonial.avatar || testimonialImages[0];
+        currentImage.alt = `${testimonial.name}'s images`;
+        
+        // Add navigation controls if multiple images
+        if (testimonialImages.length > 1) {
+            // Previous button
+            const prevButton = document.createElement('button');
+            prevButton.className = 'popup-nav-button popup-prev-button';
+            prevButton.innerHTML = `
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+                </svg>
+            `;
+            
+            // Next button
+            const nextButton = document.createElement('button');
+            nextButton.className = 'popup-nav-button popup-next-button';
+            nextButton.innerHTML = `
+                <svg viewBox="0 0 24 24">
+                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                </svg>
+            `;
+            
+            // Image counter
+            const imageCounter = document.createElement('div');
+            imageCounter.className = 'popup-image-counter';
+            imageCounter.textContent = `1 / ${testimonialImages.length}`;
+            
+            // Thumbnail strip
+            const thumbnailStrip = document.createElement('div');
+            thumbnailStrip.className = 'popup-thumbnail-strip';
+            
+            testimonialImages.forEach((img, index) => {
+                const thumb = document.createElement('img');
+                thumb.className = 'popup-thumbnail';
+                thumb.src = img;
+                thumb.alt = `Thumbnail ${index + 1}`;
+                thumb.dataset.index = index;
+                
+                if (img === (testimonial.avatar || testimonialImages[0])) {
+                    thumb.classList.add('active-thumbnail');
+                }
+                
+                thumb.addEventListener('click', () => {
+                    currentImage.src = img;
+                    updateActiveThumbnail(thumbnailStrip, index);
+                    imageCounter.textContent = `${index + 1} / ${testimonialImages.length}`;
+                });
+                
+                thumbnailStrip.appendChild(thumb);
+            });
+            
+            // Navigation functionality
+            let currentIndex = testimonial.avatar ? 
+                testimonialImages.indexOf(testimonial.avatar) : 0;
+            if (currentIndex === -1) currentIndex = 0;
+            
+            const navigate = (direction) => {
+                if (direction === 'prev') {
+                    currentIndex = (currentIndex - 1 + testimonialImages.length) % testimonialImages.length;
+                } else {
+                    currentIndex = (currentIndex + 1) % testimonialImages.length;
+                }
+                
+                currentImage.src = testimonialImages[currentIndex];
+                updateActiveThumbnail(thumbnailStrip, currentIndex);
+                imageCounter.textContent = `${currentIndex + 1} / ${testimonialImages.length}`;
+            };
+            
+            prevButton.addEventListener('click', () => navigate('prev'));
+            nextButton.addEventListener('click', () => navigate('next'));
+            
+            imageContainer.appendChild(prevButton);
+            imageContainer.appendChild(currentImage);
+            imageContainer.appendChild(nextButton);
+            popupContent.appendChild(imageContainer);
+            popupContent.appendChild(imageCounter);
+            popupContent.appendChild(thumbnailStrip);
+        } else {
+            // Single image view
+            imageContainer.appendChild(currentImage);
+            popupContent.appendChild(imageContainer);
+        }
+        
+        // Close button
+        const closeButton = document.createElement('button');
+        closeButton.className = 'popup-close-button';
+        closeButton.innerHTML = `
+            <svg viewBox="0 0 24 24">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+        `;
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(popupOverlay);
+        });
+        
+        popupContent.appendChild(closeButton);
+        popupOverlay.appendChild(popupContent);
+        
+        // Close when clicking outside image
+        popupOverlay.addEventListener('click', (e) => {
+            if (e.target === popupOverlay) {
+                document.body.removeChild(popupOverlay);
+            }
+        });
+        
+        document.body.appendChild(popupOverlay);
+    }
+
+    function updateActiveThumbnail(thumbnailStrip, activeIndex) {
+        const thumbnails = thumbnailStrip.querySelectorAll('.popup-thumbnail');
+        thumbnails.forEach((thumb, index) => {
+            if (index === activeIndex) {
+                thumb.classList.add('active-thumbnail');
+            } else {
+                thumb.classList.remove('active-thumbnail');
+            }
+        });
     }
 
     // Load testimonials when the Home page shown
@@ -1028,7 +1174,10 @@ document.addEventListener('DOMContentLoaded', function() {
         track.style.transform = `translateX(${translateValue}px)`;
         
         // Update button states
-        if (prevBtn) prevBtn.disabled = currentPosition <= 0;
+        if (prevBtn) {
+            prevBtn.disabled = currentPosition <= 0;
+            prevBtn.style.hover = 'none';
+        }
         if (nextBtn) nextBtn.disabled = currentPosition >= cards.length - visibleCards;
     }
 
