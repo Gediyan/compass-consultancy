@@ -706,26 +706,6 @@ document.addEventListener('DOMContentLoaded', function() {
             this.value === 'event' ? 'block' : 'none';
     });
 
-    // Helper function to show notifications
-    function showNotification(message, isError = false) {
-        const notification = document.getElementById('successNotification');
-        const icon = document.getElementById('notification-icon');
-        const msgElement = document.getElementById('notification-message');
-        
-        msgElement.textContent = message;
-        notification.className = isError ? 'notification error show' : 'notification show';
-        
-        if (isError) {
-            icon.textContent = 'error';
-        } else {
-            icon.textContent = 'check_circle';
-        }
-        
-        setTimeout(() => {
-            notification.className = 'notification';
-        }, 3000);
-    }
-
     // Forgot password modal
     deletePhotoBtn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -759,4 +739,347 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+});
+
+// Helper function to show notifications
+function showNotification(message, isError = false) {
+    const notification = document.getElementById('successNotification');
+    const icon = document.getElementById('notification-icon');
+    const msgElement = document.getElementById('notification-message');
+    
+    msgElement.textContent = message;
+    notification.className = isError ? 'notification error show' : 'notification show';
+    
+    if (isError) {
+        icon.textContent = 'error';
+    } else {
+        icon.textContent = 'check_circle';
+    }
+    
+    setTimeout(() => {
+        notification.className = 'notification';
+    }, 3000);
+}
+
+// Database functions
+const TestimonialDB = {
+    // Key for localStorage
+    STORAGE_KEY: 'website_testimonials',
+    
+    // Get all testimonials
+    getAll: function() {
+        const testimonials = localStorage.getItem(this.STORAGE_KEY);
+        return testimonials ? JSON.parse(testimonials) : [];
+    },
+    
+    // Save a new testimonial
+    save: function(testimonial) {
+        const testimonials = this.getAll();
+        testimonial.id = Date.now(); // Add unique ID
+        testimonials.unshift(testimonial); // Add to beginning of array
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(testimonials));
+        return testimonial;
+    },
+    
+    // Update a testimonial
+    update: function(id, updatedData) {
+        const testimonials = this.getAll();
+        const index = testimonials.findIndex(t => t.id == id);
+        if (index !== -1) {
+            testimonials[index] = {...testimonials[index], ...updatedData};
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(testimonials));
+            return true;
+        }
+        return false;
+    },
+    
+    // Delete a testimonial
+    delete: function(id) {
+        const testimonials = this.getAll();
+        const filtered = testimonials.filter(t => t.id != id);
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filtered));
+        return testimonials.length !== filtered.length;
+    },
+    
+    // Get a single testimonial by ID
+    getById: function(id) {
+        return this.getAll().find(t => t.id == id);
+    }
+};
+
+// Tab switching functionality
+document.querySelectorAll('.manage-tab-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        // Remove active class from all buttons and panes
+        document.querySelectorAll('.manage-tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+        
+        // Add active class to clicked button and corresponding pane
+        button.classList.add('active');
+        const tabId = button.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+        
+        // Load testimonials when the tab is shown
+        if (tabId === 'testimonials-tab') {
+            loadTestimonials();
+        }
+    });
+});
+
+// Load testimonials from database
+function loadTestimonials() {
+    const testimonials = TestimonialDB.getAll();
+    const testimonialsList = document.querySelector('.testimonials-list');
+    
+    if (testimonials.length === 0) {
+        testimonialsList.innerHTML = `
+            <div class="empty-state">
+                <i class="material-icons">format_quote</i>
+                <p>No testimonials yet. Create your first one!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    testimonialsList.innerHTML = '';
+    testimonials.forEach(testimonial => {
+        const testimonialItem = createTestimonialItem(testimonial);
+        testimonialsList.appendChild(testimonialItem);
+    });
+}
+
+// Preview avatar image when selected
+document.getElementById('clientAvatar').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('avatarPreview');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `<img src="${e.target.result}" alt="Avatar Preview">`;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.innerHTML = '';
+    }
+});
+
+// Function to create testimonial item HTML
+function createTestimonialItem(testimonial) {
+    const stars = '★'.repeat(testimonial.rating) + '☆'.repeat(5 - testimonial.rating);
+    const date = new Date(testimonial.createdAt).toLocaleDateString();
+    
+    const element = document.createElement('div');
+    element.className = 'testimonial-item';
+    element.dataset.id = testimonial.id;
+    element.innerHTML = `
+        <div class="testimonial-rating" title="${testimonial.rating} out of 5 stars">
+            ${stars}
+        </div>
+        <blockquote class="testimonial-quote">${testimonial.quote}</blockquote>
+        <div class="client-info">
+            <div class="client-avatar">
+                <img src="${testimonial.avatar || 'default-avatar.jpg'}" alt="${testimonial.name}">
+            </div>
+            <div class="client-details">
+                <h4>${testimonial.name}</h4>
+                <p>${testimonial.position}</p>
+                <small class="testimonial-date">${date}</small>
+            </div>
+        </div>
+        <div class="testimonial-actions">
+            <button type="button" class="edit-testimonial" title="Edit">
+                <i class="material-icons">edit</i>
+            </button>
+            <button type="button" class="delete-testimonial" title="Delete">
+                <i class="material-icons">delete</i>
+            </button>
+        </div>
+    `;
+    
+    return element;
+}
+
+// Handle edit and delete actions (event delegation)
+document.querySelector('.testimonials-list').addEventListener('click', function(e) {
+    const testimonialItem = e.target.closest('.testimonial-item');
+    if (!testimonialItem) return;
+    
+    const testimonialId = testimonialItem.getAttribute('data-id');
+    
+    if (e.target.closest('.edit-testimonial')) {
+        // Edit functionality
+        const testimonial = TestimonialDB.getById(testimonialId);
+        if (testimonial) {
+            populateEditForm(testimonial);
+        }
+    } else if (e.target.closest('.delete-testimonial')) {
+        // Delete functionality
+        if (confirm('Are you sure you want to delete this testimonial?')) {
+            const isDeleted = TestimonialDB.delete(testimonialId);
+            if (isDeleted) {
+                testimonialItem.remove();
+                showNotification('Testimonial deleted successfully!');
+                
+                // Show empty state if no testimonials left
+                if (!document.querySelector('.testimonial-item')) {
+                    document.querySelector('.testimonials-list').innerHTML = `
+                        <div class="empty-state">
+                            <i class="material-icons">format_quote</i>
+                            <p>No testimonials yet. Create your first one!</p>
+                        </div>
+                    `;
+                }
+            } else {
+                showNotification('Failed to delete testimonial!', true);
+            }
+        }
+    }
+});
+
+// Populate form for editing
+function populateEditForm(testimonial) {
+    document.getElementById('testimonialRating').value = testimonial.rating;
+    document.getElementById('testimonialQuote').value = testimonial.quote;
+    document.getElementById('clientName').value = testimonial.name;
+    document.getElementById('clientPosition').value = testimonial.position;
+    
+    // Handle avatar preview
+    const preview = document.getElementById('avatarPreview');
+    if (testimonial.avatar) {
+        preview.innerHTML = `<img src="${testimonial.avatar}" alt="Avatar Preview">`;
+    } else {
+        preview.innerHTML = '';
+    }
+    
+    // Scroll to form
+    document.querySelector('#testimonialForm').scrollIntoView({ behavior: 'smooth' });
+    
+    // Change form to update mode
+    const form = document.getElementById('testimonialForm');
+    form.dataset.editId = testimonial.id;
+    form.querySelector('button[type="submit"]').innerHTML = '<i class="material-icons">save</i> Update Testimonial';
+    
+    // Update form submit handler temporarily
+    form.removeEventListener('submit', handleFormSubmit);
+    form.addEventListener('submit', handleUpdateSubmit);
+}
+
+// Handle form submission for new testimonials
+async function handleFormSubmit(e) {
+    e.preventDefault();
+    // Get form values
+    const rating = document.getElementById('testimonialRating').value;
+    const quote = document.getElementById('testimonialQuote').value;
+    const name = document.getElementById('clientName').value;
+    const position = document.getElementById('clientPosition').value;
+    const avatarFile = document.getElementById('clientAvatar').files[0];
+    
+    // Convert image to base64 for storage
+    let avatarBase64 = '';
+    if (avatarFile) {
+        avatarBase64 = await convertImageToBase64(avatarFile);
+    }
+    
+    // Create testimonial object
+    const testimonial = {
+        rating,
+        quote,
+        name,
+        position,
+        avatar: avatarBase64 || 'default-avatar.jpg',
+        createdAt: new Date().toISOString()
+    };
+    
+    // Save to database
+    const savedTestimonial = TestimonialDB.save(testimonial);
+    
+    // Reload testimonials list
+    loadTestimonials();
+    
+    // Reset form
+    this.reset();
+    document.getElementById('avatarPreview').innerHTML = '';
+    
+    // Show success message
+    showNotification('Testimonial saved successfully!');
+}
+
+// Convert image file to base64
+function convertImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+}
+
+// Handle form submission for updates
+function handleUpdateSubmit(e) {
+    e.preventDefault();
+    
+    const form = e.target;
+    const testimonialId = form.dataset.editId;
+    
+    // Get form values
+    const rating = document.getElementById('testimonialRating').value;
+    const quote = document.getElementById('testimonialQuote').value;
+    const name = document.getElementById('clientName').value;
+    const position = document.getElementById('clientPosition').value;
+    const avatarFile = document.getElementById('clientAvatar').files[0];
+    
+    // Prepare updated data
+    const updatedData = {
+        rating,
+        quote,
+        name,
+        position,
+        updatedAt: new Date().toISOString()
+    };
+    
+    // If new image was selected, convert and add to update
+    if (avatarFile) {
+        convertImageToBase64(avatarFile).then(avatarBase64 => {
+            updatedData.avatar = avatarBase64;
+            completeUpdate(testimonialId, updatedData, form);
+        });
+    } else {
+        completeUpdate(testimonialId, updatedData, form);
+    }
+}
+
+function completeUpdate(testimonialId, updatedData, form) {
+    // Update in database
+    const isUpdated = TestimonialDB.update(testimonialId, updatedData);
+    
+    if (isUpdated) {
+        // Reload testimonials
+        loadTestimonials();
+        
+        // Reset form
+        form.reset();
+        document.getElementById('avatarPreview').innerHTML = '';
+        delete form.dataset.editId;
+        form.querySelector('button[type="submit"]').innerHTML = '<i class="material-icons">save</i> Save Testimonial';
+        
+        // Restore original submit handler
+        form.removeEventListener('submit', handleUpdateSubmit);
+        form.addEventListener('submit', handleFormSubmit);
+        
+        showNotification('Testimonial updated successfully!');
+    } else {
+        showNotification('Failed to update testimonial!', true);
+    }
+}
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', () => {
+    // Load testimonials if on the testimonials tab
+    if (document.querySelector('#testimonials-tab').classList.contains('active')) {
+        loadTestimonials();
+    }
+    
+    // Set up form submission handler
+    document.getElementById('testimonialForm').addEventListener('submit', handleFormSubmit);
 });

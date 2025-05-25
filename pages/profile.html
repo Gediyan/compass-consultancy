@@ -154,80 +154,153 @@
 
             <!-- Manage Website Section (Admin Only) -->
             <div id="manage" class="tab-content">
-                <div class="manage-sections">
-                    <!-- Post Creation Form -->
-                    <section class="card">
-                        <div class="section-header">
-                            <h2><i class="material-icons">post_add</i> Create New Post</h2>
-                        </div>
-                        
-                        <form id="postForm">
-                            <div class="form-group">
-                                <label for="postTitle">Post Title</label>
-                                <input type="text" id="postTitle" required>
+                <!-- Tab Navigation -->
+                <div class="manage-tabs">
+                    <button class="manage-tab-btn active" data-tab="posts-tab">Manage Posts</button>
+                    <button class="manage-tab-btn" data-tab="testimonials-tab">Manage Testimonials</button>
+                </div>
+                
+                <!-- Posts Tab -->
+                <div id="posts-tab" class="tab-pane active">
+                    <div class="manage-sections">
+                        <!-- Post Creation Form -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">post_add</i> Create New Post</h2>
                             </div>
                             
-                            <div class="form-group">
-                                <label for="postType">Post Type</label>
-                                <select id="postType" required>
-                                    <option value="">Select type</option>
-                                    <option value="news">News</option>
-                                    <option value="event">Event</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="postDescription">Description</label>
-                                <textarea id="postDescription" rows="5" required></textarea>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="postDate">Date</label>
-                                <input type="date" id="postDate" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="postImages">Select Images (Multiple)</label>
-                                <input type="file" id="postImages" name="postImages" multiple accept="image/*">
-                                <small>Recommended size: 600x400 pixels</small>
-                                <div id="imagePreviews" class="image-previews"></div>
-                            </div>
-                            
-                            <!-- Event-specific fields (hidden by default) -->
-                            <div id="eventFields" style="display: none;">
+                            <form id="postForm">
                                 <div class="form-group">
-                                    <label for="eventLocation">Location</label>
-                                    <input type="text" id="eventLocation">
-                                    
-                                    <div id="eventLocationField">
-                                        <label for="eventLocation">Event Location</label>
-                                        <div class="location-input-group">
-                                            <input type="text" id="eventLocation" name="eventLocation">
-                                            <button type="button" id="selectOnMapBtn" class="btn btn--secondary">
-                                                <i class="fas fa-map-marker-alt"></i> Select on Map
-                                            </button>
+                                    <label for="postTitle">Post Title</label>
+                                    <input type="text" id="postTitle" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="postType">Post Type</label>
+                                    <select id="postType" required>
+                                        <option value="">Select type</option>
+                                        <option value="news">News</option>
+                                        <option value="event">Event</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="postDescription">Description</label>
+                                    <textarea id="postDescription" rows="5" required></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="postDate">Date</label>
+                                    <input type="date" id="postDate" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="postImages">Select Images (Multiple)</label>
+                                    <input type="file" id="postImages" name="postImages" multiple accept="image/*">
+                                    <small>Recommended size: 600x400 pixels</small>
+                                    <div id="imagePreviews" class="image-previews"></div>
+                                </div>
+                                
+                                <!-- Event-specific fields (hidden by default) -->
+                                <div id="eventFields" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="eventLocation">Location</label>
+                                        <input type="text" id="eventLocation">
+                                        
+                                        <div id="eventLocationField">
+                                            <label for="eventLocation">Event Location</label>
+                                            <div class="location-input-group">
+                                                <input type="text" id="eventLocation" name="eventLocation">
+                                                <button type="button" id="selectOnMapBtn" class="btn btn--secondary">
+                                                    <i class="fas fa-map-marker-alt"></i> Select on Map
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn--primary">
+                                        <i class="material-icons">publish</i> Publish Post
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+                        
+                        <!-- Existing Posts Management -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">list_alt</i> Manage Existing Posts</h2>
+                            </div>
+                            <div class="posts-list">
+                                <!-- Posts will be listed here -->
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                
+                <!-- Testimonials Tab -->
+                <div id="testimonials-tab" class="tab-pane">
+                    <div class="manage-sections">
+                        <!-- Testimonial Creation Form -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">format_quote</i> Create New Testimonial</h2>
                             </div>
                             
-                            <div class="form-actions">
-                                <button type="submit" class="btn btn--primary">
-                                    <i class="material-icons">publish</i> Publish Post
-                                </button>
+                            <form id="testimonialForm">
+                                <div class="form-group">
+                                    <label for="testimonialRating">Rating (1-5)</label>
+                                    <select id="testimonialRating" required>
+                                        <option value="">Select rating</option>
+                                        <option value="1">1 Star</option>
+                                        <option value="2">2 Stars</option>
+                                        <option value="3">3 Stars</option>
+                                        <option value="4">4 Stars</option>
+                                        <option value="5">5 Stars</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="testimonialQuote">Testimonial Quote</label>
+                                    <textarea id="testimonialQuote" rows="4" required placeholder="What the client said..."></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="clientAvatar">Client Avatar</label>
+                                    <input type="file" id="clientAvatar" name="clientAvatar" accept="image/*">
+                                    <small>Recommended size: 150x150 pixels</small>
+                                    <div id="avatarPreview" class="avatar-preview"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="clientName">Client Name</label>
+                                    <input type="text" id="clientName" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="clientPosition">Client Position/Company</label>
+                                    <input type="text" id="clientPosition" required>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn--primary">
+                                        <i class="material-icons">save</i> Save Testimonial
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+                        
+                        <!-- Existing Testimonials Management -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">reviews</i> Manage Testimonials</h2>
                             </div>
-                        </form>
-                    </section>
-                    
-                    <!-- Existing Posts Management -->
-                    <section class="card">
-                        <div class="section-header">
-                            <h2><i class="material-icons">list_alt</i> Manage Existing Posts</h2>
-                        </div>
-                        <div class="posts-list">
-                            <!-- Posts will be listed here -->
-                        </div>
-                    </section>
+                            <div class="testimonials-list">
+                                <!-- Testimonials will be loaded from database -->
+                            </div>
+                        </section>
+                    </div>
                 </div>
             </div>
 
