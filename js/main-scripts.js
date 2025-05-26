@@ -457,8 +457,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create logo in header
     const popupLogo = document.createElement('img');
-    const isRoot = window.location.pathname === '/index.html' ||  window.location.pathname === '/';
-    const imagesPath = isRoot ? 'images/' : '../images/';
+    let imagesPath = '';
+    if (window.location.pathname.includes('/pages/')) {
+        imagesPath = '../images/';
+      } else {
+        path = 'images/';
+      }
     popupLogo.src = `${imagesPath}logo-700px-01.png`;
     popupLogo.alt = 'Company Logo';
     popupLogo.className = 'popup-logo';
@@ -481,7 +485,12 @@ document.addEventListener('DOMContentLoaded', function() {
     popupNav.className = 'popup-nav';
     popupContent.appendChild(popupNav);
 
-    const path = isRoot ? 'pages/' : '../pages/';
+    let path = '';
+    if (window.location.pathname.includes('/pages/')) {
+        path = '';
+      } else {
+        path = 'pages/';
+      }
 
     const isRootPath = window.location.pathname === '/index.html' ||  window.location.pathname === '/';
     const indexPath = isRootPath ? 'index.html' : '../index.html';
@@ -855,12 +864,6 @@ function initializeBusinessHours() {
         // Update the status display
         openStatus.textContent = isOpen ? "(Open)" : "(Closed)";
         openStatus.style.color = isOpen ? "#4CAF50" : "#F44336"; // Green/Red colors
-    }
-    
-    // Helper function for debugging
-    function getDayName(day) {
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        return days[day];
     }
     
     // Check immediately
