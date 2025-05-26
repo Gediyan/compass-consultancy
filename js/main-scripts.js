@@ -414,56 +414,65 @@ document.addEventListener('DOMContentLoaded', function() {
 // Mobile navigation menu toggle functionality
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Create overlay element
-  const overlay = document.createElement('div');
-  overlay.className = 'popup-overlay';
-  document.body.appendChild(overlay);
+    // Create overlay element
+    const overlay = document.createElement('div');
+    overlay.className = 'popup-overlay';
+    document.body.appendChild(overlay);
 
-  // Create mobile nav popup container
-  const mobileNavPopup = document.createElement('div');
-  mobileNavPopup.id = 'mobileNavPopup';
-  mobileNavPopup.className = 'mobile-nav-popup';
-  document.body.appendChild(mobileNavPopup);
+    // Create mobile nav popup container
+    const mobileNavPopup = document.createElement('div');
+    mobileNavPopup.id = 'mobileNavPopup';
+    mobileNavPopup.className = 'mobile-nav-popup';
+    document.body.appendChild(mobileNavPopup);
 
-  // Create popup header
-  const popupHeader = document.createElement('div');
-  popupHeader.className = 'popup-header';
-  mobileNavPopup.appendChild(popupHeader);
+    // Create popup header
+    const popupHeader = document.createElement('div');
+    popupHeader.className = 'popup-header';
+    mobileNavPopup.appendChild(popupHeader);
 
-  // Create logo in header
-  const popupLogo = document.createElement('img');
-  popupLogo.src = '../images/logo-700px-01.png';
-  popupLogo.alt = 'Company Logo';
-  popupLogo.className = 'popup-logo';
-  popupHeader.appendChild(popupLogo);
+    // Create logo in header
+    const popupLogo = document.createElement('img');
+    popupLogo.src = '../images/logo-700px-01.png';
+    popupLogo.alt = 'Company Logo';
+    popupLogo.className = 'popup-logo';
+    popupHeader.appendChild(popupLogo);
 
-  // Create close button
-  const closePopupBtn = document.createElement('button');
-  closePopupBtn.id = 'closePopupBtn';
-  closePopupBtn.className = 'close-popup';
-  closePopupBtn.innerHTML = '&times;';
-  popupHeader.appendChild(closePopupBtn);
+    // Create close button
+    const closePopupBtn = document.createElement('button');
+    closePopupBtn.id = 'closePopupBtn';
+    closePopupBtn.className = 'close-popup';
+    closePopupBtn.innerHTML = '&times;';
+    popupHeader.appendChild(closePopupBtn);
 
-  // Create popup content container
-  const popupContent = document.createElement('div');
-  popupContent.className = 'popup-content';
-  mobileNavPopup.appendChild(popupContent);
+    // Create popup content container
+    const popupContent = document.createElement('div');
+    popupContent.className = 'popup-content';
+    mobileNavPopup.appendChild(popupContent);
 
-  // Create navigation
-  const popupNav = document.createElement('nav');
-  popupNav.className = 'popup-nav';
-  popupContent.appendChild(popupNav);
+    // Create navigation
+    const popupNav = document.createElement('nav');
+    popupNav.className = 'popup-nav';
+    popupContent.appendChild(popupNav);
 
-  // Navigation items data
-  const navItems = [
-    { href: '../index.html', icon: '<i class="fas fa-home"></i>', text: 'Home' },
-    { href: '../pages/news-events.html', icon: '<span class="material-icons">newspaper</span>', text: 'News & Events' },
-    { href: '../pages/about.html', icon: '<i class="fas fa-building"></i>', text: 'About' },
-    { href: '../pages/services.html', icon: '<i class="fas fa-tools"></i>', text: 'Services' },
-    { href: '../pages/projects.html', icon: '<span class="material-icons">work</span>', text: 'Projects' },
-    { href: '../pages/team.html', icon: '<i class="fas fa-user-tie"></i>', text: 'Team' },
-    { href: '../pages/contact.html', icon: '<span class="material-icons">contact_mail</span>', text: 'Contact Us' }
-  ];
+    if (window.location.pathname.includes('/pages/')) {
+          path = ``;
+        } else {
+          path = `pages/`;
+        }
+
+    const isRoot = window.location.pathname === '/index.html' ||  window.location.pathname === '/';
+    const indexPath = isRoot ? 'index.html' : '../index.html';
+
+    // Navigation items data
+    const navItems = [
+        { href: `${indexPath}`, icon: '<i class="fas fa-home"></i>', text: 'Home' },
+        { href: `${path}news-events.html`, icon: '<span class="material-icons">newspaper</span>', text: 'News & Events' },
+        { href: `${path}about.html`, icon: '<i class="fas fa-building"></i>', text: 'About' },
+        { href: `${path}services.html`, icon: '<i class="fas fa-tools"></i>', text: 'Services' },
+        { href: `${path}projects.html`, icon: '<span class="material-icons">work</span>', text: 'Projects' },
+        { href: `${path}team.html`, icon: '<i class="fas fa-user-tie"></i>', text: 'Team' },
+        { href: `${path}contact.html`, icon: '<span class="material-icons">contact_mail</span>', text: 'Contact Us' }
+    ];
 
   // Create navigation items
   navItems.forEach(item => {
