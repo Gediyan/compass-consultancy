@@ -93,15 +93,6 @@ header {
     font-weight: 700;
 }
 
-.menu-toggle {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    display: none;
-}
-
 nav {
     display: flex;
     gap: 1.5rem;
@@ -133,7 +124,7 @@ nav a:hover::after {
 }
 
 .theme-toggle {
-    background: var(--cards-bg-color);
+    background: none;
     border: none;
     cursor: pointer;
     padding: 8px;
@@ -185,11 +176,6 @@ nav a:hover::after {
         font-size: 1rem;
         font-weight: 600;
     }
-    .menu-toggle {
-        display: block;
-        position: fixed;
-        left: 70%;
-    }
 
     nav {
         position: fixed;
@@ -212,14 +198,6 @@ nav a:hover::after {
         display: flex;
     }
 }
-
-/* Responsive Design */
-@media (max-width: 360px) {
-    .menu-toggle {
-        left: 62%;
-    }
-}
-
 
 /* Profile Dropdown Styles */
 

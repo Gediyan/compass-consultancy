@@ -13,15 +13,13 @@
     <body>
         <header>
             <div class="logo-container">
-                <img src="../images/logo-700px-01.png" alt="Company Logo" class="logo">
+                <img src="../images/logo-700px-01.png" alt="Company Logo" class="logo" id="logoIcon">
                 <div class="company-name"><h1>Compass AEPED</h1></div>
             </div>
             
-            <button class="menu-toggle" id="menuToggle">☰</button>
-            
             <nav id="mainNav">
                 <a href="../index.html">Home</a>
-                <a href="team.html">News & Events</a>
+                <a href="news-events.html">News & Events</a>
                 <a href="about.html">About</a>
                 <a href="services.html">Services</a>
                 <a href="projects.html">Projects</a>
@@ -30,7 +28,10 @@
             </nav>
             
             <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle">🌓</button>
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="material-icons sun-icon">light_mode</span>
+                    <span class="material-icons moon-icon">dark_mode</span>
+                </button>
             
                 <!-- Profile Dropdown -->
                 <div class="profile-dropdown">

@@ -282,11 +282,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Mobile menu toggle functionality
-    const menuToggle = document.getElementById('menuToggle');
+    const logoIcon = document.getElementById('logoIcon');
     const mainNav = document.getElementById('mainNav');
     
-    if (menuToggle && mainNav) {
-        menuToggle.addEventListener('click', () => {
+    if (logoIcon && mainNav) {
+        logoIcon.addEventListener('click', () => {
             mainNav.classList.toggle('active');
         });
     }
