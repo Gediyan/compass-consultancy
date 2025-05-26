@@ -232,27 +232,39 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-// Theme toggle functionality
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('themeToggle');
+    const sunIcon = themeToggle.querySelector('.sun-icon');
+    const moonIcon = themeToggle.querySelector('.moon-icon');
     const body = document.body;
     
     // Check for saved theme preference or use preferred color scheme
     const savedTheme = localStorage.getItem('theme') || 
                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     
+    // Initialize theme and icons
     if (savedTheme === 'dark') {
         body.classList.add('dark-theme');
-        themeToggle.textContent = '🌞';
+        sunIcon.style.display = 'inline-block';
+        moonIcon.style.display = 'none';
     } else {
-        themeToggle.textContent = '🌓';
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'inline-block';
     }
     
     themeToggle.addEventListener('click', () => {
         body.classList.toggle('dark-theme');
         const isDark = body.classList.contains('dark-theme');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        themeToggle.textContent = isDark ? '🌞' : '🌓';
+        
+        // Toggle icon visibility
+        if (isDark) {
+            sunIcon.style.display = 'inline-block';
+            moonIcon.style.display = 'none';
+        } else {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'inline-block';
+        }
     });
 
     // Location pin interactions
@@ -545,7 +557,6 @@ function initializeBusinessHours() {
     const openStatus = document.getElementById('openStatus');
     
     if (!openStatus) {
-        console.error('openStatus element not found');
         return;
     }
     
@@ -929,7 +940,6 @@ const TestimonialDB = {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('loadTestimonials');
     function loadTestimonials() {
         const testimonials = TestimonialDB.getAll();
         const testimonialsTrack = document.querySelector('.testimonials-track');
@@ -1136,7 +1146,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('calculateCardWidth');
     const track = document.querySelector('.testimonials-track');
     const cards = document.querySelectorAll('.testimonial-card');
     const prevBtn = document.querySelector('.previous');
@@ -1183,7 +1192,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Go to previous slide
     function prevSlide() {
-        console.log('Prev clicked - Before:', visibleCards, 'cardWidth:', cardWidth);
         if (currentPosition > 0) {
             currentPosition--;
             updateCarousel();
@@ -1192,7 +1200,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Go to next slide
     function nextSlide() {
-        console.log('next clicked - Before:', visibleCards, 'cardWidth:', cardWidth);
         if (currentPosition < cards.length - visibleCards) {
             currentPosition++;
             updateCarousel();

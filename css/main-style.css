@@ -133,11 +133,38 @@ nav a:hover::after {
 }
 
 .theme-toggle {
-    background: none;
+    background: var(--cards-bg-color);
     border: none;
-    color: white;
-    font-size: 1.2rem;
     cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    background: rgba(0,0,0,0.1);
+}
+
+.theme-toggle .material-icons {
+    font-size: 24px;
+    color: var(--icon-color, #333); /* Use CSS variable for theming */
+}
+
+.dark-theme .theme-toggle .material-icons {
+    color: var(--icon-color-dark, #fff);
+}
+
+/* Optional: Add animation */
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.theme-toggle:hover .material-icons {
+    animation: rotate 2s linear infinite;
 }
 
 /* Responsive Design */
@@ -263,7 +290,7 @@ nav a:hover::after {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: white;
+    background-color: var(--cards-bg-color);
     color: var(--primary-color);
     display: flex;
     cursor: pointer;
@@ -1171,7 +1198,7 @@ main {
 }
 
 .control-btn:not(:disabled):hover {
-    background-color: #3498db;
+    background-color: var(--primary-color);
     color: white;
     transform: scale(1.1);
 }
