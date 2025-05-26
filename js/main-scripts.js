@@ -486,14 +486,14 @@ document.addEventListener('DOMContentLoaded', function() {
     popupContent.appendChild(popupNav);
 
     let path = '';
+    let indexPath = '';
     if (window.location.pathname.includes('/pages/')) {
         path = '';
+        indexPath = '../index.html'
       } else {
         path = 'pages/';
+        indexPath = 'index.html';
       }
-
-    const isRootPath = window.location.pathname === '/index.html' ||  window.location.pathname === '/';
-    const indexPath = isRootPath ? 'index.html' : '../index.html';
 
     // Navigation items data
     const navItems = [
