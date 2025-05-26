@@ -53,169 +53,100 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Mobile Navigation Popup (initially hidden) -->
-            <div class="popup-overlay" id="popupOverlay"></div>
-            <div class="mobile-nav-popup" id="mobileNavPopup">
-                <div class="popup-header">
-                    <img src="images/logo-700px-01.png" alt="Company Logo" class="popup-logo">
-                    <button class="close-popup" id="closePopupBtn">&times;</button>
+        </header>
+        <section class="slideshow-section">
+            <!-- Static Welcome Text -->
+            <div class="welcome-text">
+                <h1>Welcome to Compass AEPED</h1>
+            </div>
+            
+            <!-- Automatic Text Slideshow -->
+            <div class="text-slideshow">
+                <div class="text-slide active">
+                    <h2>Compass AEPED Establishment</h2>
+                    <p>Compass AEPED is an established urban and regional planning 
+                        consultancy with over 15 years of expertise in the field of planning 
+                        and development. Headquartered in Addis Ababa, we are committed to 
+                        shaping sustainable urban environments</p>
+                </div>
+                <div class="text-slide">
+                    <h2>Innovative Engineering Solutions</h2>
+                    <p>We deliver cutting-edge architectural and engineering solutions 
+                        tailored to Ethiopia's unique context. Our team combines international 
+                        standards with local expertise to create functional, sustainable spaces.</p>
+                </div>
+                <div class="text-slide">
+                    <h2>Sustainable Development Approach</h2>
+                    <p>Our approach integrates environmental responsibility with urban 
+                        development. We prioritize green spaces, energy efficiency, and 
+                        community-focused designs in all our projects.</p>
+                </div>
+            </div>
+            
+            <!-- Manual Image Slideshow -->
+            <div class="slideshow-container">
+                <div class="slide fade">
+                    <img src="images/smart-buildings.jpg" alt="Modern City Infrastructure">
+                </div>
+                <div class="slide fade">
+                    <img src="images/tall-building.jpg" alt="Urban Tall Building">
+                </div>
+                <div class="slide fade">
+                    <img src="images/glass-building.jpg" alt="Urban Glass Building">
+                </div>
+                <div class="slide fade">
+                    <img src="images/supertall-buildings.jpg" alt="Urban Super Tall Building">
                 </div>
                 
-                <div class="popup-content">
-                    <nav class="popup-nav">
-                        <a href="index.html" class="nav-item">
-                        <span class="nav-icon"><i class="fas fa-home"></i></span>
-                        <span class="nav-text">Home</span>
-                        </a>
-                        <a href="pages/news-events.html" class="nav-item">
-                        <span class="nav-icon material-icons">newspaper</span>
-                        <span class="nav-text">News & Events</span>
-                        </a>
-                        <a href="pages/about.html" class="nav-item">
-                            <span class="nav-icon"><i class="fas fa-building"></i></span>
-                            <span class="nav-text"> About</span>
-                        </a>
-                        <a href="pages/services.html" class="nav-item">
-                        <span class="nav-icon"><i class="fas fa-tools"></i></span>
-                        <span class="nav-text">Services</span>
-                        </a>
-                        <a href="pages/projects.html" class="nav-item">
-                        <span class="nav-icon material-icons">work</span>
-                        <span class="nav-text">Projects</span>
-                        </a>
-                        <a href="pages/team.html" class="nav-item">
-                        <span class="nav-icon"><i class="fas fa-user-tie"></i></span>
-                        <span class="nav-text">Team</span>
-                        </a>
-                        <a href="pages/contact.html" class="nav-item">
-                        <span class="nav-icon material-icons">contact_mail</span>
-                        <span class="nav-text">Contact Us</span>
-                        </a>
-                    </nav>
-                    
-                    <div class="popup-footer">
-                        <div class="popup-contact-info">
-                        <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
-                        <p><i class="fas fa-envelope"></i> info@compassaeped.com</p>
-                        </div>
-                        <div class="popup-social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        </div>
-                    </div>
+                <!-- Navigation Arrows -->
+                <div class="welcome-control">
+                    <a class="welcome-prev" onclick="plusSlides(-1)">&#10094;</a>
+                    <a class="welcome-next" onclick="plusSlides(1)">&#10095;</a>
                 </div>
+                
             </div>
-        </header>
-        <!-- Image Slideshow Section -->
-        <section class="slideshow-section">
-            <!-- Your slideshow content goes here -->
-            <div class="slideshow-container">
-            <div class="slide fade">
-                <img src="images/city-picture.jpg" alt="Slide 1">
+            
+            <!-- Dots Indicator -->
+            <div class="dots-container">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot" onclick="currentSlide(4)"></span>
             </div>
-            <div class="slide fade">
-                <img src="images/night-city-picture.jpg" alt="Slide 2">
-            </div>
-            <!-- Add more slides as needed -->
+        </section>
+
+        <!-- Status-section -->
+        <section class="status-section">
+            <div class="stats-container">
+                <div class="stat-item">
+                <div class="counter-wrapper">
+                    <span class="counter" data-target="210">0</span><span class="plus-sign">+</span>
+                </div>
+                <p>Projects Completed</p>
+                </div>
+                <div class="stat-item">
+                <div class="counter-wrapper">
+                    <span class="counter" data-target="100">0</span><span class="plus-sign">+</span>
+                </div>
+                <p>Client Satisfaction</p>
+                </div>
+                <div class="stat-item">
+                <div class="counter-wrapper">
+                    <span class="counter" data-target="16">0</span><span class="plus-sign">+</span>
+                </div>
+                <p>Years Experience</p>
+                </div>
+                <div class="stat-item">
+                <div class="counter-wrapper">
+                    <span class="counter" data-target="40">0</span><span class="plus-sign">+</span>
+                </div>
+                <p>Professional Team</p>
+                </div>
             </div>
         </section>
          
         <main class="content-section">
-            <!-- Welcome-section -->
-            <section class="compass-welcome">
-                <!-- Slideshow Container -->
-                <div class="slideshow-container">
-                    <!-- Slide 1 -->
-                    <div class="welcome-slide active">
-                        <div class="slide-bg" style="background-image: linear-gradient(var(--welcome-gradient-top), var(--welcome-gradient-bottom)), url(images/Poster-Photo-min.jpg);"></div>
-                        <div class="welcome-content-container">
-                            <div class="wellcome-container">
-                                <div class="text-content">
-                                    <h1>Compass AEPED Consultancy</h1>
-                                    <h3 class="welcome-intro-text">
-                                        Compass AEPED is an established urban and regional planning 
-                                        consultancy with over 15 years of expertise in the field of planning 
-                                        and development. Headquartered in Addis Ababa, we are committed to 
-                                        shaping sustainable urban environments.
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Slide 2 -->
-                    <div class="welcome-slide">
-                        <div class="slide-bg" style="background-image: linear-gradient(var(--welcome-gradient-top), var(--welcome-gradient-bottom)), url(images/night-city-picture.jpg);"></div>
-                        <div class="welcome-content-container">
-                            <div class="wellcome-container">
-                                <div class="text-content">
-                                    <h1>Innovative Solutions</h1>
-                                    <h3 class="welcome-intro-text">
-                                        We deliver cutting-edge architectural and engineering solutions 
-                                        tailored to Ethiopia's unique context. Our team combines international 
-                                        standards with local expertise to create functional, sustainable spaces.
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Slide 3 -->
-                    <div class="welcome-slide">
-                        <div class="slide-bg" style="background-image: linear-gradient(var(--welcome-gradient-top), var(--welcome-gradient-bottom)), url(images/city-picture.jpg);"></div>
-                        <div class="welcome-content-container">
-                            <div class="wellcome-container">
-                                <div class="text-content">
-                                    <h1>Sustainable Development</h1>
-                                    <h3 class="welcome-intro-text">
-                                        Our approach integrates environmental responsibility with urban 
-                                        development. We prioritize green spaces, energy efficiency, and 
-                                        community-focused designs in all our projects.
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Slide Navigation -->
-                <div class="slide-nav">
-                    <button class="slide-nav-btn active" aria-label="Go to slide 1"></button>
-                    <button class="slide-nav-btn" aria-label="Go to slide 2"></button>
-                    <button class="slide-nav-btn" aria-label="Go to slide 3"></button>
-                </div>
-            </section>
-            <!-- Status-section -->
-            <section class="status-section">
-                <div class="stats-container">
-                    <div class="stat-item">
-                    <div class="counter-wrapper">
-                        <span class="counter" data-target="210">0</span><span class="plus-sign">+</span>
-                    </div>
-                    <p>Projects Completed</p>
-                    </div>
-                    <div class="stat-item">
-                    <div class="counter-wrapper">
-                        <span class="counter" data-target="100">0</span><span class="plus-sign">+</span>
-                    </div>
-                    <p>Client Satisfaction</p>
-                    </div>
-                    <div class="stat-item">
-                    <div class="counter-wrapper">
-                        <span class="counter" data-target="16">0</span><span class="plus-sign">+</span>
-                    </div>
-                    <p>Years Experience</p>
-                    </div>
-                    <div class="stat-item">
-                    <div class="counter-wrapper">
-                        <span class="counter" data-target="40">0</span><span class="plus-sign">+</span>
-                    </div>
-                    <p>Professional Team</p>
-                    </div>
-                </div>
-            </section>
+            
             <div class="section-title">
                 <h2>Latest News</h2>
             </div>

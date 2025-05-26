@@ -4,43 +4,101 @@
 window.addEventListener('scroll', function() {
   const header = document.querySelector('.main-header');
   const slideshow = document.querySelector('.slideshow-section');
-  const slideshowBottom = slideshow.offsetTop + slideshow.offsetHeight;
-  
-  if (window.scrollY > slideshowBottom - 100) {
-    header.classList.add('scrolled');
-  } else {
-    header.classList.remove('scrolled');
+  const heroPreview = document.querySelector('.hero-preview');
+  if (slideshow) {
+    const slideshowBottom = slideshow.offsetTop + slideshow.offsetHeight;
+
+    if (window.scrollY > slideshowBottom - 100) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+  } else if (heroPreview){
+    const slideshowBottom = heroPreview.offsetTop + heroPreview.offsetHeight;
+
+    if (window.scrollY > slideshowBottom - 100) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
   }
+  
 });
 
-// Initialize header state
-document.addEventListener('DOMContentLoaded', function() {
-  const header = document.querySelector('.main-header');
-  const slideshow = document.querySelector('.slideshow-section');
-  const slideshowBottom = slideshow.offsetTop + slideshow.offsetHeight;
-  
-  if (window.scrollY > slideshowBottom - 100) {
-    header.classList.add('scrolled');
-  }
-});
+// Automatic Text Slideshow
+let textSlideIndex = 0;
+const textSlides = document.querySelectorAll('.text-slide');
 
-// Simple Slideshow Functionality
-let currentSlide = 0;
-const slides = document.querySelectorAll('.slide');
+function showTextSlides() {
 
-function showSlide(n) {
-  slides.forEach(slide => slide.classList.remove('fade'));
-  currentSlide = (n + slides.length) % slides.length;
-  slides[currentSlide].classList.add('fade');
+    if (textSlides) return;
+    // Hide all slides
+    textSlides.forEach(slide => {
+        slide.classList.remove('active');
+    });
+    
+    // Move to next slide
+    textSlideIndex++;
+    if (textSlideIndex > textSlides.length) {
+        textSlideIndex = 1;
+    }
+    
+    // Show current slide
+    textSlides[textSlideIndex-1].classList.add('active');
+    
+    // Change slide every 5 seconds
+    setTimeout(showTextSlides, 5000);
 }
 
-// Auto-advance slides
-setInterval(() => {
-  showSlide(currentSlide + 1);
-}, 5000);
+// Manual Image Slideshow
+let imageSlideIndex = 1;
+// showSlides(imageSlideIndex);
 
-// Initialize first slide
-showSlide(0);
+function plusSlides(n) {
+  showSlides(imageSlideIndex += n);
+}
+
+function currentSlide(n) {
+  showSlides(imageSlideIndex = n);
+}
+
+function showSlides(n) {
+  let i;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+
+  if (!slides) return;
+  if (slides.length === 0) return;
+
+  console.log('slides: ', slides.length)
+  
+  if (n > slides.length) {
+    imageSlideIndex = 1;
+  }    
+  if (n < 1) {
+    imageSlideIndex = slides.length;
+  }
+  
+  // Hide all slides
+  slides.forEach(slide => {
+    slide.style.display = "none";  
+  });
+  
+  // Remove active class from dots
+  dots.forEach(dot => {
+    dot.classList.remove('active-dot');
+  });
+  
+  // Show current slide
+  slides[imageSlideIndex-1].style.display = "block";  
+  dots[imageSlideIndex-1].classList.add('active-dot');
+}
+
+// Start both slideshows
+document.addEventListener('DOMContentLoaded', function() {
+  showTextSlides();
+  showSlides(imageSlideIndex);
+});
 
 // Back to Top Button
 document.getElementById('back-to-top').addEventListener('click', function() {
@@ -355,86 +413,138 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Mobile navigation menu toggle functionality
-// document.addEventListener('DOMContentLoaded', function() {
-//   const logoIcon = document.getElementById('logoIcon');
-//   const mainNav = document.getElementById('mainNav');
-//   const body = document.body;
-//   const header = document.querySelector('.main-header');
-
-//   function setupNavigation() {
-//     if (window.innerWidth <= 992) { // Mobile
-//       // Close nav by default
-//       mainNav.classList.remove('mobile-visible');
-      
-//       // Toggle navigation
-//       logoIcon.addEventListener('click', function(e) {
-//         e.preventDefault();
-//         mainNav.classList.toggle('mobile-visible');
-//         body.classList.toggle('nav-open');
-        
-        
-//       });
-      
-//       // Close when clicking links
-//       document.querySelectorAll('#mainNav a').forEach(link => {
-//         link.addEventListener('click', function() {
-//           mainNav.classList.remove('mobile-visible');
-//           body.classList.remove('nav-open');
-//           header.style.backgroundColor = 'transparent';
-//         });
-//       });
-//     } else { // Desktop
-//       // Reset any mobile styles
-//       mainNav.classList.remove('mobile-visible');
-//       body.classList.remove('nav-open');
-//       header.style.backgroundColor = 'transparent';
-//     }
-//   }
-  
-//   // Initialize
-//   setupNavigation();
-  
-//   // Handle resize
-//   window.addEventListener('resize', setupNavigation);
-// });
 
 document.addEventListener('DOMContentLoaded', function() {
-  const logoIcon = document.getElementById('logoIcon');
-  const mobileNavPopup = document.getElementById('mobileNavPopup');
-  const popupOverlay = document.getElementById('popupOverlay');
-  const closePopupBtn = document.getElementById('closePopupBtn');
+  // Create overlay element
+  const overlay = document.createElement('div');
+  overlay.className = 'popup-overlay';
+  document.body.appendChild(overlay);
 
-  // Toggle popup when logo is clicked (mobile only)
-  logoIcon.addEventListener('click', function(e) {
-    if (window.innerWidth <= 992) {
-      e.preventDefault();
-      popupOverlay.classList.add('active');
-      mobileNavPopup.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+  // Create mobile nav popup container
+  const mobileNavPopup = document.createElement('div');
+  mobileNavPopup.id = 'mobileNavPopup';
+  mobileNavPopup.className = 'mobile-nav-popup';
+  document.body.appendChild(mobileNavPopup);
+
+  // Create popup header
+  const popupHeader = document.createElement('div');
+  popupHeader.className = 'popup-header';
+  mobileNavPopup.appendChild(popupHeader);
+
+  // Create logo in header
+  const popupLogo = document.createElement('img');
+  popupLogo.src = '../images/logo-700px-01.png';
+  popupLogo.alt = 'Company Logo';
+  popupLogo.className = 'popup-logo';
+  popupHeader.appendChild(popupLogo);
+
+  // Create close button
+  const closePopupBtn = document.createElement('button');
+  closePopupBtn.id = 'closePopupBtn';
+  closePopupBtn.className = 'close-popup';
+  closePopupBtn.innerHTML = '&times;';
+  popupHeader.appendChild(closePopupBtn);
+
+  // Create popup content container
+  const popupContent = document.createElement('div');
+  popupContent.className = 'popup-content';
+  mobileNavPopup.appendChild(popupContent);
+
+  // Create navigation
+  const popupNav = document.createElement('nav');
+  popupNav.className = 'popup-nav';
+  popupContent.appendChild(popupNav);
+
+  // Navigation items data
+  const navItems = [
+    { href: '../index.html', icon: '<i class="fas fa-home"></i>', text: 'Home' },
+    { href: '../pages/news-events.html', icon: '<span class="material-icons">newspaper</span>', text: 'News & Events' },
+    { href: '../pages/about.html', icon: '<i class="fas fa-building"></i>', text: 'About' },
+    { href: '../pages/services.html', icon: '<i class="fas fa-tools"></i>', text: 'Services' },
+    { href: '../pages/projects.html', icon: '<span class="material-icons">work</span>', text: 'Projects' },
+    { href: '../pages/team.html', icon: '<i class="fas fa-user-tie"></i>', text: 'Team' },
+    { href: '../pages/contact.html', icon: '<span class="material-icons">contact_mail</span>', text: 'Contact Us' }
+  ];
+
+  // Create navigation items
+  navItems.forEach(item => {
+    const navItem = document.createElement('a');
+    navItem.href = item.href;
+    navItem.className = 'nav-item';
+    navItem.innerHTML = `
+      <span class="nav-icon">${item.icon}</span>
+      <span class="nav-text">${item.text}</span>
+    `;
+    popupNav.appendChild(navItem);
   });
 
-  // Close popup
+  // Create popup footer
+  const popupFooter = document.createElement('div');
+  popupFooter.className = 'popup-footer';
+  popupContent.appendChild(popupFooter);
+
+  // Create contact info
+  const contactInfo = document.createElement('div');
+  contactInfo.className = 'popup-contact-info';
+  contactInfo.innerHTML = `
+    <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+    <p><i class="fas fa-envelope"></i> info@compassaeped.com</p>
+  `;
+  popupFooter.appendChild(contactInfo);
+
+  // Create social links
+  const socialLinks = document.createElement('div');
+  socialLinks.className = 'popup-social-links';
+  socialLinks.innerHTML = `
+    <a href="#"><i class="fab fa-facebook"></i></a>
+    <a href="#"><i class="fab fa-twitter"></i></a>
+    <a href="#"><i class="fab fa-linkedin"></i></a>
+  `;
+  popupFooter.appendChild(socialLinks);
+
+  // Function to open popup
+  function openPopup() {
+    mobileNavPopup.classList.add('active');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Function to close popup
   function closePopup() {
     mobileNavPopup.classList.remove('active');
-    popupOverlay.classList.remove('active');
+    overlay.classList.remove('active');
     document.body.style.overflow = '';
   }
 
+  // Event listeners
+  document.getElementById('logoIcon').addEventListener('click', function(e) {
+    e.preventDefault();
+    openPopup();
+  });
+
   closePopupBtn.addEventListener('click', closePopup);
-  popupOverlay.addEventListener('click', closePopup);
+  overlay.addEventListener('click', closePopup);
 
   // Close when clicking on nav items
-  document.querySelectorAll('.popup-nav a').forEach(link => {
+  document.querySelectorAll('.nav-item').forEach(link => {
     link.addEventListener('click', closePopup);
   });
 
-  // Handle resize
-  window.addEventListener('resize', function() {
-    if (window.innerWidth > 992) {
+  // Handle escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
       closePopup();
     }
   });
+
+  // Responsive handling
+  function handleResize() {
+    if (window.innerWidth > 992) {
+      closePopup();
+    }
+  }
+
+  window.addEventListener('resize', handleResize);
 });
 
 // Function to load posts on home page
@@ -1001,66 +1111,6 @@ function initSlideshows() {
         };
     });
 }
-
-
-// Slideshow functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const slides = document.querySelectorAll('.welcome-slide');
-    const navButtons = document.querySelectorAll('.slide-nav-btn');
-    let currentSlide = 0;
-    let slideInterval;
-    let slideDuration = 6000; // 6 seconds per slide
-    
-    function showSlide(index) {
-        // Reset all slides
-        slides.forEach(slide => {
-            slide.classList.remove('active', 'prev');
-        });
-        
-        // Update nav buttons
-        navButtons.forEach(btn => btn.classList.remove('active'));
-        
-        // Set new current slide
-        currentSlide = (index + slides.length) % slides.length;
-        if (slides.length > 0) {
-            slides[currentSlide].classList.add('active');
-            navButtons[currentSlide].classList.add('active');
-        
-            // Set previous slide for transition effect
-            const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-            slides[prevIndex].classList.add('prev');
-        }
-    }
-    
-    function nextSlide() {
-        showSlide(currentSlide + 1);
-    }
-    
-    // Start autoplay
-    function startSlideShow() {
-        slideInterval = setInterval(nextSlide, slideDuration);
-    }
-    
-    // Pause on hover
-    const slideshow = document.querySelector('.slideshow-container');
-    if (slideInterval) {
-        slideshow.addEventListener('mouseenter', () => clearInterval(slideInterval));
-        slideshow.addEventListener('mouseleave', startSlideShow);
-    }
-    
-    // Navigation buttons
-    navButtons.forEach((button, index) => {
-        button.addEventListener('click', () => {
-            clearInterval(slideInterval);
-            showSlide(index);
-            startSlideShow();
-        });
-    });
-    
-    // Initialize
-    showSlide(0);
-    startSlideShow();
-});
 
 const TestimonialDB = {
     // Key for localStorage

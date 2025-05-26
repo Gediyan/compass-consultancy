@@ -53,75 +53,71 @@
                 </div>
             </div>
         </div>
-
-        <!-- Mobile Navigation Popup (initially hidden) -->
-        <div class="popup-overlay" id="popupOverlay"></div>
-        <div class="mobile-nav-popup" id="mobileNavPopup">
-            <div class="popup-header">
-                <img src="../images/logo-700px-01.png" alt="Company Logo" class="popup-logo">
-                <button class="close-popup" id="closePopupBtn">&times;</button>
+    </header>
+    <section class="slideshow-section">
+        <!-- Static Welcome Text -->
+        <div class="welcome-text">
+            <h1>About Compass AEPED</h1>
+        </div>
+        
+        <!-- Automatic Text Slideshow -->
+        <div class="text-slideshow">
+            <div class="text-slide active">
+                <h2>OUR Vision</h2>
+                <p>To be recognized as the premier consultancy firm in Ethiopia, renowned for our innovative design
+                    solutions, commitment to sustainability, and positive impact on communities across the nation. We
+                    strive to be a model for professional excellence, driving development and setting new standards for the
+                    industry.</p>
             </div>
-            
-            <div class="popup-content">
-                <nav class="popup-nav">
-                    <a href="../index.html" class="nav-item">
-                    <span class="nav-icon"><i class="fas fa-home"></i></span>
-                    <span class="nav-text">Home</span>
-                    </a>
-                    <a href="news-events.html" class="nav-item">
-                    <span class="nav-icon material-icons">newspaper</span>
-                    <span class="nav-text">News & Events</span>
-                    </a>
-                    <a href="about.html" class="nav-item">
-                        <span class="nav-icon"><i class="fas fa-building"></i></span>
-                        <span class="nav-text"> About</span>
-                    </a>
-                    <a href="services.html" class="nav-item">
-                    <span class="nav-icon"><i class="fas fa-tools"></i></span>
-                    <span class="nav-text">Services</span>
-                    </a>
-                    <a href="projects.html" class="nav-item">
-                    <span class="nav-icon material-icons">work</span>
-                    <span class="nav-text">Projects</span>
-                    </a>
-                    <a href="team.html" class="nav-item">
-                    <span class="nav-icon"><i class="fas fa-user-tie"></i></span>
-                    <span class="nav-text">Team</span>
-                    </a>
-                    <a href="contact.html" class="nav-item">
-                    <span class="nav-icon material-icons">contact_mail</span>
-                    <span class="nav-text">Contact Us</span>
-                    </a>
-                </nav>
-                
-                <div class="popup-footer">
-                    <div class="popup-contact-info">
-                    <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
-                    <p><i class="fas fa-envelope"></i> info@compassaeped.com</p>
-                    </div>
-                    <div class="popup-social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
+            <div class="text-slide">
+                <h2>Mission</h2>
+                <p>To contribute to Ethiopia ongoing development by providing standardized, high-quality, and efficient
+                    consultancy services in architecture, engineering, planning, and environmental design. We achieve this
+                    through the application of appropriate knowledge and cutting-edge technologies, tailored to the specific
+                    needs of each project.</p>
+            </div>
+            <div class="text-slide">
+                <h2>Core Values</h2>
+                <p>Integrity: We maintain the highest ethical standards in all our dealings, ensuring transparency and
+                    accountability in every project.
+                    Client <br> Satisfaction: We prioritize the needs of our clients, working closely with them to understand their
+                    vision and deliver solutions that exceed their expectations.
+                    Multi-Disciplinary <br> Approach: We leverage the diverse expertise of our team, encompassing architecture,
+                    engineering, planning, and environmental design, to provide comprehensive and integrated solutions.
+                    <br> Trust: We build trust with our clients through open communication, collaboration, and a commitment to
+                    delivering on our promises.</p>
             </div>
         </div>
-    </header>
-    <!-- Image Slideshow Section -->
-    <section class="slideshow-section">
+        
+        <!-- Manual Image Slideshow -->
         <div class="slideshow-container">
+            <div class="slide fade">
+                <img src="../images/smart-buildings.jpg" alt="Modern City Infrastructure">
+            </div>
+            <div class="slide fade">
+                <img src="../images/tall-building.jpg" alt="Urban Tall Building">
+            </div>
+            <div class="slide fade">
+                <img src="../images/glass-building.jpg" alt="Urban Glass Building">
+            </div>
+            <div class="slide fade">
+                <img src="../images/supertall-buildings.jpg" alt="Urban Super Tall Building">
+            </div>
             
-            <section class="hero">
-                <h1>Our Story, Values, and Vision</h1>
-                <p>Compass AEPED is dedicated to creating sustainable solutions that empower communities and transform lives across Ethiopia.</p>
-            </section>
-            <div class="slide fade">
-                <img src="../images/city-picture.jpg" alt="Slide 1">
+            <!-- Navigation Arrows -->
+            <div class="welcome-control">
+                <a class="welcome-prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="welcome-next" onclick="plusSlides(1)">&#10095;</a>
             </div>
-            <div class="slide fade">
-                <img src="../images/night-city-picture.jpg" alt="Slide 2">
-            </div>
+            
+        </div>
+        
+        <!-- Dots Indicator -->
+        <div class="dots-container">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+            <span class="dot" onclick="currentSlide(4)"></span>
         </div>
     </section>
 
