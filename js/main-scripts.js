@@ -5,6 +5,8 @@ window.addEventListener('scroll', function() {
   const header = document.querySelector('.main-header');
   const slideshow = document.querySelector('.slideshow-section');
   const heroPreview = document.querySelector('.hero-preview');
+  const testimonialSection = document.querySelector('.testimonials-carousel');
+
   if (slideshow) {
     const slideshowBottom = slideshow.offsetTop + slideshow.offsetHeight;
 
@@ -20,6 +22,17 @@ window.addEventListener('scroll', function() {
         header.classList.add('scrolled');
     } else {
         header.classList.remove('scrolled');
+    }
+  }
+
+  if (testimonialSection) {
+    const slideshowBottom = testimonialSection.offsetTop + testimonialSection.offsetHeight;
+    
+    if (window.scrollY > slideshowBottom - 100) {
+        header.style.position = 'relative';
+        console.log('sticky')
+    } else {
+        header.style.position = 'fixed';
     }
   }
   
@@ -363,6 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('themeToggle');
+    const slideshow = document.querySelector('.slideshow-section');
     const sunIcon = themeToggle.querySelector('.sun-icon');
     const moonIcon = themeToggle.querySelector('.moon-icon');
     const body = document.body;
@@ -376,9 +390,11 @@ document.addEventListener('DOMContentLoaded', function() {
         body.classList.add('dark-theme');
         sunIcon.style.display = 'inline-block';
         moonIcon.style.display = 'none';
+        slideshow.style.filter = 'brightness(0.7)'; // Lower brightness for slideshow
     } else {
         sunIcon.style.display = 'none';
         moonIcon.style.display = 'inline-block';
+        slideshow.style.filter = 'brightness(1)'; // Normal brightness
     }
     
     themeToggle.addEventListener('click', () => {
@@ -390,11 +406,20 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isDark) {
             sunIcon.style.display = 'inline-block';
             moonIcon.style.display = 'none';
+            sunIcon.style.background = 'none'
+            slideshow.style.filter = 'brightness(0.7)'; // Lower brightness
         } else {
             sunIcon.style.display = 'none';
             moonIcon.style.display = 'inline-block';
+            slideshow.style.filter = 'brightness(1)'; // Normal brightness
         }
     });
+
+    // Add background to moon icon when displayed
+    moonIcon.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+    moonIcon.style.borderRadius = '50%';
+    moonIcon.style.padding = '4px';
+    moonIcon.style.transition = 'background-color 0.3s ease';
 
     // Location pin interactions
     const locationPins = document.querySelectorAll('.footprint-pin');
