@@ -1,5 +1,77 @@
 // main-scripts.js
 
+// Sticky Header with Background Change
+window.addEventListener('scroll', function() {
+  const header = document.querySelector('.main-header');
+  const slideshow = document.querySelector('.slideshow-section');
+  const slideshowBottom = slideshow.offsetTop + slideshow.offsetHeight;
+  
+  if (window.scrollY > slideshowBottom - 100) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+});
+
+// Initialize header state
+document.addEventListener('DOMContentLoaded', function() {
+  const header = document.querySelector('.main-header');
+  const slideshow = document.querySelector('.slideshow-section');
+  const slideshowBottom = slideshow.offsetTop + slideshow.offsetHeight;
+  
+  if (window.scrollY > slideshowBottom - 100) {
+    header.classList.add('scrolled');
+  }
+});
+
+// Simple Slideshow Functionality
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+
+function showSlide(n) {
+  slides.forEach(slide => slide.classList.remove('fade'));
+  currentSlide = (n + slides.length) % slides.length;
+  slides[currentSlide].classList.add('fade');
+}
+
+// Auto-advance slides
+setInterval(() => {
+  showSlide(currentSlide + 1);
+}, 5000);
+
+// Initialize first slide
+showSlide(0);
+
+// Back to Top Button
+document.getElementById('back-to-top').addEventListener('click', function() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+});
+
+// Show/hide button based on scroll position
+window.onscroll = function() {
+  scrollFunction();
+};
+
+function scrollFunction() {
+  const backToTopButton = document.getElementById("back-to-top");
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    backToTopButton.style.display = "block";
+  } else {
+    backToTopButton.style.display = "none";
+  }
+}
+
+// Smooth scroll to top when clicked
+document.getElementById("back-to-top").addEventListener("click", function() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+});
+
 // Counter Animation Function
 function initCounterAnimation() {
     const counters = document.querySelectorAll('.counter');
@@ -280,28 +352,90 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById(`${location}-info`).style.display = 'none';
         });
     });
-
-    // Mobile menu toggle functionality
-    const logoIcon = document.getElementById('logoIcon');
-    const mainNav = document.getElementById('mainNav');
-    
-    if (logoIcon && mainNav) {
-        logoIcon.addEventListener('click', () => {
-            mainNav.classList.toggle('active');
-        });
-    }
-
-    // Close mobile menu when clicking on a link
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth <= 767) {
-                mainNav.classList.remove('active');
-            }
-        });
-    });
 });
 
+// Mobile navigation menu toggle functionality
+// document.addEventListener('DOMContentLoaded', function() {
+//   const logoIcon = document.getElementById('logoIcon');
+//   const mainNav = document.getElementById('mainNav');
+//   const body = document.body;
+//   const header = document.querySelector('.main-header');
+
+//   function setupNavigation() {
+//     if (window.innerWidth <= 992) { // Mobile
+//       // Close nav by default
+//       mainNav.classList.remove('mobile-visible');
+      
+//       // Toggle navigation
+//       logoIcon.addEventListener('click', function(e) {
+//         e.preventDefault();
+//         mainNav.classList.toggle('mobile-visible');
+//         body.classList.toggle('nav-open');
+        
+        
+//       });
+      
+//       // Close when clicking links
+//       document.querySelectorAll('#mainNav a').forEach(link => {
+//         link.addEventListener('click', function() {
+//           mainNav.classList.remove('mobile-visible');
+//           body.classList.remove('nav-open');
+//           header.style.backgroundColor = 'transparent';
+//         });
+//       });
+//     } else { // Desktop
+//       // Reset any mobile styles
+//       mainNav.classList.remove('mobile-visible');
+//       body.classList.remove('nav-open');
+//       header.style.backgroundColor = 'transparent';
+//     }
+//   }
+  
+//   // Initialize
+//   setupNavigation();
+  
+//   // Handle resize
+//   window.addEventListener('resize', setupNavigation);
+// });
+
+document.addEventListener('DOMContentLoaded', function() {
+  const logoIcon = document.getElementById('logoIcon');
+  const mobileNavPopup = document.getElementById('mobileNavPopup');
+  const popupOverlay = document.getElementById('popupOverlay');
+  const closePopupBtn = document.getElementById('closePopupBtn');
+
+  // Toggle popup when logo is clicked (mobile only)
+  logoIcon.addEventListener('click', function(e) {
+    if (window.innerWidth <= 992) {
+      e.preventDefault();
+      popupOverlay.classList.add('active');
+      mobileNavPopup.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  });
+
+  // Close popup
+  function closePopup() {
+    mobileNavPopup.classList.remove('active');
+    popupOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  closePopupBtn.addEventListener('click', closePopup);
+  popupOverlay.addEventListener('click', closePopup);
+
+  // Close when clicking on nav items
+  document.querySelectorAll('.popup-nav a').forEach(link => {
+    link.addEventListener('click', closePopup);
+  });
+
+  // Handle resize
+  window.addEventListener('resize', function() {
+    if (window.innerWidth > 992) {
+      closePopup();
+    }
+  });
+});
 
 // Function to load posts on home page
 function loadPosts() {
@@ -944,7 +1078,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const testimonials = TestimonialDB.getAll();
         const testimonialsTrack = document.querySelector('.testimonials-track');
         
-        if (testimonials.length === 0) {
+        if (testimonialsTrack && testimonials.length === 0) {
             testimonialsTrack.innerHTML = `
                 <div class="empty-state">
                     <i class="material-icons">format_quote</i>
@@ -953,12 +1087,13 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             return;
         }
-        
-        testimonialsTrack.innerHTML = '';
-        testimonials.forEach(testimonial => {
-            const testimonialItem = createTestimonialItem(testimonial);
-            testimonialsTrack.appendChild(testimonialItem);
-        });
+        if (testimonialsTrack) {
+            testimonialsTrack.innerHTML = '';
+            testimonials.forEach(testimonial => {
+                const testimonialItem = createTestimonialItem(testimonial);
+                testimonialsTrack.appendChild(testimonialItem);
+            });
+        }
     }
 
     function createTestimonialItem(testimonial) {

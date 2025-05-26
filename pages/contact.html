@@ -11,11 +11,12 @@
         <link rel="stylesheet" href="../css/main-style.css">
     </head>
     <body>
-        <header>
+        <header class="main-header">
             <div class="logo-container">
                 <img src="../images/logo-700px-01.png" alt="Company Logo" class="logo" id="logoIcon">
                 <div class="company-name"><h1>Compass AEPED</h1></div>
             </div>
+            <button id="back-to-top" title="Go to top">↑</button>
             
             <nav id="mainNav">
                 <a href="../index.html">Home</a>
@@ -36,9 +37,10 @@
                 <!-- Profile Dropdown -->
                 <div class="profile-dropdown">
                     <div class="dropdown-btn" id="profileDropdownBtn">G</div>
+                    
                     <div class="dropdown-content" id="profileDropdown">
                         <div class="dropdown-profile-info">
-                            <div class="dropdown-profile-icon" id="dropdownProfileIcon">G</div>
+                            <div class="dropdown-profile-icon" id="dropdownProfileIcon">C</div>
                             <div>
                                 <div id="dropdownUserName">Guest</div>
                                 <div id="dropdownUserEmail"></div>
@@ -52,7 +54,78 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Mobile Navigation Popup (initially hidden) -->
+            <div class="popup-overlay" id="popupOverlay"></div>
+            <div class="mobile-nav-popup" id="mobileNavPopup">
+                <div class="popup-header">
+                    <img src="../images/logo-700px-01.png" alt="Company Logo" class="popup-logo">
+                    <button class="close-popup" id="closePopupBtn">&times;</button>
+                </div>
+                
+                <div class="popup-content">
+                    <nav class="popup-nav">
+                        <a href="../index.html" class="nav-item">
+                        <span class="nav-icon"><i class="fas fa-home"></i></span>
+                        <span class="nav-text">Home</span>
+                        </a>
+                        <a href="news-events.html" class="nav-item">
+                        <span class="nav-icon material-icons">newspaper</span>
+                        <span class="nav-text">News & Events</span>
+                        </a>
+                        <a href="about.html" class="nav-item">
+                            <span class="nav-icon"><i class="fas fa-building"></i></span>
+                            <span class="nav-text"> About</span>
+                        </a>
+                        <a href="services.html" class="nav-item">
+                        <span class="nav-icon"><i class="fas fa-tools"></i></span>
+                        <span class="nav-text">Services</span>
+                        </a>
+                        <a href="projects.html" class="nav-item">
+                        <span class="nav-icon material-icons">work</span>
+                        <span class="nav-text">Projects</span>
+                        </a>
+                        <a href="team.html" class="nav-item">
+                        <span class="nav-icon"><i class="fas fa-user-tie"></i></span>
+                        <span class="nav-text">Team</span>
+                        </a>
+                        <a href="contact.html" class="nav-item">
+                        <span class="nav-icon material-icons">contact_mail</span>
+                        <span class="nav-text">Contact Us</span>
+                        </a>
+                    </nav>
+                    
+                    <div class="popup-footer">
+                        <div class="popup-contact-info">
+                        <p><i class="fas fa-phone"></i> +1 (123) 456-7890</p>
+                        <p><i class="fas fa-envelope"></i> info@compassaeped.com</p>
+                        </div>
+                        <div class="popup-social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </header>
+
+        <!-- Image Slideshow Section -->
+        <section class="slideshow-section">
+            <div class="slideshow-container">
+                
+                <section class="hero">
+                    <h1>Our Story, Values, and Vision</h1>
+                    <p>Compass AEPED is dedicated to creating sustainable solutions that empower communities and transform lives across Ethiopia.</p>
+                </section>
+                <div class="slide fade">
+                    <img src="../images/city-picture.jpg" alt="Slide 1">
+                </div>
+                <div class="slide fade">
+                    <img src="../images/night-city-picture.jpg" alt="Slide 2">
+                </div>
+            </div>
+        </section>
         <section class="contact-detail">
           <h1>Contact Us!</h1>
         </section>
