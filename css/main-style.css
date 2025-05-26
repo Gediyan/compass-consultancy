@@ -254,12 +254,12 @@ body{
 }
 
 .popup-social-links a {
-    color: #333;
+    color: var(--footer-link-color);
     transition: color 0.2s;
 }
 
 .popup-social-links a:hover {
-  color: #0066cc;
+  color: var(--footer-social-link-bg-color);
 }
 
 /* Mobile Styles */
