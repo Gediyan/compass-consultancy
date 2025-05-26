@@ -432,7 +432,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create logo in header
     const popupLogo = document.createElement('img');
-    popupLogo.src = '../images/logo-700px-01.png';
+    const isRoot = window.location.pathname === '/index.html' ||  window.location.pathname === '/';
+    const imagesPath = isRoot ? 'images/' : '../images/';
+    popupLogo.src = `${imagesPath}logo-700px-01.png`;
     popupLogo.alt = 'Company Logo';
     popupLogo.className = 'popup-logo';
     popupHeader.appendChild(popupLogo);
@@ -454,7 +456,6 @@ document.addEventListener('DOMContentLoaded', function() {
     popupNav.className = 'popup-nav';
     popupContent.appendChild(popupNav);
 
-    const isRoot = window.location.pathname === '/index.html' ||  window.location.pathname === '/';
     const path = isRoot ? 'pages/' : '../pages/';
 
     const isRootPath = window.location.pathname === '/index.html' ||  window.location.pathname === '/';
