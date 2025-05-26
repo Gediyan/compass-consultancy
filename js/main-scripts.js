@@ -454,14 +454,11 @@ document.addEventListener('DOMContentLoaded', function() {
     popupNav.className = 'popup-nav';
     popupContent.appendChild(popupNav);
 
-    if (window.location.pathname.includes('/pages/')) {
-          path = ``;
-        } else {
-          path = `pages/`;
-        }
-
     const isRoot = window.location.pathname === '/index.html' ||  window.location.pathname === '/';
-    const indexPath = isRoot ? 'index.html' : '../index.html';
+    const path = isRoot ? 'pages/' : '../pages/';
+
+    const isRootPath = window.location.pathname === '/index.html' ||  window.location.pathname === '/';
+    const indexPath = isRootPath ? 'index.html' : '../index.html';
 
     // Navigation items data
     const navItems = [
