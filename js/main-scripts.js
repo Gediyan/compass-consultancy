@@ -390,11 +390,16 @@ document.addEventListener('DOMContentLoaded', function() {
         body.classList.add('dark-theme');
         sunIcon.style.display = 'inline-block';
         moonIcon.style.display = 'none';
-        slideshow.style.filter = 'brightness(0.7)'; // Lower brightness for slideshow
+        if (slideshow) {
+            slideshow.style.filter = 'brightness(0.7)'; // Lower brightness for slideshow
+        }
+        
     } else {
         sunIcon.style.display = 'none';
         moonIcon.style.display = 'inline-block';
-        slideshow.style.filter = 'brightness(1)'; // Normal brightness
+        if (slideshow) {
+            slideshow.style.filter = 'brightness(1)'; // Lower brightness for slideshow
+        }
     }
     
     themeToggle.addEventListener('click', () => {
@@ -407,11 +412,15 @@ document.addEventListener('DOMContentLoaded', function() {
             sunIcon.style.display = 'inline-block';
             moonIcon.style.display = 'none';
             sunIcon.style.background = 'none'
-            slideshow.style.filter = 'brightness(0.7)'; // Lower brightness
+            if (slideshow) {
+                slideshow.style.filter = 'brightness(0.7)'; // Lower brightness for slideshow
+            }
         } else {
             sunIcon.style.display = 'none';
             moonIcon.style.display = 'inline-block';
-            slideshow.style.filter = 'brightness(1)'; // Normal brightness
+            if (slideshow) {
+                slideshow.style.filter = 'brightness(1)'; // Lower brightness for slideshow
+            }
         }
     });
 
@@ -461,8 +470,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (window.location.pathname.includes('/pages/')) {
         imagesPath = '../images/';
       } else {
-        path = 'images/';
+        imagesPath = 'images/';
       }
+
     popupLogo.src = `${imagesPath}logo-700px-01.png`;
     popupLogo.alt = 'Company Logo';
     popupLogo.className = 'popup-logo';
@@ -505,6 +515,7 @@ document.addEventListener('DOMContentLoaded', function() {
         { href: `${path}team.html`, icon: '<i class="fas fa-user-tie"></i>', text: 'Team' },
         { href: `${path}contact.html`, icon: '<span class="material-icons">contact_mail</span>', text: 'Contact Us' }
     ];
+    console.log('indexPath:', indexPath, 'path:', path)
 
   // Create navigation items
   navItems.forEach(item => {
