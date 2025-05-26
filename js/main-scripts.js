@@ -376,6 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const themeToggle = document.getElementById('themeToggle');
+    const featuredPosts = document.querySelector('.preview-card');
     const slideshow = document.querySelector('.slideshow-section');
     const sunIcon = themeToggle.querySelector('.sun-icon');
     const moonIcon = themeToggle.querySelector('.moon-icon');
@@ -392,14 +393,18 @@ document.addEventListener('DOMContentLoaded', function() {
         moonIcon.style.display = 'none';
         if (slideshow) {
             slideshow.style.filter = 'brightness(0.7)'; // Lower brightness for slideshow
-        }
+        } else if (featuredPosts){
+                featuredPosts.style.filter = 'brightness(0.1)'; // Lower brightness for slideshow
+            }
         
     } else {
         sunIcon.style.display = 'none';
         moonIcon.style.display = 'inline-block';
         if (slideshow) {
-            slideshow.style.filter = 'brightness(1)'; // Lower brightness for slideshow
-        }
+            slideshow.style.filter = 'brightness(1)'; // Upper brightness for slideshow
+        } else if (featuredPosts){
+                featuredPosts.style.filter = 'brightness(1)'; // Upper brightness for slideshow
+            }
     }
     
     themeToggle.addEventListener('click', () => {
@@ -414,12 +419,16 @@ document.addEventListener('DOMContentLoaded', function() {
             sunIcon.style.background = 'none'
             if (slideshow) {
                 slideshow.style.filter = 'brightness(0.7)'; // Lower brightness for slideshow
+            } else if (featuredPosts){
+                featuredPosts.style.filter = 'brightness(0.1)'; // Lower brightness for slideshow
             }
         } else {
             sunIcon.style.display = 'none';
             moonIcon.style.display = 'inline-block';
             if (slideshow) {
-                slideshow.style.filter = 'brightness(1)'; // Lower brightness for slideshow
+                slideshow.style.filter = 'brightness(1)'; // Upper brightness for slideshow
+            } else if (featuredPosts){
+                featuredPosts.style.filter = 'brightness(1)'; // Upper brightness for slideshow
             }
         }
     });

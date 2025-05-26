@@ -374,7 +374,14 @@ body{
 
     .welcome-text {
         margin-left: 3rem;
-        margin-right: 3rem;
+        display: -webkit-box;
+        line-clamp: 2;
+        -webkit-line-clamp: 2; /* Limit to 2 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.4;
+        min-height: 2.8em; /* 2 lines * line-height */
     }
 
     .welcome-text h1 {
@@ -389,12 +396,11 @@ body{
     }
 
     .text-slide h2 {
-        max-width: 300px;
+        max-width: 250px;
         font-size: 3rem;
     }
 
     .text-slide p {
-        
         font-size: 1rem;
     }
 }
@@ -1842,10 +1848,6 @@ body{
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.preview-card:hover {
-    transform: translateY(-5px);
-}
-
 .preview-card-bg {
     position: absolute;
     width: 100%;
@@ -1857,6 +1859,7 @@ body{
 }
 
 .preview-card:hover .preview-card-bg {
+    transform: scale(1.1);
     filter: brightness(0.5);
 }
 
