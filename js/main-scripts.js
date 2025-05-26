@@ -31,7 +31,8 @@ const textSlides = document.querySelectorAll('.text-slide');
 
 function showTextSlides() {
 
-    if (textSlides) return;
+    if (!textSlides) return;
+    if (textSlides.length === 0) return;
     // Hide all slides
     textSlides.forEach(slide => {
         slide.classList.remove('active');
@@ -52,7 +53,7 @@ function showTextSlides() {
 
 // Manual Image Slideshow
 let imageSlideIndex = 1;
-// showSlides(imageSlideIndex);
+showSlides(imageSlideIndex);
 
 function plusSlides(n) {
   showSlides(imageSlideIndex += n);
@@ -69,8 +70,6 @@ function showSlides(n) {
 
   if (!slides) return;
   if (slides.length === 0) return;
-
-  console.log('slides: ', slides.length)
   
   if (n > slides.length) {
     imageSlideIndex = 1;
