@@ -373,7 +373,7 @@ body{
     }
 
     .welcome-text {
-        margin-left: 3rem;
+        margin-left: 2rem;
         display: -webkit-box;
         line-clamp: 2;
         -webkit-line-clamp: 2; /* Limit to 2 lines */
