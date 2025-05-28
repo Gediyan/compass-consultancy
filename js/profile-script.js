@@ -1203,3 +1203,577 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up form submission handler
     document.getElementById('testimonialForm').addEventListener('submit', handleFormSubmit);
 });
+
+
+// Database functions
+const ServiceDB = {
+    // Key for localStorage
+    SERVICE_KEY: 'compass_service_categories',
+    
+    // Get all services
+    getAll: function() {
+        const services = localStorage.getItem(this.SERVICE_KEY);
+        return services ? JSON.parse(services) : [];
+    },
+    
+    // Save a new testimonial
+    save: function(testimonial) {
+        const services = this.getAll();
+        testimonial.id = Date.now(); // Add unique ID
+        services.unshift(testimonial); // Add to beginning of array
+        localStorage.setItem(this.SERVICE_KEY, JSON.stringify(services));
+        return testimonial;
+    },
+    
+    // Update a testimonial
+    update: function(id, updatedData) {
+        const services = this.getAll();
+        const index = services.findIndex(t => t.id == id);
+        if (index !== -1) {
+            services[index] = {...services[index], ...updatedData};
+            localStorage.setItem(this.SERVICE_KEY, JSON.stringify(services));
+            return true;
+        }
+        return false;
+    },
+    
+    // Delete a testimonial
+    delete: function(id) {
+        const services = this.getAll();
+        const filtered = services.filter(t => t.id != id);
+        localStorage.setItem(this.SERVICE_KEY, JSON.stringify(filtered));
+        return services.length !== filtered.length;
+    },
+    
+    // Get a single testimonial by ID
+    getById: function(id) {
+        return this.getAll().find(t => t.id == id);
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Add feature input
+    document.getElementById('addFeatureBtn').addEventListener('click', function() {
+        const container = document.getElementById('serviceFeaturesContainer');
+        const featureDiv = document.createElement('div');
+        featureDiv.className = 'feature-input';
+        featureDiv.innerHTML = `
+            <input type="text" class="feature-input-field" placeholder="Feature description">
+            <button type="button" class="btn btn--danger remove-feature">
+                <i class="material-icons">remove</i>
+            </button>
+        `;
+        container.appendChild(featureDiv);
+    });
+
+    // Remove feature
+    document.getElementById('serviceFeaturesContainer').addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-feature')) {
+            e.target.closest('.feature-input').remove();
+        }
+    });
+
+    // Service image preview (updated to show compression info)
+    document.getElementById('serviceImage').addEventListener('change', async function(e) {
+        const preview = document.getElementById('serviceImagePreview');
+        preview.innerHTML = '';
+        
+        if (e.target.files.length > 0) {
+            const file = e.target.files[0];
+            const originalSize = formatFileSize(file.size);
+            
+            // Show temporary preview
+            const tempPreview = document.createElement('div');
+            tempPreview.innerHTML = `
+                <p>Loading and compressing image (${originalSize})...</p>
+                <progress value="0" max="100"></progress>
+            `;
+            preview.appendChild(tempPreview);
+            
+            try {
+                const compressionResult = await compressImage(file);
+                
+                preview.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = compressionResult.dataUrl;
+                preview.appendChild(img);
+                
+                const info = document.createElement('div');
+                info.className = 'image-info';
+                info.innerHTML = `
+                    <p>Original: ${formatFileSize(compressionResult.originalSize)}</p>
+                    <p>Compressed: ${formatFileSize(compressionResult.compressedSize)}</p>
+                    <p>Dimensions: ${compressionResult.width}×${compressionResult.height}px</p>
+                `;
+                preview.appendChild(info);
+            } catch (error) {
+                preview.innerHTML = '<p class="error">Failed to process image</p>';
+                console.error('Image processing error:', error);
+            }
+        }
+    });
+
+    // Set up service category submission handler
+    document.getElementById('serviceCategoryForm').addEventListener('submit', handleServiceCategorySubmit);
+    
+    function handleServiceCategorySubmit (e) {
+        e.preventDefault();
+        
+        const title = document.getElementById('categoryTitle').value;
+        const icon = document.getElementById('categoryIcon').value;
+        const description = document.getElementById('categoryDescription').value;
+        
+        const category = {
+            id: Date.now().toString(),
+            title,
+            icon,
+            description,
+            services: [],
+            createdAt: new Date().toISOString()
+        };
+
+        // Save to database
+        const savedServiceCategory = ServiceDB.save(category);
+        
+        this.reset();
+        updateCategoryDropdown();
+        loadServices();
+        
+        showNotification('Service category saved successfully!');
+    }
+
+    // Save individual service
+    document.getElementById('individualServiceForm').addEventListener('submit', handleIndividualServiceSubmit);
+    
+    async function handleIndividualServiceSubmit (e) {
+        e.preventDefault();
+        
+        const categoryId = document.getElementById('serviceCategory').value;
+        const title = document.getElementById('individualServiceTitle').value;
+        const description = document.getElementById('individualServiceDescription').value;
+        const imageFile = document.getElementById('serviceImage').files[0];
+        
+        // Get features
+        const features = [];
+        document.querySelectorAll('.feature-input-field').forEach(input => {
+            if (input.value.trim() !== '') {
+                features.push(input.value.trim());
+            }
+        });
+        
+        // Compress and store image if exists
+        let imageData = null;
+        if (imageFile) {
+            try {
+                const compressionResult = await compressImage(imageFile);
+                imageData = {
+                    dataUrl: compressionResult.dataUrl,
+                    dimensions: {
+                        width: compressionResult.width,
+                        height: compressionResult.height
+                    },
+                    originalSize: formatFileSize(compressionResult.originalSize),
+                    compressedSize: formatFileSize(compressionResult.compressedSize)
+                };
+            } catch (error) {
+                console.error('Image compression failed:', error);
+                alert('Failed to process image. Please try another image.');
+                return;
+            }
+        }
+        
+        const service = {
+            id: Date.now().toString(),
+            title,
+            description,
+            features,
+            image: imageData, // Store compressed image data
+            createdAt: new Date().toISOString()
+        };
+        
+        // Add service to the selected category
+        const categories = ServiceDB.getAll();
+        const categoryIndex = categories.findIndex(t => t.id == categoryId);
+        
+        if (categoryIndex !== -1) {
+            categories[categoryIndex].services.push(service);
+            localStorage.setItem('compass_service_categories', JSON.stringify(categories));
+            
+            this.reset();
+            document.getElementById('serviceFeaturesContainer').innerHTML = '';
+            document.getElementById('serviceImagePreview').innerHTML = '';
+            
+            loadServices();
+            showNotification('Service added successfully!');
+        } else {
+            showNotification('Error: Category not found!');
+        }
+    }
+
+    // Helper function to format file sizes
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Update category dropdown
+    function updateCategoryDropdown() {
+        const select = document.getElementById('serviceCategory');
+        select.innerHTML = '<option value="">Select a category</option>';
+        
+        const categories = ServiceDB.getAll();
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id;
+            option.textContent = category.title;
+            select.appendChild(option);
+        });
+    }
+
+    // Load services
+    function loadServices() {
+        const accordion = document.getElementById('servicesAccordion');
+        const categories = ServiceDB.getAll();
+        
+        if (categories.length === 0) {
+            accordion.innerHTML = `
+                <div class="service empty-state">
+                    <i class="material-icons">info</i>
+                    <p>No service categories added yet. Create your first category above.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        accordion.innerHTML = '';
+        
+        categories.forEach(category => {
+            const categoryCard = document.createElement('div');
+            categoryCard.className = 'category-card card';
+            categoryCard.dataset.id = category.id;
+            
+            const categoryHeader = document.createElement('div');
+            categoryHeader.className = 'category-header';
+            categoryHeader.innerHTML = `
+                <div class="category-title">
+                    <i class="material-icons">${category.icon}</i>
+                    <h3>${category.title}</h3>
+                </div>
+                <div class="category-actions">
+                    <button class="btn btn--secondary edit-category" data-id="${category.id}">
+                        <i class="material-icons">edit</i>
+                    </button>
+                    <button class="btn btn--danger delete-category" data-id="${category.id}">
+                        <i class="material-icons">delete</i>
+                    </button>
+                </div>
+            `;
+            
+            const categoryBody = document.createElement('div');
+            categoryBody.className = 'category-body';
+            categoryBody.innerHTML = `
+                <p>${category.description}</p>
+                <div class="services-list">
+                    ${category.services.length > 0 ? 
+                        category.services.map(service => `
+                            <div class="service-item">
+                                <div class="service-header">
+                                    <h4>${service.title}</h4>
+                                    <div class="service-actions">
+                                        <button class="btn btn--secondary edit-service" data-catid="${category.id}" data-id="${service.id}">
+                                            <i class="material-icons">edit</i>
+                                        </button>
+                                        <button class="btn btn--danger delete-service" data-catid="${category.id}" data-id="${service.id}">
+                                            <i class="material-icons">delete</i>
+                                        </button>
+                                    </div>
+                                </div>
+                                ${service.image ? `
+                                    <img src="${service.image.dataUrl}" alt="${service.title}" class="service-image">
+                                    <div class="image-info">
+                                        <small>${service.image.dimensions.width}×${service.image.dimensions.height}px</small>
+                                    </div>
+                                ` : ''}
+                                <p>${service.description}</p>
+                                <ul class="service-features">
+                                    ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `).join('') : 
+                        '<div class="service empty-state">No services in this category yet</div>'
+                    }
+                </div>
+            `;
+            
+            categoryCard.appendChild(categoryHeader);
+            categoryCard.appendChild(categoryBody);
+            accordion.appendChild(categoryCard);
+        });
+    }
+
+    // Delete category
+    document.getElementById('servicesAccordion').addEventListener('click', function(e) {
+        const serviceCategoryItem = e.target.closest('.category-card');
+        if (!serviceCategoryItem) return;
+
+        if (!editingServiceCategory) {
+            existingServices = []
+        };
+
+        const serviceCategoryId = serviceCategoryItem.getAttribute('data-id');
+
+        if (e.target.closest('.edit-category')) {
+            // Edit functionality
+            const categories = ServiceDB.getById(serviceCategoryId);
+            if (categories) {
+                populateEditService(categories);
+            }
+        } else if (e.target.closest('.delete-category')) {
+            if (confirm('Are you sure you want to delete this category and all its services?')) {
+                const isDeleted = ServiceDB.delete(serviceCategoryId);
+
+                if (isDeleted) {
+                    loadServices();
+                    updateCategoryDropdown();
+                    showNotification('Service Category deleted successfully!');
+                } else {
+                    showNotification('Failed to delete service category!', true);
+                }
+                
+            }
+        }
+        
+        // Delete individual service
+        if (e.target.classList.contains('delete-service')) {
+            const catId = e.target.getAttribute('data-catid');
+            const serviceId = e.target.getAttribute('data-id');
+            
+            if (confirm('Are you sure you want to delete this service?')) {
+                let categories = JSON.parse(localStorage.getItem('serviceCategories'));
+                const categoryIndex = categories.findIndex(cat => cat.id === catId);
+                
+                if (categoryIndex !== -1) {
+                    categories[categoryIndex].services = categories[categoryIndex].services.filter(
+                        service => service.id !== serviceId
+                    );
+                    localStorage.setItem('serviceCategories', JSON.stringify(categories));
+                    loadServices();
+                }
+            }
+        }
+    });
+
+    let editingServiceCategory = null;
+    let existingServices = [];
+
+    function populateEditService(category) {
+        if (editingServiceCategory === category.id) {
+            showNotification('You are already editing this Service Category');
+            return;
+        }
+
+        // Reset form
+        const serviceForm = document.getElementById('serviceCategoryForm');
+        serviceForm.reset();
+
+        if (!category) {
+            showNotification('Category not found', true);
+            return;
+        }
+
+        document.getElementById('categoryTitle').value = category.title;
+        document.getElementById('categoryIcon').value = category.icon;
+        document.getElementById('selectedIconPreview').innerHTML = `<i class="material-icons">${category.icon}</i>`;
+        document.getElementById('categoryDescription').value = category.description;
+        existingServices = category.services
+
+        // Change form to update mode
+        serviceForm.dataset.editId = category.id;
+        editingServiceCategory = category.id;
+        serviceForm.querySelector('button[type="submit"]').innerHTML = '<i class="material-icons">save</i> Update Category';
+
+        // Scroll to form
+        serviceForm.scrollIntoView({ behavior: 'smooth' });
+
+        // Update form submit handler temporarily
+        serviceForm.removeEventListener('submit', handleServiceCategorySubmit);
+        serviceForm.addEventListener('submit', handleUpdateServiceCategorySubmit);
+    }
+
+    function handleUpdateServiceCategorySubmit (e) {
+        e.preventDefault();
+        const serviceForm = e.target;
+        const serviceFormId = serviceForm.dataset.editId;
+        
+        // Get form values
+        const title = document.getElementById('categoryTitle').value;
+        const icon = document.getElementById('categoryIcon').value;
+        const description = document.getElementById('categoryDescription').value;
+
+        // Ensure we have at least one services
+        const serviceList = existingServices.length > 0 ? existingServices : [];
+        const category = {
+            updatedAt: Date.now().toString(),
+            title,
+            icon,
+            description,
+        };
+
+        // Add new images
+        category.services = serviceList;
+        
+        // Update in database
+        const isUpdated = ServiceDB.update(serviceFormId, category);
+        
+        if (isUpdated) {
+            serviceForm.reset();
+            editingServiceCategory = '';
+            delete serviceForm.dataset.editId;
+            serviceForm.querySelector('button[type="submit"]').innerHTML = '<i class="material-icons">save</i> Save Category';
+            
+            // Restore original submit handler
+            serviceForm.removeEventListener('submit', handleServiceCategorySubmit);
+            serviceForm.addEventListener('submit', handleUpdateServiceCategorySubmit);
+            
+            updateCategoryDropdown();
+            loadServices();
+            
+            showNotification('Service category Updated successfully!');
+        } else {
+            showNotification('Failed to update testimonial!', true);
+        }
+    }
+
+    // Initialize
+    updateCategoryDropdown();
+    loadServices();
+});
+
+
+// Material Icons data (top 100 commonly used icons)
+const materialIcons = [
+    'home', 'search', 'info', 'check', 'close', 'menu', 'expand_more', 'expand_less',
+    'favorite', 'favorite_border', 'share', 'settings', 'account_circle', 'add', 'delete',
+    'arrow_back', 'arrow_forward', 'chevron_left', 'chevron_right', 'refresh', 'more_vert',
+    'visibility', 'visibility_off', 'lock', 'lock_open', 'person', 'people', 'person_add',
+    'email', 'phone', 'link', 'calendar_today', 'location_on', 'map', 'local_offer',
+    'shopping_cart', 'shopping_basket', 'credit_card', 'work', 'school', 'star', 'star_border',
+    'star_half', 'bookmark', 'bookmark_border', 'lightbulb', 'lightbulb_outline', 'help',
+    'help_outline', 'warning', 'error', 'error_outline', 'notifications', 'notifications_none',
+    'notifications_off', 'done', 'done_all', 'remove', 'add_circle', 'remove_circle',
+    'cancel', 'arrow_upward', 'arrow_downward', 'chevron_up', 'chevron_down', 'filter_list',
+    'sort', 'import_export', 'redo', 'undo', 'cached', 'autorenew', 'loop', 'hourglass_empty',
+    'hourglass_full', 'print', 'save', 'cloud', 'cloud_upload', 'cloud_download', 'attach_file',
+    'create', 'edit', 'content_copy', 'content_cut', 'content_paste', 'inbox', 'archive',
+    'report', 'delete_forever', 'send', 'mail', 'drafts', 'markunread', 'reply', 'reply_all',
+    'forward', 'insert_link', 'insert_photo', 'insert_chart', 'format_quote', 'format_list_bulleted',
+    'format_list_numbered', 'format_bold', 'format_italic', 'format_underlined', 'format_color_text'
+];
+
+// Icon Picker functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const iconPickerModal = document.getElementById('iconPickerModal');
+    const openIconPicker = document.getElementById('openIconPicker');
+    const closeModal = document.querySelector('.close-modal');
+    const iconsGrid = document.getElementById('iconsGrid');
+    const iconSearch = document.getElementById('iconSearch');
+    const categoryIconInput = document.getElementById('categoryIcon');
+    const selectedIconPreview = document.getElementById('selectedIconPreview');
+
+    // Load icons into the grid
+    function loadIcons(icons) {
+        iconsGrid.innerHTML = '';
+        icons.forEach(icon => {
+            const iconItem = document.createElement('div');
+            iconItem.className = 'icon-item';
+            iconItem.innerHTML = `
+                <i class="material-icons">${icon}</i>
+                <span>${icon}</span>
+            `;
+            iconItem.addEventListener('click', function() {
+                categoryIconInput.value = icon;
+                selectedIconPreview.innerHTML = `<i class="material-icons">${icon}</i>`;
+                closeIconPicker();
+            });
+            iconsGrid.appendChild(iconItem);
+        });
+    }
+
+    // Open icon picker
+    openIconPicker.addEventListener('click', function() {
+        iconPickerModal.style.display = 'block';
+        loadIcons(materialIcons);
+    });
+
+    // Close icon picker
+    function closeIconPicker() {
+        iconPickerModal.style.display = 'none';
+    }
+
+    closeModal.addEventListener('click', closeIconPicker);
+
+    // Close when clicking outside modal
+    window.addEventListener('click', function(event) {
+        if (event.target === iconPickerModal) {
+            closeIconPicker();
+        }
+    });
+
+    // Search functionality
+    iconSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const filteredIcons = materialIcons.filter(icon => 
+            icon.toLowerCase().includes(searchTerm)
+        );
+        loadIcons(filteredIcons);
+    });
+
+    // Initialize with empty preview
+    selectedIconPreview.innerHTML = '<i class="material-icons">image</i>';
+});
+
+
+// Image compression function
+function compressImage(file, quality = 0.7, maxWidth = 800) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = new Image();
+            img.src = event.target.result;
+            
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Calculate new dimensions while maintaining aspect ratio
+                let width = img.width;
+                let height = img.height;
+                
+                if (width > maxWidth) {
+                    height = Math.round((height * maxWidth) / width);
+                    width = maxWidth;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                // Draw and compress image
+                ctx.drawImage(img, 0, 0, width, height);
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+                
+                resolve({
+                    dataUrl: compressedDataUrl,
+                    width: width,
+                    height: height,
+                    originalSize: file.size,
+                    compressedSize: compressedDataUrl.length // Approximate
+                });
+            };
+        };
+        reader.readAsDataURL(file);
+    });
+}

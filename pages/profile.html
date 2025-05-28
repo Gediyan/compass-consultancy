@@ -166,6 +166,7 @@
                 <div class="manage-tabs">
                     <button class="manage-tab-btn active" data-tab="posts-tab">Posts</button>
                     <button class="manage-tab-btn" data-tab="testimonials-tab">Testimonials</button>
+                    <button class="manage-tab-btn" data-tab="services-tab">Services</button>
                 </div>
                 
                 <!-- Posts Tab -->
@@ -212,9 +213,6 @@
                                 <!-- Event-specific fields (hidden by default) -->
                                 <div id="eventFields" style="display: none;">
                                     <div class="form-group">
-                                        <label for="eventLocation">Location</label>
-                                        <input type="text" id="eventLocation">
-                                        
                                         <div id="eventLocationField">
                                             <label for="eventLocation">Event Location</label>
                                             <div class="location-input-group">
@@ -310,6 +308,109 @@
                         </section>
                     </div>
                 </div>
+                <div id="services-tab" class="tab-pane">
+                    <div class="manage-sections">
+                        <!-- Service Category Creation Form -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">category</i> Create Service Category</h2>
+                            </div>
+                            
+                            <form id="serviceCategoryForm">
+                                <div class="form-group">
+                                    <label for="categoryTitle">Category Title</label>
+                                    <input type="text" id="categoryTitle" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="categoryIcon">Category Icon</label>
+                                    <div class="icon-selection">
+                                        <input type="text" id="categoryIcon" placeholder="e.g., design_services" required readonly>
+                                        <button type="button" id="openIconPicker" class="btn btn--secondary">
+                                            <i class="material-icons">image_search</i> Select Icon
+                                        </button>
+                                        <span id="selectedIconPreview" class="icon-preview"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="categoryDescription">Category Description</label>
+                                    <textarea id="categoryDescription" rows="3" required></textarea>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn--primary">
+                                        <i class="material-icons">save</i> Save Category
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+                        
+                        <!-- Individual Service Creation Form -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">add_circle</i> Add Service to Category</h2>
+                            </div>
+                            
+                            <form id="individualServiceForm">
+                                <div class="form-group">
+                                    <label for="serviceCategory">Select Category</label>
+                                    <select id="serviceCategory" required>
+                                        <option value="">Select a category</option>
+                                        <!-- Categories will be populated here -->
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="individualServiceTitle">Service Title</label>
+                                    <input type="text" id="individualServiceTitle" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="individualServiceDescription">Service Description</label>
+                                    <textarea id="individualServiceDescription" rows="3" required></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Service Features</label>
+                                    <div id="serviceFeaturesContainer">
+                                        <!-- Features will be added here -->
+                                    </div>
+                                    <button type="button" id="addFeatureBtn" class="btn btn--secondary">
+                                        <i class="material-icons">add</i> Add Feature
+                                    </button>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="serviceImage">Service Image</label>
+                                    <input type="file" id="serviceImage" accept="image/*">
+                                    <small>Recommended size: 800x600 pixels</small>
+                                    <div id="serviceImagePreview" class="image-preview"></div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn--primary">
+                                        <i class="material-icons">save</i> Save Service
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+                        
+                        <!-- Existing Services Management -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">list</i> Manage Services</h2>
+                            </div>
+                            <div class="services-accordion" id="servicesAccordion">
+                                <!-- Categories and services will be loaded here -->
+                                <div class="service empty-state">
+                                    <i class="material-icons">info</i>
+                                    <p>No service categories added yet. Create your first category above.</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -359,6 +460,24 @@
         <div class="notification" id="successNotification">
             <i class="material-icons" id="notification-icon">check_circle</i>
             <span id="notification-message"></span>
+        </div>
+
+        <!-- Icon Picker Modal -->
+        <div id="iconPickerModal" class="icon-modal">
+            <div class="icon-modal-content">
+                <div class="icon-modal-header">
+                    <h3>Select Material Icon</h3>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="icon-search">
+                        <input type="text" id="iconSearch" placeholder="Search icons...">
+                    </div>
+                    <div class="icons-grid" id="iconsGrid">
+                        <!-- Icons will be loaded here -->
+                    </div>
+                </div>
+            </div>
         </div>
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
