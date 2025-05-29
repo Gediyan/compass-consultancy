@@ -1129,7 +1129,6 @@ body {
     line-height: 1.6;
     font-style: italic;
     position: relative;
-    padding-left: 1.5rem;
 }
 
 .services-list {
@@ -1149,6 +1148,7 @@ body {
     border-radius: 4px;
     display: flex;
     flex-direction: column;
+    align-self: center;
 }
 
 .service-item:hover {
