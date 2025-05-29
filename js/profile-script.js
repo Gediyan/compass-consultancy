@@ -742,22 +742,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Helper function to show notifications
 function showNotification(message, isError = false) {
-    const notification = document.getElementById('successNotification');
-    const icon = document.getElementById('notification-icon');
-    const msgElement = document.getElementById('notification-message');
+    const notification = document.createElement('div');
+    notification.className = isError ? 'notification error' : 'notification success';
+    notification.innerHTML = `
+        <i class="material-icons">${isError ? 'error' : 'check_circle'}</i>
+        <span>${message}</span>
+    `;
     
-    msgElement.textContent = message;
-    notification.className = isError ? 'notification error show' : 'notification show';
+    // Position the notification based on current scroll
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    notification.style.top = `${scrollTop + 20}px`;
+    notification.style.right = '20px';
     
-    if (isError) {
-        icon.textContent = 'error';
-    } else {
-        icon.textContent = 'check_circle';
-    }
+    // Add to body
+    document.body.appendChild(notification);
     
+    // Trigger the show animation
     setTimeout(() => {
-        notification.className = 'notification';
+        notification.classList.add('show');
+    }, 10);
+    
+    // Remove after animation and timeout
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300); // Match this with your CSS transition time
     }, 3000);
+    
+    // Update position on scroll
+    const updatePosition = () => {
+        const newScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        notification.style.top = `${newScrollTop + 20}px`;
+    };
+    
+    window.addEventListener('scroll', updatePosition);
+    
+    // Clean up scroll listener when notification is removed
+    setTimeout(() => {
+        window.removeEventListener('scroll', updatePosition);
+    }, 3300); // Slightly longer than total display time
 }
 
 // Database functions
@@ -962,7 +986,7 @@ function createTestimonialItem(testimonial) {
         <div class="testimonial-rating" title="${testimonial.rating} out of 5 stars">
             ${stars}
         </div>
-        <blockquote class="testimonial-quote">${testimonial.quote}</blockquote>
+        <blockquote class="testimonial-quote"><p>${testimonial.quote}</p></blockquote>
         <div class="client-info">
             <div class="client-avatar">
                 <img src="${testimonial.avatar || '../images/image-placeholder.jpg'}" alt="${testimonial.name}" class="client-avatar-image">
@@ -1216,16 +1240,16 @@ const ServiceDB = {
         return services ? JSON.parse(services) : [];
     },
     
-    // Save a new testimonial
-    save: function(testimonial) {
+    // Save a new service
+    save: function(service) {
         const services = this.getAll();
-        testimonial.id = Date.now(); // Add unique ID
-        services.unshift(testimonial); // Add to beginning of array
+        service.id = Date.now(); // Add unique ID
+        services.unshift(service); // Add to beginning of array
         localStorage.setItem(this.SERVICE_KEY, JSON.stringify(services));
-        return testimonial;
+        return service;
     },
     
-    // Update a testimonial
+    // Update a service
     update: function(id, updatedData) {
         const services = this.getAll();
         const index = services.findIndex(t => t.id == id);
@@ -1253,6 +1277,23 @@ const ServiceDB = {
 
 document.addEventListener('DOMContentLoaded', function() {
 
+    // Form selection functionality
+    const formSelector = document.getElementById('serviceFormSelector');
+    const formSections = document.querySelectorAll('.form-section');
+    
+    formSelector.addEventListener('change', function() {
+        // Hide all form sections
+        formSections.forEach(section => {
+            section.style.display = 'none';
+        });
+        
+        // Show selected form section
+        const selectedForm = document.getElementById(this.value);
+        if (selectedForm) {
+            selectedForm.style.display = 'block';
+        }
+    });
+
     // Add feature input
     document.getElementById('addFeatureBtn').addEventListener('click', function() {
         const container = document.getElementById('serviceFeaturesContainer');
@@ -1260,7 +1301,7 @@ document.addEventListener('DOMContentLoaded', function() {
         featureDiv.className = 'feature-input';
         featureDiv.innerHTML = `
             <input type="text" class="feature-input-field" placeholder="Feature description">
-            <button type="button" class="btn btn--danger remove-feature">
+            <button type="button" class="remove-feature">
                 <i class="material-icons">remove</i>
             </button>
         `;
@@ -1275,7 +1316,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Service image preview (updated to show compression info)
-    document.getElementById('serviceImage').addEventListener('change', async function(e) {
+    document.getElementById('serviceImage').addEventListener('change', serviceImagePreview);
+        
+    async function serviceImagePreview (e) {
         const preview = document.getElementById('serviceImagePreview');
         preview.innerHTML = '';
         
@@ -1312,7 +1355,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Image processing error:', error);
             }
         }
-    });
+    }
 
     // Set up service category submission handler
     document.getElementById('serviceCategoryForm').addEventListener('submit', handleServiceCategorySubmit);
@@ -1453,55 +1496,62 @@ document.addEventListener('DOMContentLoaded', function() {
         
         categories.forEach(category => {
             const categoryCard = document.createElement('div');
-            categoryCard.className = 'category-card card';
+            categoryCard.className = 'category-card';
             categoryCard.dataset.id = category.id;
             
             const categoryHeader = document.createElement('div');
             categoryHeader.className = 'category-header';
             categoryHeader.innerHTML = `
-                <div class="category-title">
-                    <i class="material-icons">${category.icon}</i>
-                    <h3>${category.title}</h3>
-                </div>
-                <div class="category-actions">
-                    <button class="btn btn--secondary edit-category" data-id="${category.id}">
-                        <i class="material-icons">edit</i>
-                    </button>
-                    <button class="btn btn--danger delete-category" data-id="${category.id}">
-                        <i class="material-icons">delete</i>
-                    </button>
+                <div class="category-header-actions">
+                    <div class="category-title">
+                        <i class="material-icons">${category.icon}</i>
+                        <h3>${category.title}</h3>
+                    </div>
+                    <div class="category-actions">
+                        <button type="button" class="edit-category" title="Edit">
+                            <i class="material-icons">edit</i>
+                        </button>
+                        <button type="button" class="delete-category" title="Delete">
+                            <i class="material-icons">delete</i>
+                        </button>
+                    </div>
                 </div>
             `;
             
             const categoryBody = document.createElement('div');
             categoryBody.className = 'category-body';
+            categoryBody.dataset.id = category.id;
             categoryBody.innerHTML = `
                 <p>${category.description}</p>
                 <div class="services-list">
                     ${category.services.length > 0 ? 
                         category.services.map(service => `
-                            <div class="service-item">
-                                <div class="service-header">
+                            <div class="service-item" id="${service.id}">
+                                <div class="service-header-action">
                                     <h4>${service.title}</h4>
                                     <div class="service-actions">
-                                        <button class="btn btn--secondary edit-service" data-catid="${category.id}" data-id="${service.id}">
+                                         <button class="edit-service" 
+                                                data-category-id="${category.id}"
+                                                data-service-id="${service.id}">
                                             <i class="material-icons">edit</i>
                                         </button>
-                                        <button class="btn btn--danger delete-service" data-catid="${category.id}" data-id="${service.id}">
+                                        <button class="delete-service" 
+                                                data-category-id="${category.id}"
+                                                data-service-id="${service.id}">
                                             <i class="material-icons">delete</i>
                                         </button>
                                     </div>
                                 </div>
-                                ${service.image ? `
-                                    <img src="${service.image.dataUrl}" alt="${service.title}" class="service-image">
-                                    <div class="image-info">
-                                        <small>${service.image.dimensions.width}×${service.image.dimensions.height}px</small>
-                                    </div>
-                                ` : ''}
+                                
                                 <p>${service.description}</p>
-                                <ul class="service-features">
-                                    ${service.features.map(feature => `<li>${feature}</li>`).join('')}
-                                </ul>
+                                <div class="service-info-container">
+                                    ${service.image ? `
+                                        <img src="${service.image.dataUrl}" alt="${service.title}" class="service-image">
+                                    ` : ''}
+                                    <ul class="service-features">
+                                        ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+                                    </ul>
+                                </div>
                             </div>
                         `).join('') : 
                         '<div class="service empty-state">No services in this category yet</div>'
@@ -1515,7 +1565,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Delete category
+    // Edit and delete services category
     document.getElementById('servicesAccordion').addEventListener('click', function(e) {
         const serviceCategoryItem = e.target.closest('.category-card');
         if (!serviceCategoryItem) return;
@@ -1530,7 +1580,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Edit functionality
             const categories = ServiceDB.getById(serviceCategoryId);
             if (categories) {
-                populateEditService(categories);
+                populateEditCategory(categories);
+            } else {
+                showNotification('Category not found', true);
             }
         } else if (e.target.closest('.delete-category')) {
             if (confirm('Are you sure you want to delete this category and all its services?')) {
@@ -1546,44 +1598,254 @@ document.addEventListener('DOMContentLoaded', function() {
                 
             }
         }
-        
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.edit-service')) {
+            const button = e.target.closest('.edit-service');
+            const categoryId = button.dataset.categoryId;
+            const serviceId = button.dataset.serviceId;
+            editService(categoryId, serviceId);
+        }
+        if (e.target.closest('.delete-service')) {
+            const button = e.target.closest('.delete-service');
+            const categoryId = button.dataset.categoryId;
+            const serviceId = button.dataset.serviceId;
+            deleteService(categoryId, serviceId);
+        }
+    });
+
+    function deleteService (categoryId, serviceId){
         // Delete individual service
-        if (e.target.classList.contains('delete-service')) {
-            const catId = e.target.getAttribute('data-catid');
-            const serviceId = e.target.getAttribute('data-id');
+        if (confirm('Are you sure you want to delete this service?')) {
+            let categories = ServiceDB.getAll();
+            const categoryIndex = categories.findIndex(cat => cat.id === categoryId);
             
-            if (confirm('Are you sure you want to delete this service?')) {
-                let categories = JSON.parse(localStorage.getItem('serviceCategories'));
-                const categoryIndex = categories.findIndex(cat => cat.id === catId);
-                
-                if (categoryIndex !== -1) {
-                    categories[categoryIndex].services = categories[categoryIndex].services.filter(
-                        service => service.id !== serviceId
-                    );
-                    localStorage.setItem('serviceCategories', JSON.stringify(categories));
-                    loadServices();
-                }
+            if (categoryIndex !== -1) {
+                categories[categoryIndex].services = categories[categoryIndex].services.filter(
+                    service => service.id !== serviceId
+                );
+                localStorage.setItem('compass_service_categories', JSON.stringify(categories));
+                loadServices();
+            }
+        }
+    }
+
+    let editingIndividualService = null;
+
+    // Your edit function
+    function editService(categoryId, serviceId) {
+        const category = ServiceDB.getById(categoryId);
+
+        function getServiceByID (id) {
+            return category.services.find(service => service.id === id);
+        }
+
+        const service = getServiceByID(serviceId);
+
+        if (editingIndividualService === serviceId) {
+            showNotification('You are already editing this post');
+            return;
+        }
+
+        const categoryForm = document.getElementById('category-form');
+        const serviceForm = document.getElementById('service-form');
+        if (categoryForm) {
+            categoryForm.style.display = 'none';
+            serviceForm.style.display = 'block';
+        }
+
+        if (service) {
+                populateEditService(service, category);
+            }
+    }
+
+    function populateEditService(service, category){
+        // Reset form
+        const individualServiceForm = document.getElementById('individualServiceForm');
+        individualServiceForm.reset();
+        editingServiceCategory = category.id;
+
+        // Best practice - select by ID:
+        document.getElementById('individualServiceTitle').value = service.title;
+        document.getElementById('individualServiceDescription').value = service.description;
+        updateCategoryDropdown(); 
+
+        // Function to select a category by ID
+        function selectCategoryById(categoryId) {
+            document.getElementById('serviceCategory').value = categoryId;
+        }
+        selectCategoryById(category.id);
+
+        function renderServiceFeatures(features) {
+            const container = document.getElementById('serviceFeaturesContainer');
+            container.innerHTML = ''; // Clear existing content
+
+            if (features && features.length > 0) {
+                features.forEach(feature => {
+                    const featureDiv = document.createElement('div');
+                    featureDiv.className = 'feature-input';
+                    featureDiv.innerHTML = `
+                        <input type="text" class="feature-input-field" value="${feature}">
+                        <button type="button" class="remove-feature">
+                            <i class="material-icons">remove</i>
+                        </button>
+                    `;
+                    container.appendChild(featureDiv);
+                });
+            } else {
+                container.innerHTML = '<div class="service empty-state">No features in this service yet</div>';
+            }
+        }
+
+        // Render the features
+        renderServiceFeatures(service.features);
+
+        const preview = document.getElementById('serviceImagePreview');
+        preview.innerHTML = '';
+        if (service.image.dataUrl){
+            const img = document.createElement('img');
+            img.src = service.image.dataUrl;
+            
+            preview.appendChild(img);
+            
+            const info = document.createElement('div');
+            info.className = 'image-info';
+            info.innerHTML = `
+                <p>Original: ${service.image.originalSize}</p>
+                <p>Compressed: ${service.image.compressedSize}</p>
+                <p>Dimensions: ${service.image.dimensions.width}×${service.image.dimensions.height}px</p>
+            `;
+            preview.appendChild(info);
+        }
+
+        // Change form to update mode
+        individualServiceForm.dataset.editId = service.id;
+        editingIndividualService = service.id;
+        individualServiceForm.querySelector('button[type="submit"]').innerHTML = '<i class="material-icons">save</i> Update Service';
+
+        // Scroll to form
+        individualServiceForm.scrollIntoView({ behavior: 'smooth' });
+
+        // Update form submit handler temporarily
+        individualServiceForm.removeEventListener('submit', handleIndividualServiceSubmit);
+        individualServiceForm.addEventListener('submit', handleUpdateIndividualServiceSubmit);
+    }
+
+    // Remove feature functionality (using event delegation)
+    document.getElementById('serviceFeaturesContainer').addEventListener('click', function(e) {
+        if (e.target.closest('.remove-feature')) {
+            e.target.closest('.feature-input').remove();
+            
+            // Show empty state if no features left
+            if (this.querySelectorAll('.feature-input').length === 0) {
+                this.innerHTML = '<div class="service empty-state">No features in this service yet</div>';
             }
         }
     });
 
+    async function handleUpdateIndividualServiceSubmit(e) {
+        e.preventDefault();
+        
+        // Get form values
+        const categoryId = document.getElementById('serviceCategory').value;
+        const title = document.getElementById('individualServiceTitle').value;
+        const description = document.getElementById('individualServiceDescription').value;
+        const imageFile = document.getElementById('serviceImage').files[0];
+        const serviceId = this.dataset.editId;
+        
+        // Get features from inputs
+        const features = [];
+        document.querySelectorAll('#serviceFeaturesContainer .feature-input-field').forEach(input => {
+            if (input.value.trim() !== '') {
+                features.push(input.value.trim());
+            }
+        });
+        
+        // Get existing categories
+        let categories = ServiceDB.getAll();
+        
+        // Find the category containing the service
+        const categoryIndex = categories.findIndex(cat => cat.id === editingServiceCategory);
+        if (categoryIndex === -1) {
+            showNotification('Category not found!', true);
+            return;
+        }
+        
+        // Find the service index within the category
+        const serviceIndex = categories[categoryIndex].services.findIndex(srv => srv.id === serviceId);
+        if (serviceIndex === -1) {
+            showNotification('Service not found!', true);
+            return;
+        }
+        
+        // Process image (keep existing if no new image uploaded)
+        let imageData = categories[categoryIndex].services[serviceIndex].image;
+        
+        // If new image was uploaded
+        if (imageFile) {
+            try {
+                const compressionResult = await compressImage(imageFile);
+                imageData = {
+                    dataUrl: compressionResult.dataUrl,
+                    dimensions: {
+                        width: compressionResult.width,
+                        height: compressionResult.height
+                    },
+                    originalSize: formatFileSize(compressionResult.originalSize),
+                    compressedSize: formatFileSize(compressionResult.compressedSize)
+                };
+            } catch (error) {
+                showNotification('Failed to process image. Please try another image.', true);
+                return;
+            }
+        }
+        
+        // Update the service
+        categories[categoryIndex].services[serviceIndex] = {
+            ...categories[categoryIndex].services[serviceIndex],
+            title,
+            description,
+            features,
+            image: imageData,
+            updatedAt: new Date().toISOString()
+        };
+        
+        // Save back to localStorage
+        localStorage.setItem('compass_service_categories', JSON.stringify(categories));
+        
+        // Show success message
+        showNotification('Service updated successfully!');
+        
+        // Reset form and reload services
+        this.reset();
+        document.getElementById('serviceFeaturesContainer').innerHTML = '';
+        document.getElementById('serviceImagePreview').innerHTML = '';
+        delete this.dataset.editId;
+        editingIndividualService = null;
+        editingServiceCategory = null;
+        
+        // Reload services to show changes
+        loadServices();
+        
+        // Restore original submit handler
+        this.removeEventListener('submit', handleUpdateIndividualServiceSubmit);
+        this.addEventListener('submit', handleIndividualServiceSubmit);
+    }
+        
+
     let editingServiceCategory = null;
     let existingServices = [];
 
-    function populateEditService(category) {
+    function populateEditCategory(category) {
         if (editingServiceCategory === category.id) {
             showNotification('You are already editing this Service Category');
             return;
         }
 
         // Reset form
-        const serviceForm = document.getElementById('serviceCategoryForm');
-        serviceForm.reset();
-
-        if (!category) {
-            showNotification('Category not found', true);
-            return;
-        }
+        const serviceCategoryForm = document.getElementById('serviceCategoryForm');
+        serviceCategoryForm.reset();
 
         document.getElementById('categoryTitle').value = category.title;
         document.getElementById('categoryIcon').value = category.icon;
@@ -1592,16 +1854,16 @@ document.addEventListener('DOMContentLoaded', function() {
         existingServices = category.services
 
         // Change form to update mode
-        serviceForm.dataset.editId = category.id;
+        serviceCategoryForm.dataset.editId = category.id;
         editingServiceCategory = category.id;
-        serviceForm.querySelector('button[type="submit"]').innerHTML = '<i class="material-icons">save</i> Update Category';
+        serviceCategoryForm.querySelector('button[type="submit"]').innerHTML = '<i class="material-icons">save</i> Update Category';
 
         // Scroll to form
-        serviceForm.scrollIntoView({ behavior: 'smooth' });
+        serviceCategoryForm.scrollIntoView({ behavior: 'smooth' });
 
         // Update form submit handler temporarily
-        serviceForm.removeEventListener('submit', handleServiceCategorySubmit);
-        serviceForm.addEventListener('submit', handleUpdateServiceCategorySubmit);
+        serviceCategoryForm.removeEventListener('submit', handleServiceCategorySubmit);
+        serviceCategoryForm.addEventListener('submit', handleUpdateServiceCategorySubmit);
     }
 
     function handleUpdateServiceCategorySubmit (e) {

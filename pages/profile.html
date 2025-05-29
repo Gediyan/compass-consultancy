@@ -310,8 +310,22 @@
                 </div>
                 <div id="services-tab" class="tab-pane">
                     <div class="manage-sections">
-                        <!-- Service Category Creation Form -->
+                        <!-- Form Selection Dropdown -->
                         <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">design_services</i> Services Management</h2>
+                            </div>
+                            <div class="form-group">
+                                <label for="serviceFormSelector">Select Form to Display</label>
+                                <select id="serviceFormSelector" class="form-control">
+                                    <option value="category-form">Add New Category</option>
+                                    <option value="service-form">Add New Service</option>
+                                </select>
+                            </div>
+                        </section>
+
+                        <!-- Service Category Creation Form (Initially visible) -->
+                        <section id="category-form" class="card form-section">
                             <div class="section-header">
                                 <h2><i class="material-icons">category</i> Create Service Category</h2>
                             </div>
@@ -345,9 +359,9 @@
                                 </div>
                             </form>
                         </section>
-                        
-                        <!-- Individual Service Creation Form -->
-                        <section class="card">
+
+                        <!-- Individual Service Creation Form (Initially hidden) -->
+                        <section id="service-form" class="card form-section" style="display: none;">
                             <div class="section-header">
                                 <h2><i class="material-icons">add_circle</i> Add Service to Category</h2>
                             </div>
@@ -385,7 +399,7 @@
                                     <label for="serviceImage">Service Image</label>
                                     <input type="file" id="serviceImage" accept="image/*">
                                     <small>Recommended size: 800x600 pixels</small>
-                                    <div id="serviceImagePreview" class="image-preview"></div>
+                                    <div id="serviceImagePreview" class="service-image-preview"></div>
                                 </div>
                                 
                                 <div class="form-actions">
@@ -396,7 +410,7 @@
                             </form>
                         </section>
                         
-                        <!-- Existing Services Management -->
+                        <!-- Existing Services Management (Always visible) -->
                         <section class="card">
                             <div class="section-header">
                                 <h2><i class="material-icons">list</i> Manage Services</h2>
