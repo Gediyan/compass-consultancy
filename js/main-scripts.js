@@ -1,41 +1,6 @@
 // main-scripts.js
 
 // Sticky Header with Background Change
-// window.addEventListener('scroll', function() {
-//   const header = document.querySelector('.main-header');
-//   const slideshow = document.querySelector('.slideshow-section');
-//   const heroPreview = document.querySelector('.hero-preview');
-//   const testimonialSection = document.querySelector('.testimonials-carousel');
-
-//   if (slideshow) {
-//     const slideshowBottom = slideshow.offsetTop + slideshow.offsetHeight;
-
-//     if (window.scrollY > slideshowBottom - 100) {
-//         header.classList.add('scrolled');
-//     } else {
-//         header.classList.remove('scrolled');
-//     }
-//   } else if (heroPreview){
-//     const slideshowBottom = heroPreview.offsetTop + heroPreview.offsetHeight;
-
-//     if (window.scrollY > slideshowBottom - 100) {
-//         header.classList.add('scrolled');
-//     } else {
-//         header.classList.remove('scrolled');
-//     }
-//   }
-
-//   if (testimonialSection) {
-//     const slideshowBottom = testimonialSection.offsetTop + testimonialSection.offsetHeight;
-    
-//     if (window.scrollY > slideshowBottom - 100) {
-//         header.style.position = 'relative';
-//     } else {
-//         header.style.position = 'fixed';
-//     }
-//   }
-  
-// });
 
 const header = document.querySelector('.main-header');
 
@@ -1626,12 +1591,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setupIntersectionObserver() {
-    const servicesSection = document.querySelector('.content-section');
     const servicesCard = document.getElementById('servicesCard');
     
-    if (!servicesSection || !servicesCard) {
-        return;
-    }
+    if (!servicesCard) return;
+
+    // Set initial threshold based on screen size
+    let threshold = window.matchMedia('(max-width: 768px)').matches ? 0.04 : 0.07;
 
     // Create a simple, reliable observer
     const observer = new IntersectionObserver((entries) => {
@@ -1646,8 +1611,8 @@ function setupIntersectionObserver() {
         );
         
         }, {
-            threshold: 0.07,
-            rootMargin: '0px 0px', // Trigger on exact vertical edges
+            rootMargin: '0px 0px 0px 0px',
+            threshold: threshold,
         }
     );
     
