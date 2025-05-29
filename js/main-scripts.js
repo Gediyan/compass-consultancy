@@ -714,16 +714,6 @@ function navigateToPost(postId) {
     }
 }
 
-// Add this CSS for the highlight effect (optional)
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes highlight {
-        0% { background-color: rgba(255, 255, 0, 0.3); }
-        100% { background-color: transparent; }
-    }
-`;
-document.head.appendChild(style);
-
 // Update news-events page to handle hash on load
 if (window.location.pathname.includes('pages/news-events.html')) {
     document.addEventListener('DOMContentLoaded', function() {
@@ -1523,19 +1513,21 @@ document.addEventListener('DOMContentLoaded', function() {
             servicesCardContent.innerHTML = '<p>No services available yet.</p>';
             return;
         }
-        
+
+        const sortCategories = categories.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        console.log(sortCategories);
         // Create container for all categories
         const categoriesContainer = document.createElement('div');
         categoriesContainer.className = 'services-card-content';
         
-        categories.forEach(category => {
+        sortCategories.forEach(category => {
             if (category.services && category.services.length > 0) {
                 const categoryElement = document.createElement('div');
                 categoryElement.className = 'service-category';
                 
                 categoryElement.innerHTML = `
                     <h3 class="service-header"><i class="${category.icon}"></i> ${category.title}</h3>
-                    <p>${category.description}</p>
+                    <p class="category-description">${category.description}</p>
                 `;
                 
                 const servicesList = document.createElement('div');

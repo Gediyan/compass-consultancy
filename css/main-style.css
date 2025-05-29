@@ -19,6 +19,7 @@
     --paragraph-text-color:#333;
     --cards-bg-color: #fff;
     --post-card-description: #555;
+    --service-category-bg: #f5f7fa;
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     --stat-container-bg: rgba(88, 87, 87, 0.2);
     --transition: all 0.3s ease;
@@ -47,6 +48,7 @@
     --paragraph-text-color:#f0f0f0;
     --cards-bg-color: #2d2d2d;
     --post-card-description: #b5b6b7;
+    --service-category-bg: #39393d;
     --shadow: 0 4px 6px rgba(222, 221, 221, 0.1);
     --stat-container-bg: rgba(0, 0, 0, 0.2);
     --footer-header1-color: rgb(209, 235, 243);
@@ -798,6 +800,20 @@ body{
     flex-grow: 1;
 }
 
+.card-title {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+    min-height: 2.8em; /* 2 lines * line-height */
+}
+
 .card-meta {
     font-size: 0.85rem;
     color: #777;
@@ -1041,16 +1057,15 @@ body{
 
 .services-section {
     width: 100%;
-  padding: 1rem 0;
-  background: var(--body-bg-color);
-  position: relative;
-  overflow: hidden;
+    padding: 1rem 0;
+    background: var(--body-bg-color);
+    position: relative;
+    overflow: hidden;
 }
 
 .services-card {
     background-color: var(--body-bg-color);
     border-radius: 1rem;
-    /* box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.1); */
     padding: 2rem;
     margin: 2rem auto;
     
@@ -1066,9 +1081,15 @@ body{
 }
 
 .service-category {
-    background-color: var(--body-bg-color);
+    /* background: var(--service-category-bg); */
+    border: 1px solid var(--service-category-bg);
+    border-radius: 10px;
     margin-bottom: 40px;
     width: 100%;
+}
+
+.category-description {
+    padding: 1rem;
 }
 
 .services-card-content {
@@ -1078,11 +1099,20 @@ body{
     gap: 30px;
 }
 
+@media (max-width: 500px) {
+  .services-card-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    align-items: flex-start;
+  }
+}
+
 /* Desktop styles (two columns) */
 @media (min-width: 768px) {
   .services-card-content {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    /* grid-template-columns: repeat(2, 1fr); */
     align-items: flex-start;
   }
   
