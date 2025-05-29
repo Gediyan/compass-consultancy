@@ -1208,16 +1208,22 @@ body{
   position: relative;
 }
 
-.service-features li:before {
-  content: '';
+ul {
+  list-style: none; /* Remove default bullets */
+  padding-left: 1em; /* Adjust indentation */
+}
+
+ul li {
+  position: relative;
+  padding-left: 1.5em; /* Space for custom bullet */
+}
+
+ul li::before {
+  content: "•"; /* Bullet character */
+  color: var(--primary-color); /* Your bullet color */
+  font-size: 1.2em; /* Adjust size */
   position: absolute;
-  left: -15px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--primary-color);
+  left: 0;
 }
 
 .read-more-btn {
