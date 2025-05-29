@@ -1580,6 +1580,12 @@ document.addEventListener('DOMContentLoaded', function() {
             // Edit functionality
             const categories = ServiceDB.getById(serviceCategoryId);
             if (categories) {
+                const categoryForm = document.getElementById('category-form');
+                const serviceForm = document.getElementById('service-form');
+                if (!categoryForm) {
+                    serviceForm.style.display = 'none';
+                    categoryForm.style.display = 'block';
+                }
                 populateEditCategory(categories);
             } else {
                 showNotification('Category not found', true);
