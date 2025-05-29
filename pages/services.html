@@ -117,15 +117,20 @@
                 <span class="dot" onclick="currentSlide(4)"></span>
             </div>
         </section>
-        <section class="services-detail">
-          <h1>Services</h1>
-        </section>
-        <section>
-            <div>aaaa</div>
-            <div>b</div>
-            <div>c</div>
-        </section>
-        <section>lower-section</section>
+        <main class="services-detail">
+            <section id="category-{{category.id}}" class="service-category-section">
+                <h2><i class="{{category.icon}}"></i> {{category.title}}</h2>
+                <p>{{category.description}}</p>
+                
+                <div class="services-grid">
+                    {{#each category.services}}
+                    <div id="service-{{this.id}}" class="service-detail-card">
+                    <!-- Service details here -->
+                    </div>
+                    {{/each}}
+                </div>
+            </section>
+        </main>
         
         <div id="footer-container"></div>
 

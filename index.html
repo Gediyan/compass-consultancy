@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,12 +10,12 @@
         <link rel="stylesheet" href="css/main-style.css">
     </head>
     <body>
+        <button id="back-to-top" title="Go to top">↑</button>
         <header class="main-header">
             <div class="logo-container">
                 <img src="images/logo-700px-01.png" alt="Company Logo" class="logo" id="logoIcon">
                 <div class="company-name"><h1>Compass AEPED</h1></div>
             </div>
-            <button id="back-to-top" title="Go to top">↑</button>
             
             <nav id="mainNav">
                 <a href="index.html">Home</a>
@@ -144,7 +144,9 @@
                 </div>
             </div>
         </section>
-         
+        <div class="spacer">
+            Scroll down to see services
+        </div>
         <main class="content-section">
             
             <div class="section-title">
@@ -160,74 +162,17 @@
             <div class="events-container">
                 <!-- Event posts will be dynamically inserted here by JavaScript -->
             </div>
-            <div class="section-title">
-                <h2>Our Services</h2>
-                <p class="section-title-description">Comprehensive consultancy solutions tailored to your business needs</p>
+
+            <!-- Add this where you want the services section to appear -->
+            <div id="servicesSection" class="services-section">
+                <div  id="servicesContainer" class="services-container">
+                    <h2 class="services-header">Our Services</h2>
+                    <div id="servicesCard" class="services-card">
+                    <!-- Services will be dynamically inserted here -->
+                    </div>
+                </div>
             </div>
-            
-            <div class="service-intro-container">
-                <section class="service-card">
-                    <h3 class="card-title">URBAN PLANNING AND DESIGN</h3>
-                    <ul class="intro-planning-description">
-                        <li>Structure Planning</li>
-                        <li>Corridor Planning</li>
-                        <li>Local Development Planning (LDP)</li>
-                        <li>Neighborhood Development Planning (NDP)</li>
-                        <li>Urban Design</li>
-                        <li>Landscape Design</li>
-                        <li>Land Inventory & Records Management</li>
-                        <li>Urban Policy Research & Analysis</li>
-                        <li>Urban Development Standards & Regulations</li>
-                    </ul>
-                </section>
-                <section class="service-card">
-                    <h3 class="card-title">ARCHITECTURAL & ENGINEERING DESIGN</h3>
-                    <ul class="intro-architecture-description">
-                        <li>Architectural Design</li>
-                        <li>Engineering Design</li>
-                        <li>Construction Management</li>
-                    </ul>
-                </section>
-                <section class="service-card">
-                    <h3 class="card-title">SOCIOECONOMIC DEVELOPMENT & PLANNING</h3>
-                    <ul class="intro-socio-economic-description">
-                        <li>Housing Development Studies</li>
-                        <li>Market Analysis & Feasibility Studies</li>
-                        <li>Social & Economic Impact Assessments</li>
-                        <li>Land Property Valuation</li>
-                    </ul>
-                </section>
-                <section class="service-card">
-                    <h3 class="card-title">ENVIRONMENTAL PLANNING & SUSTAINABILITY</h3>
-                    <ul class="intro-environmental-planning-description">
-                        <li>Environmental Impact Assessments (EIAs)</li>
-                        <li>Sustainable Design & Planning</li>
-                    </ul>
-                </section>
-                <section class="service-card">
-                    <h3 class="card-title">INFRASTRUCTURE PLANNING</h3>
-                    <ul class="intro-infrastructure-planning-description">
-                        <li>Infrastructure Asset Planning</li>
-                        <li>Transportation Planning</li>
-                        <li>Utility Systems Planning </li>
-                        <li>Site Development Planning</li>
-                    </ul>
-                </section>
-                <section class="service-card">
-                    <h3 class="card-title">CAPACITY BUILDING & TRAINING</h3>
-                    <ul class="intro-capacity-building-description">
-                        <li>Technical Assistance</li>
-                        <li>Training</li>
-                    </ul>
-                </section>
-                <section class="service-card">
-                    <h3 class="card-title">GEOSPATIAL SERVICES</h3>
-                    <ul class="intro-geospatial-service-description">
-                        <li>Street Addressing</li>
-                        <li>Base Map</li>
-                    </ul>
-                </section>
-            </div>
+
             <!-- Why Choose Us -->
             <div class="section-header">
                 <h2>Why Choose Compass AEPED?</h2>
@@ -335,6 +280,8 @@
                 </button>
             </div>
         </main>
+        <div class="spacer"></div>
+        
         <div id="footer-container"></div>
 
         <script>

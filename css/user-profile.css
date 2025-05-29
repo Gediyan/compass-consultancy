@@ -1415,6 +1415,42 @@ progress {
     }
 }
 
+/* Orientation-specific adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+    .icon-modal-content {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    
+    .icons-grid {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    }
+}
+
+/* High-density displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { 
+    .btn, input, select, textarea {
+        border-width: 0.5px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .tab-navigation, .manage-tabs, .form-actions {
+        display: none;
+    }
+    
+    .tab-content {
+        display: block !important;
+    }
+    
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+    }
+}
+
 
 
 /* Notification style */

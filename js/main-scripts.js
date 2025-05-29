@@ -1,42 +1,98 @@
 // main-scripts.js
 
 // Sticky Header with Background Change
-window.addEventListener('scroll', function() {
-  const header = document.querySelector('.main-header');
-  const slideshow = document.querySelector('.slideshow-section');
-  const heroPreview = document.querySelector('.hero-preview');
-  const testimonialSection = document.querySelector('.testimonials-carousel');
+// window.addEventListener('scroll', function() {
+//   const header = document.querySelector('.main-header');
+//   const slideshow = document.querySelector('.slideshow-section');
+//   const heroPreview = document.querySelector('.hero-preview');
+//   const testimonialSection = document.querySelector('.testimonials-carousel');
 
-  if (slideshow) {
-    const slideshowBottom = slideshow.offsetTop + slideshow.offsetHeight;
+//   if (slideshow) {
+//     const slideshowBottom = slideshow.offsetTop + slideshow.offsetHeight;
 
-    if (window.scrollY > slideshowBottom - 100) {
-        header.classList.add('scrolled');
-    } else {
-        header.classList.remove('scrolled');
-    }
-  } else if (heroPreview){
-    const slideshowBottom = heroPreview.offsetTop + heroPreview.offsetHeight;
+//     if (window.scrollY > slideshowBottom - 100) {
+//         header.classList.add('scrolled');
+//     } else {
+//         header.classList.remove('scrolled');
+//     }
+//   } else if (heroPreview){
+//     const slideshowBottom = heroPreview.offsetTop + heroPreview.offsetHeight;
 
-    if (window.scrollY > slideshowBottom - 100) {
-        header.classList.add('scrolled');
-    } else {
-        header.classList.remove('scrolled');
-    }
-  }
+//     if (window.scrollY > slideshowBottom - 100) {
+//         header.classList.add('scrolled');
+//     } else {
+//         header.classList.remove('scrolled');
+//     }
+//   }
 
-  if (testimonialSection) {
-    const slideshowBottom = testimonialSection.offsetTop + testimonialSection.offsetHeight;
+//   if (testimonialSection) {
+//     const slideshowBottom = testimonialSection.offsetTop + testimonialSection.offsetHeight;
     
-    if (window.scrollY > slideshowBottom - 100) {
-        header.style.position = 'relative';
-        console.log('sticky')
-    } else {
-        header.style.position = 'fixed';
-    }
-  }
+//     if (window.scrollY > slideshowBottom - 100) {
+//         header.style.position = 'relative';
+//     } else {
+//         header.style.position = 'fixed';
+//     }
+//   }
   
-});
+// });
+
+const header = document.querySelector('.main-header');
+
+// For slideshow/hero preview
+const createSectionObserver = (section, className) => {
+  if (!section) return;
+  
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        header.classList.toggle(className, !entry.isIntersecting);
+      });
+    },
+    { 
+      rootMargin: '0px 0px 0px 0px',
+      threshold: 0
+    }
+  );
+  observer.observe(section);
+};
+
+createSectionObserver(document.querySelector('.slideshow-section'), 'scrolled');
+createSectionObserver(document.querySelector('.hero-preview'), 'scrolled');
+createSectionObserver(document.querySelector('.services-section'));
+
+// For testimonial section
+const serviceSecttionObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      header.style.opacity = !entry.isIntersecting ? '1' : '0';
+    });
+  },
+  { 
+    rootMargin: '0px 0px 0px 0px',
+    threshold: 0.05
+  }
+);
+
+if (document.querySelector('.services-section')) {
+  serviceSecttionObserver.observe(document.querySelector('.services-section'));
+}
+// For testimonial section
+const testimonialObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      header.style.opacity = !entry.isIntersecting ? '1' : '0';
+    });
+  },
+  { 
+    rootMargin: '0px 0px 0px 0px',
+    threshold: [1, 0.5]
+  }
+);
+
+if (document.querySelector('.testimonials-carousel')) {
+  testimonialObserver.observe(document.querySelector('.testimonials-carousel'));
+}
 
 // Automatic Text Slideshow
 let textSlideIndex = 0;
@@ -1468,4 +1524,184 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Start the carousel
     initCarousel();
+});
+
+
+// Database functions
+const ServiceDB = {
+    // Key for localStorage
+    SERVICE_KEY: 'compass_service_categories',
+    
+    // Get all services
+    getAll: function() {
+        const services = localStorage.getItem(this.SERVICE_KEY);
+        return services ? JSON.parse(services) : [];
+    },
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Load services immediately
+    loadServicesIntoCard();
+
+    // Intersection Observer to trigger animation
+    setupIntersectionObserver();
+  
+    function loadServicesIntoCard() {
+        const servicesCardContent = document.getElementById('servicesCard');
+        if (!servicesCardContent) return;
+
+        servicesCardContent.innerHTML = '';
+        
+        const categories = ServiceDB.getAll();
+        
+        if (categories.length === 0) {
+            servicesCardContent.innerHTML = '<p>No services available yet.</p>';
+            return;
+        }
+        
+        // Create container for all categories
+        const categoriesContainer = document.createElement('div');
+        categoriesContainer.className = 'services-card-content';
+        
+        categories.forEach(category => {
+            if (category.services && category.services.length > 0) {
+                const categoryElement = document.createElement('div');
+                categoryElement.className = 'service-category';
+                
+                categoryElement.innerHTML = `
+                    <h3 class="service-header"><i class="${category.icon}"></i> ${category.title}</h3>
+                    <p>${category.description}</p>
+                `;
+                
+                const servicesList = document.createElement('div');
+                servicesList.className = 'services-list';
+                
+                category.services.forEach(service => {
+                    const serviceElement = document.createElement('div');
+                    serviceElement.className = 'service-item';
+                    serviceElement.dataset.serviceId = service.id;
+                    serviceElement.dataset.categoryId = category.id;
+                    
+                    let imageHtml = '';
+                    if (service.image && service.image.dataUrl) {
+                    imageHtml = `<img src="${service.image.dataUrl}" alt="${service.title}" class="service-image-preview" id="${service.id}">`;
+                    }
+                    
+                    let featuresHtml = '';
+                    if (service.features && service.features.length > 0) {
+                    featuresHtml = `
+                        <ul class="service-features" id="${service.id}">
+                        ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                    `;
+                    }
+                    
+                    serviceElement.innerHTML = `
+                    ${imageHtml}
+                    <h4 class="each-header" id="${service.id}">${service.title}</h4>
+                    <p>${service.description}</p>
+                    ${featuresHtml}
+                    `;
+                    
+                    serviceElement.addEventListener('click', function() {
+                    navigateToService(service.id, category.id);
+                    });
+                    
+                    servicesList.appendChild(serviceElement);
+                });
+                
+                const readMoreBtn = document.createElement('a');
+                readMoreBtn.className = 'read-more-btn';
+                readMoreBtn.textContent = 'Read More';
+                readMoreBtn.href = `services.html#category-${category.id}`;
+                
+                categoryElement.appendChild(servicesList);
+                categoryElement.appendChild(readMoreBtn);
+                categoriesContainer.appendChild(categoryElement);
+            }
+        });
+        
+        servicesCardContent.appendChild(categoriesContainer);
+    }
+});
+
+function setupIntersectionObserver() {
+    const servicesSection = document.querySelector('.content-section');
+    const servicesCard = document.getElementById('servicesCard');
+    
+    if (!servicesSection || !servicesCard) {
+        return;
+    }
+
+    // Create a simple, reliable observer
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                console.log('Element is visible - adding visible class');
+                servicesCard.style.willChange = 'opacity, transform';
+                servicesCard.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+            }
+        );
+        
+        }, {
+            threshold: 0.07,
+            rootMargin: '0px 0px', // Trigger on exact vertical edges
+        }
+    );
+    
+    observer.observe(servicesCard);
+}
+
+
+// Global functions for navigation
+function navigateToService(serviceId, categoryId) {
+  window.location.href = `pages/services.html#category-${categoryId}-service-${serviceId}`;
+}
+
+function navigateToCategory(categoryId) {
+  window.location.href = `pages/services.html#category-${categoryId}`;
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Check URL hash on page load
+  const hash = window.location.hash;
+  
+  if (hash) {
+    // Check if hash contains a service ID
+    const serviceMatch = hash.match(/service-([^&]+)/);
+    const categoryMatch = hash.match(/category-([^&]+)/);  
+    
+    if (categoryMatch) {
+        const categoryId = categoryMatch[1];
+        const categoryElement = document.querySelector(`[data-category-id="${categoryId}"]`);
+        console.log('hash:', categoryMatch[1], 'categoryElement:',categoryElement); 
+      
+      if (categoryElement) {
+        // Scroll to category
+        setTimeout(() => {
+          categoryElement.scrollIntoView({ behavior: 'smooth' });
+          
+          // If there's a service ID, scroll to that service after a delay
+          if (serviceMatch) {
+            const serviceId = serviceMatch[1];
+            setTimeout(() => {
+              const serviceElement = document.querySelector(`[data-service-id="${serviceId}"]`);
+              if (serviceElement) {
+                serviceElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Optional: highlight the service
+                serviceElement.style.boxShadow = '0 0 0 3px rgba(52, 152, 219, 0.5)';
+                setTimeout(() => {
+                  serviceElement.style.boxShadow = 'none';
+                }, 3000);
+              }
+            }, 500);
+          }
+        }, 100);
+      }
+    }
+  }
 });
