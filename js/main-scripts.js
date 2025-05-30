@@ -666,6 +666,62 @@ function loadPosts() {
     } else {
         if (eventsContainer) eventsContainer.innerHTML = '<p class="no-posts">No upcoming events found.</p>';
     }
+
+    postCardIntersectionObserver();
+}
+
+function postCardIntersectionObserver() {
+    const newsContainer = document.querySelectorAll('.news-card');
+    const eventContainer = document.querySelectorAll('.event-card');
+
+    // Set initial threshold based on screen size
+    let threshold = window.matchMedia('(max-width: 768px)').matches ? 0.04 : 0.07;
+
+    if (newsContainer) {
+        // Create a simple, reliable observer
+        newsContainer.forEach(news => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        news.style.willChange = 'opacity, transform';
+                        news.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                    }
+                );
+                
+                }, {
+                    rootMargin: '0px 0px 0px 0px',
+                    threshold: threshold,
+                }
+            );
+        
+           observer.observe(news); 
+        });
+    }
+
+    if (eventContainer) {
+        // Create a simple, reliable observer
+        eventContainer.forEach(events => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        events.style.willChange = 'opacity, transform';
+                        events.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                    }
+                );
+                
+                }, {
+                    rootMargin: '0px 0px 0px 0px',
+                    threshold: threshold,
+                }
+            );
+        
+           observer.observe(events); 
+        });
+    }
 }
 
 // Helper function to add navigation to post elements
@@ -1409,7 +1465,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const cardStyle = window.getComputedStyle(cards[currentPosition]);
         const margin = parseFloat(cardStyle.marginLeft) + parseFloat(cardStyle.marginRight);
-        return cards[0].offsetWidth + margin;
+        console.log('offsetWidth:', cards[currentPosition].offsetWidth, 'margin:', margin);
+        return cards[currentPosition].offsetWidth + margin;
     }
 
     // Update the number of visible cards based on screen size
@@ -1422,6 +1479,7 @@ document.addEventListener('DOMContentLoaded', function() {
             visibleCards = 3;
         }
         cardWidth = calculateCardWidth();
+        console.log('cardWidth:', cardWidth);
     }
 
     // Update the carousel position
@@ -1632,13 +1690,307 @@ function setupIntersectionObserver() {
 }
 
 
-// Global functions for navigation
 function navigateToService(serviceId, categoryId) {
-  window.location.href = `pages/services.html#category-${categoryId}-service-${serviceId}`;
+  // Store the target service ID in session storage
+  sessionStorage.setItem('scrollToService', serviceId);
+  
+  // Navigate to the services page
+  window.location.href = `pages/services.html#service-${serviceId}`;
 }
 
-function navigateToCategory(categoryId) {
-  window.location.href = `pages/services.html#category-${categoryId}`;
+// Then in your services.html page, add this code:
+document.addEventListener('DOMContentLoaded', function() {
+  const serviceId = sessionStorage.getItem('scrollToService');
+  if (serviceId) {
+    const element = document.getElementById(`service-${serviceId}`);
+    if (element) {
+      setTimeout(() => { // Small delay to ensure page is fully rendered
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 100);
+    }
+    sessionStorage.removeItem('scrollToService'); // Clean up
+  }
+});
+
+// Call loadPosts when the page loads
+document.addEventListener('DOMContentLoaded', benefitCardIntersectionObserver);
+
+function benefitCardIntersectionObserver() {
+    const serviceItem = document.querySelectorAll('.benefit-card');
+
+    // Set initial threshold based on screen size
+    let threshold = window.matchMedia('(max-width: 768px)').matches ? 0.04 : 0.07;
+
+    if (serviceItem) {
+        // Create a simple, reliable observer
+        serviceItem.forEach(services => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        services.style.willChange = 'opacity, transform';
+                        services.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                    }
+                );
+                
+                }, {
+                    rootMargin: '0px 0px 0px 0px',
+                    threshold: threshold,
+                }
+            );
+        
+           observer.observe(services); 
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const allServices = ServiceDB.getAll();
+    
+    // Sort posts by date (newest first)
+    allServices.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    // Display all posts
+    displayAllServices(allServices);
+    
+    // Display featured posts (latest 3)
+    servicesSlideshow(allServices);
+});
+
+function servicesSlideshow(allServices) {
+    const container = document.getElementById('featuredServices');
+    if (!container) return;
+    if (container) container.innerHTML = '';
+    
+    // Create slideshow container
+    const slideshow = document.createElement('div');
+    slideshow.className = 'preview-slideshow';
+    
+    // Create controls container
+    const controls = document.createElement('div');
+    controls.className = 'slideshow-controls';
+    let serviceImage = '../images/image-placeholder.jpg';
+    let slideCount = 0;
+    // Add posts as slides
+    allServices.forEach((categories) => {
+        // Skip categories with empty services array
+        if (categories.services.length === 0) {
+            return; // This skips to the next iteration in forEach
+        }
+
+        slideCount += categories.services.length
+        categories.services.forEach((services, servicesIndex) => {
+            const serviceCard = document.createElement('div');
+            serviceCard.className = 'preview-card';
+            if (services.image){
+                serviceImage = services.image.dataUrl;
+            }
+            
+            serviceCard.innerHTML = `
+                <div class="preview-card-bg" style="background-image: url('${serviceImage}')"></div>
+                <div class="service-card-content">
+                    <div class="service-type">
+                        <span><i class="cat-icon material-icons">${categories.icon}</i>${categories.title}</span>
+                    </div>
+                    <h3>${services.title}</h3>
+                    <div class="services-meta">
+                        <span>${services.description}</span>
+                    </div>
+                </div>
+            `;
+            
+            // Make the card clickable
+            serviceCard.addEventListener('click', () => {
+                document.getElementById(`service-${services.id}`)?.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+            
+            slideshow.appendChild(serviceCard);
+            
+            // Add control dot
+            const dot = document.createElement('div');
+            dot.className = 'slide-dot';
+            dot.dataset.index = servicesIndex;
+            controls.appendChild(dot);
+        })
+    });
+    
+    if (container) {
+        container.appendChild(slideshow);
+        container.appendChild(controls);
+    }
+    
+    // Auto-rotate slides
+    let currentSlide = 0;
+    const dots = document.querySelectorAll('.slide-dot');
+    
+    function updateSlide() {
+        slideshow.style.transform = `translateX(-${currentSlide * 100}%)`;
+        
+        // Update dots
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentSlide);
+        });
+    }
+    
+    // Set first slide as active
+    dots[0]?.classList.add('active');
+    
+    // Auto-rotation
+    let rotationInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % slideCount;
+        updateSlide();
+    }, 5000); // Change slide every 5 seconds
+    
+    // Dot navigation
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            currentSlide = parseInt(dot.dataset.index);
+            updateSlide();
+            // Reset timer when manually navigating
+            clearInterval(rotationInterval);
+        });
+    });
+    
+    // Pause on hover
+    if (container){
+        container.addEventListener('mouseenter', () => {
+            clearInterval(rotationInterval);
+        });
+        
+        container.addEventListener('mouseleave', () => {
+            rotationInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % slideCount;
+                updateSlide();
+            }, 5000);
+        });
+    }
+}
+
+function displayAllServices(allServices) {
+    const container = document.getElementById('servicesAccordion');
+    // Safely clear only if elements exist
+    if (!container) return;
+    if (container) container.innerHTML = '';
+    
+    allServices.forEach(category => {
+        if (category.services.length === 0 && container) {
+            return;
+        }
+        const categoryCard = document.createElement('div');
+        categoryCard.className = 'card';
+        categoryCard.dataset.id = category.id;
+        
+        const categoryHeader = document.createElement('div');
+        categoryHeader.className = 'category-header';
+        categoryHeader.innerHTML = `
+            <div class="category-title">
+                <i class="material-icons">${category.icon}</i>
+                <h3>${category.title}</h3>
+            </div>
+        `;
+        
+        const categoryBody = document.createElement('div');
+        categoryBody.className = 'category-body';
+        categoryBody.dataset.id = category.id;
+        categoryBody.innerHTML = `
+            <p>${category.description}</p>
+            <div class="services-list">
+                ${category.services.length > 0 ? 
+                    category.services.map(service => `
+                        <div class="service-items" id="service-${service.id}">
+                            <div class="service-header-action">
+                                <h4>${service.title}</h4>
+                            </div>
+                            
+                            <p>${service.description}</p>
+                            <div class="service-info-container">
+                                ${service.image ? `
+                                    <img src="${service.image.dataUrl}" alt="${service.title}" class="service-image">
+                                ` : ''}
+                                <ul class="service-features">
+                                    ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    `).join('') : 
+                    '<div class="service empty-state">No services in this category yet</div>'
+                }
+            </div>
+        `;
+        
+        categoryCard.appendChild(categoryHeader);
+        categoryCard.appendChild(categoryBody);
+        container.appendChild(categoryCard);
+    });
+    
+    // allServices.forEach(categories => {
+
+    //     // Skip categories with empty services array
+    //     if (categories.services.length === 0) {
+    //         return; // This skips to the next iteration in forEach
+    //     }
+
+    //     categories.services.forEach(services => {
+    //         const categoryElement = document.createElement('article');
+    //         categoryElement.className = 'category-detail';
+    //         categoryElement.id = `service-${services.id}`;
+
+            
+    //         // Get all images for this post
+    //         const images = categories.services || ['../images/image-placeholder.jpg'];
+    //         console.log('categories:', images);
+    //         // Generate slideshow HTML
+    //         const slideshowHTML = images.map((img, index) => `
+    //             <div class="preview-card-bg" style="background-image: url('${services.image.dataUrl}')"></div>
+    //             <div class="service-card-content">
+    //                 <h3>${services.title}</h3>
+    //             </div>
+    //             <div class="services-meta">
+    //                 <span>${services.description}</span>
+    //             </div>
+                
+    //         `).join('');
+
+    //         // Generate dots HTML if multiple images
+    //         const dotsHTML = images.length > 1 ? images.map((_, index) => `
+    //             <div class="slide-dot ${index === 0 ? 'active' : ''}" 
+    //                 data-index="${index}"></div>
+    //         `).join('') : '';
+
+        
+            
+    //         categoryElement.innerHTML = `
+    //             <div class="post-header">
+    //                 <h2 class="post-title">${services.title}</h2>
+    //             </div>
+                
+    //             <div class="image-gallery">
+    //                 <div class="main-image-container" data-services-id="${services.id}">
+    //                     ${slideshowHTML}
+    //                     ${images.length > 1 ? `
+    //                     <div class="gallery-controls">
+    //                         <div class="slide-dots">
+    //                             ${dotsHTML}
+    //                         </div>
+    //                     </div>
+    //                     ` : ''}
+    //                 </div>
+    //             </div>
+                
+    //             <div class="post-content">
+    //                 <p>${services.description}</p>
+    //             </div>
+    //         `;
+            
+    //         if (container) container.appendChild(categoryElement);
+    //     })
+    // });
 }
 
 
