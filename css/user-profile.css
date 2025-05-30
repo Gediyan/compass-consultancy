@@ -726,10 +726,6 @@ body {
     gap: 5px;
 }
 
-.undo-btn {
-    background: #4CAF50 !important;
-}
-
 .image-modal {
     display: none;
     position: fixed;
@@ -981,6 +977,26 @@ body {
     right: 0;
 }
 
+.image-size {
+    display: block;
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 2px 4px;
+    background: rgba(255, 255, 0, 0.5) !important;
+    color: rgb(0, 0, 0);
+    position: absolute;
+    opacity: 0;
+    bottom: 50%;
+    left: 0;
+    right: 0;
+}
+
+.image-preview-item:hover .image-size {
+    opacity: 1;
+}
+
 .avatar-label {
     position: absolute;
     top: 2px;
@@ -1057,23 +1073,9 @@ body {
     transition: all 0.3s ease;
 }
 
-.category-card {
-    border: 1px solid #eee;
-    padding: 20px;
-    border-radius: 8px;
-    position: relative;
-    margin-bottom: 20px;
-}
-
-.category-header-actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
 .category-header {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     padding: 15px;
     background-color: #f8f9fa;
     cursor: pointer;
@@ -1094,11 +1096,12 @@ body {
     font-size: 24px;
 }
 
-.category-actions {
-    position: absolute;
-    top: 13px;
-    right: 13px;
+.category-header-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
+
 
 .category-actions button {
     background: none;
@@ -1149,6 +1152,8 @@ body {
     display: flex;
     flex-direction: column;
     align-self: center;
+    padding: 1rem;
+    transition: transform 0.3s ease;
 }
 
 .service-item:hover {
@@ -1164,7 +1169,6 @@ body {
 .service-header-action h4 {
     color: var(--primary-color);
     font-size: 16px;
-    padding-left: 1rem;
 }
 
 .service-actions button {
@@ -1181,7 +1185,7 @@ body {
 
 .service-info-container {
     display: flex;
-    gap: 20px; /* Space between image and features */
+    /* gap: 20px; */
     max-height: 300px; /* Set a maximum height for the container */
     overflow: hidden; /* Hide any overflow */
 }
@@ -1191,6 +1195,7 @@ body {
     height: auto;
     object-fit: cover; /* Maintain aspect ratio */
     border-radius: 4px;
+    transition: transform 0.3s ease;
 }
 
 .service-image:hover {
@@ -1200,9 +1205,7 @@ body {
 .service-features {
     flex: 1; /* Take remaining space */
     overflow-y: auto; /* Enable vertical scrolling */
-    padding-right: 10px; /* Space for scrollbar */
     margin: 0;
-    padding-left: 20px; /* Maintain your existing indentation */
 }
 
 .service-features li {
@@ -1231,7 +1234,10 @@ body {
 
 .feature-input {
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     margin-bottom: 10px;
+    gap: 5px;
 }
 
 .feature-input-field {
@@ -1242,9 +1248,11 @@ body {
 }
 
 .remove-feature {
-    margin-left: 5px;
+    /* width: 10%; */
+    align-items: center;
     background-color: rgb(250, 92, 92);
     border: none;
+    border-radius: 2px;
     cursor: pointer;
     color: #ffffff;
 }
@@ -1254,27 +1262,30 @@ body {
 }
 
 .service-image-preview {
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px dashed #ddd;
-    border-radius: 4px;
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 5px;
+    transition: all 0.3s ease;
 }
 
 .service-image-preview img {
     width: 100%;
     height: 100%;
-    display: block;
-    margin-bottom: 10px;
-    border-radius: 4px;
+    object-fit: cover;
+}
+
+.image-info:hover .image-size {
+    opacity: 1;
 }
 
 .image-info {
     font-size: 12px;
     color: #666;
-}
-
-.image-info p {
-    margin: 5px 0;
+    cursor: pointer;
 }
 
 .error {

@@ -317,9 +317,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedImages = [];
 
     // Image selection handler
-    document.getElementById('postImages').addEventListener('change', function(e) {
+    document.getElementById('postImages').addEventListener('change', async function(e) {
         const files = Array.from(e.target.files);
-        
+
         files.forEach(file => {
             if (!file.type.match('image.*')) {
                 showNotification(`Skipped ${file.name} - not an image file`, true);
@@ -330,19 +330,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification(`Skipped ${file.name} - file too large (max 2MB)`, true);
                 return;
             }
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                selectedImages.push({
-                    id: `new-${Date.now()}`,
-                    data: e.target.result,
-                    file: file,
-                    isExisting: false
-                });
-                updateImagePreviews();
-            };
-            reader.readAsDataURL(file);
         });
+
+        // Process all files in parallel
+        const compressionPromises = files.map(file => 
+            compressImage(file).catch(error => {
+                console.error('Image compression failed for one file:', error);
+                return null; // Return null for failed compressions
+            })
+        );
+
+        // Wait for all compressions to complete
+        const compressionResults = await Promise.all(compressionPromises);
+        
+        // Filter out null results (failed compressions) and format
+        selectedImages = compressionResults
+            .filter(result => result !== null)
+            .map(compressionResult => ({
+                id: `new-${Date.now()}`,
+                data: compressionResult.dataUrl,
+                file: compressionResult.file,
+                originalSize: formatFileSize(compressionResult.originalSize),
+                compressedSize: formatFileSize(compressionResult.compressedSize),
+                isExisting: false
+            }));
+
+        updateImagePreviews();
         
         // Reset file input to allow selecting same files again
         e.target.value = '';
@@ -374,9 +387,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Filter out images marked for removal
-            const finalImages = selectedImages
-                .filter(img => !img.remove)
-                .map(img => img.data);
+            const finalImages = selectedImages .filter(img => !img.remove) .map(img => img.data);
+            const fileName = selectedImages .filter(filesName => !filesName.remove) .map(filesName => filesName.file);
+            const originalSize = selectedImages .filter(sizeInfo => !sizeInfo.remove) .map(sizeInfo => sizeInfo.originalSize);
+            const compressedSize = selectedImages .filter(sizeInfo => !sizeInfo.remove) .map(sizeInfo => sizeInfo.compressedSize);
             
             // Ensure we have at least one image
             const images = finalImages.length > 0 ? finalImages : ['../images/image-placeholder.jpg'];
@@ -391,6 +405,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 location,
                 images: images,
                 mainImage: images[0],
+                fileNameArray: fileName,
+                originalSize: originalSize,
+                compressedSize: compressedSize,
                 createdAt: this.dataset.editingId ? 
                     JSON.parse(localStorage.getItem('compass_aeped_posts'))
                         .find(p => p.id === this.dataset.editingId).createdAt : 
@@ -522,7 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
             postCard.className = 'post-card';
             
             // Use mainImage if available, otherwise fall back to image
-            const displayImage = post.mainImage || post.image || '../images/image-placeholder.jpg';
+            const displayImage = post.mainImage || '../images/image-placeholder.jpg';
             
             // Add badge if multiple images exist
             const imageBadge = post.images && post.images.length > 1 ? 
@@ -597,11 +614,15 @@ document.addEventListener('DOMContentLoaded', function() {
         postForm.appendChild(currentImagesInput);
 
         // Initialize selectedImages with existing images
-        selectedImages = (postToEdit.images || [postToEdit.image]).map((img, index) => ({
+        selectedImages = (postToEdit.images).map((img, index) => ({
             id: `existing-${index}`,
             data: img,
+            file: postToEdit.fileNameArray[index],
+            originalSize: postToEdit.originalSize[index],
+            compressedSize: postToEdit.compressedSize[index],
             isExisting: true
         }));
+        console.log(postToEdit);
 
         // Display image previews
         updateImagePreviews();
@@ -641,6 +662,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button class="remove-btn" onclick="removeCurrentImage(${index})">
                         <i class="material-icons">close</i>
                     </button>
+                    <span class="image-name">${img.file}</span>
+                    <span class="image-size">${img.originalSize} to ${img.compressedSize}</span>
                 `;
             }
             previewContainer.appendChild(previewItem);
@@ -876,9 +899,9 @@ function loadTestimonials() {
 let selectedClientImages = [];
 
 // Image selection handler
-document.getElementById('clientImages').addEventListener('change', function(e) {
+document.getElementById('clientImages').addEventListener('change', async function(e) {
     const files = Array.from(e.target.files);
-    
+
     files.forEach(file => {
         if (!file.type.match('image.*')) {
             showNotification(`Skipped ${file.name} - not an image file`, true);
@@ -889,19 +912,32 @@ document.getElementById('clientImages').addEventListener('change', function(e) {
             showNotification(`Skipped ${file.name} - file too large (max 2MB)`, true);
             return;
         }
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            selectedClientImages.push({
-                id: `new-${Date.now()}`,
-                data: e.target.result,
-                file: file.name,
-                isExisting: false
-            });
-            updateClientImagePreviews();
-        };
-        reader.readAsDataURL(file);
     });
+
+    // Process all files in parallel
+    const compressionPromises = files.map(file => 
+        compressImage(file).catch(error => {
+            console.error('Image compression failed for one file:', error);
+            return null; // Return null for failed compressions
+        })
+    );
+
+    // Wait for all compressions to complete
+    const compressionResults = await Promise.all(compressionPromises);
+    
+    // Filter out null results (failed compressions) and format
+    selectedClientImages = compressionResults
+        .filter(result => result !== null)
+        .map(compressionResult => ({
+            id: `new-${Date.now()}`,
+            data: compressionResult.dataUrl,
+            file: compressionResult.file,
+            originalSize: formatFileSize(compressionResult.originalSize),
+            compressedSize: formatFileSize(compressionResult.compressedSize),
+            isExisting: false
+        }));
+
+    updateClientImagePreviews();
     
     // Reset file input to allow selecting same files again
     e.target.value = '';
@@ -935,6 +971,7 @@ function updateClientImagePreviews() {
                     <i class="material-icons">close</i>
                 </button>
                 <span class="image-name">${img.file}</span>
+                <span class="image-size">${img.originalSize} to ${img.compressedSize}</span>
             `;
         }
         previewContainer.appendChild(previewItem);
@@ -1064,6 +1101,8 @@ async function handleFormSubmit(e) {
     // Filter out images marked for removal
     const finalImages = selectedClientImages .filter(img => !img.remove) .map(img => img.data);
     const fileName = selectedClientImages .filter(filesName => !filesName.remove) .map(filesName => filesName.file);
+    const originalSize = selectedClientImages .filter(sizeInfo => !sizeInfo.remove) .map(sizeInfo => sizeInfo.originalSize);
+    const compressedSize = selectedClientImages .filter(sizeInfo => !sizeInfo.remove) .map(sizeInfo => sizeInfo.compressedSize);
     
     // Ensure we have at least one image
     const imagesBase64 = finalImages.length > 0 ? finalImages : ['../images/image-placeholder.jpg'];
@@ -1077,7 +1116,9 @@ async function handleFormSubmit(e) {
         avatar: imagesBase64[0] || '../images/image-placeholder.jpg', // First image as avatar
         images: imagesBase64,
         createdAt: new Date().toISOString(),
-        fileNameArray: fileName
+        fileNameArray: fileName,
+        originalSize: originalSize,
+        compressedSize: compressedSize,
     };
     
     // Save to database
@@ -1131,6 +1172,8 @@ function populateEditForm(testimonial) {
         id: `existing-${index}`,
         data: img,
         file: testimonial.fileNameArray[index],
+        originalSize: testimonial.originalSize[index],
+        compressedSize: testimonial.compressedSize[index],
         isExisting: true
     }));
 
@@ -1168,6 +1211,8 @@ async function handleUpdateSubmit(e) {
     // Filter out images marked for removal
     const finalImages = selectedClientImages .filter(img => !img.remove) .map(img => img.data);
     const fileName = selectedClientImages .filter(filesName => !filesName.remove) .map(filesName => filesName.file);
+    const originalSize = selectedClientImages .filter(sizeInfo => !sizeInfo.remove) .map(sizeInfo => sizeInfo.originalSize);
+    const compressedSize = selectedClientImages .filter(sizeInfo => !sizeInfo.remove) .map(sizeInfo => sizeInfo.compressedSize);
     
     // Ensure we have at least one image
     const imagesBase64 = finalImages.length > 0 ? finalImages : ['../images/image-placeholder.jpg'];
@@ -1179,7 +1224,9 @@ async function handleUpdateSubmit(e) {
         name,
         position,
         updatedAt: new Date().toISOString(),
-        fileNameArray: fileName
+        fileNameArray: fileName,
+        originalSize: originalSize,
+        compressedSize: compressedSize
     };
     
     // Add new images
@@ -1319,6 +1366,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('serviceImage').addEventListener('change', serviceImagePreview);
         
     async function serviceImagePreview (e) {
+        const recommendedImageSize = document.getElementById('recommendedImageSize');
+        recommendedImageSize.innerHTML = '';
+
         const preview = document.getElementById('serviceImagePreview');
         preview.innerHTML = '';
         
@@ -1345,10 +1395,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const info = document.createElement('div');
                 info.className = 'image-info';
                 info.innerHTML = `
-                    <p>Original: ${formatFileSize(compressionResult.originalSize)}</p>
-                    <p>Compressed: ${formatFileSize(compressionResult.compressedSize)}</p>
-                    <p>Dimensions: ${compressionResult.width}×${compressionResult.height}px</p>
+                    <span class="image-name">${compressionResult.file}</span>
+                    <span class="image-size">${formatFileSize(compressionResult.originalSize)} to ${formatFileSize(compressionResult.compressedSize)}</span>
                 `;
+                const sizeInfo = document.createElement('small');
+                sizeInfo.innerHTML = `
+                    Recommended size: 800x600 pixels: Loaded Image Size: ${compressionResult.width}×${compressionResult.height} px
+                `;
+                recommendedImageSize.appendChild(sizeInfo)
                 preview.appendChild(info);
             } catch (error) {
                 preview.innerHTML = '<p class="error">Failed to process image</p>';
@@ -1432,8 +1486,11 @@ document.addEventListener('DOMContentLoaded', function() {
             description,
             features,
             image: imageData, // Store compressed image data
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            file: imageFile.name
         };
+
+        console.log(imageFile.name);
         
         // Add service to the selected category
         const categories = ServiceDB.getAll();
@@ -1452,15 +1509,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             showNotification('Error: Category not found!');
         }
-    }
-
-    // Helper function to format file sizes
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     // Update category dropdown
@@ -1707,6 +1755,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Render the features
         renderServiceFeatures(service.features);
 
+        const recommendedImageSize = document.getElementById('recommendedImageSize');
+        recommendedImageSize.innerHTML = '';
+
         const preview = document.getElementById('serviceImagePreview');
         preview.innerHTML = '';
         if (service.image.dataUrl){
@@ -1718,10 +1769,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const info = document.createElement('div');
             info.className = 'image-info';
             info.innerHTML = `
-                <p>Original: ${service.image.originalSize}</p>
-                <p>Compressed: ${service.image.compressedSize}</p>
-                <p>Dimensions: ${service.image.dimensions.width}×${service.image.dimensions.height}px</p>
+                <span class="image-name">${service.file}</span>
+                <span class="image-size">${service.image.originalSize} to ${service.image.compressedSize}</span>
             `;
+            const sizeInfo = document.createElement('small');
+            sizeInfo.innerHTML = `
+                Recommended size: 800x600 pixels: Loaded Image Size: ${service.image.dimensions.width}×${service.image.dimensions.height} px
+            `;
+            recommendedImageSize.appendChild(sizeInfo)
             preview.appendChild(info);
         }
 
@@ -2007,7 +2062,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Image compression function
 function compressImage(file, quality = 0.7, maxWidth = 800) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = function(event) {
             const img = new Image();
@@ -2038,10 +2093,27 @@ function compressImage(file, quality = 0.7, maxWidth = 800) {
                     width: width,
                     height: height,
                     originalSize: file.size,
+                    file: file.name,
                     compressedSize: compressedDataUrl.length // Approximate
                 });
             };
+
+            img.onerror = function() {
+                reject(new Error('Failed to load image'));
+            };
+        };
+        reader.onerror = function() {
+            reject(new Error('Failed to read file'));
         };
         reader.readAsDataURL(file);
     });
+}
+
+// Helper function to format file sizes
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }

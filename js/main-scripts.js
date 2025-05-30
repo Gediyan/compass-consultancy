@@ -545,7 +545,6 @@ document.addEventListener('DOMContentLoaded', function() {
         { href: `${path}team.html`, icon: '<i class="fas fa-user-tie"></i>', text: 'Team' },
         { href: `${path}contact.html`, icon: '<span class="material-icons">contact_mail</span>', text: 'Contact Us' }
     ];
-    console.log('indexPath:', indexPath, 'path:', path)
 
   // Create navigation items
   navItems.forEach(item => {
@@ -750,9 +749,9 @@ function createPostElement(post) {
     element.className = post.type === 'news' ? 'news-card' : 'event-card';
 
     // Calculate time ago
-    const postDate = new Date(post.createdAt || post.date);
+    const postDate = new Date(post.createdAt);
     const timeAgo = getTimeAgo(postDate);
-    const displayImage = post.mainImage || post.image || 'images/image-placeholder.jpg';
+    const displayImage = post.mainImage || 'images/image-placeholder.jpg';
     
     const day = postDate.getDate();
     const month = postDate.toLocaleString('default', { month: 'short' });
@@ -784,7 +783,7 @@ function createPostElement(post) {
     } else {
         // Enhanced event card implementation
         element.innerHTML = `
-            <div class="event-card__image-container">
+            <div class="event-card-image-container">
                 <img src="${displayImage}" alt="${post.title}" class="event-card-image">
                 <div class="event-card__date-badge">
                     <span class="event-card__day">${day}</span>
@@ -1515,10 +1514,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const sortCategories = categories.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-        console.log(sortCategories);
         // Create container for all categories
-        const categoriesContainer = document.createElement('div');
-        categoriesContainer.className = 'services-card-content';
         
         sortCategories.forEach(category => {
             if (category.services && category.services.length > 0) {
@@ -1536,6 +1532,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 category.services.forEach(service => {
                     const serviceElement = document.createElement('div');
                     serviceElement.className = 'service-item';
+                    serviceElement.id = service.id;
                     serviceElement.dataset.serviceId = service.id;
                     serviceElement.dataset.categoryId = category.id;
                     
@@ -1554,10 +1551,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     
                     serviceElement.innerHTML = `
-                    ${imageHtml}
                     <h4 class="each-header" id="${service.id}">${service.title}</h4>
                     <p>${service.description}</p>
-                    ${featuresHtml}
+                    <div class="service-info-container">
+                        ${imageHtml}
+                        ${featuresHtml}
+                    </div>
                     `;
                     
                     serviceElement.addEventListener('click', function() {
@@ -1574,16 +1573,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 categoryElement.appendChild(servicesList);
                 categoryElement.appendChild(readMoreBtn);
-                categoriesContainer.appendChild(categoryElement);
+                servicesCardContent.appendChild(categoryElement);
             }
         });
-        
-        servicesCardContent.appendChild(categoriesContainer);
     }
 });
 
 function setupIntersectionObserver() {
     const servicesCard = document.getElementById('servicesCard');
+    const serviceItem = document.querySelectorAll('.service-item');
     
     if (!servicesCard) return;
 
@@ -1594,7 +1592,6 @@ function setupIntersectionObserver() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                console.log('Element is visible - adding visible class');
                 servicesCard.style.willChange = 'opacity, transform';
                 servicesCard.classList.add('visible');
                 observer.unobserve(entry.target);
@@ -1609,6 +1606,29 @@ function setupIntersectionObserver() {
     );
     
     observer.observe(servicesCard);
+
+    if (serviceItem) {
+        // Create a simple, reliable observer
+        serviceItem.forEach(services => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        services.style.willChange = 'opacity, transform';
+                        services.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                    }
+                );
+                
+                }, {
+                    rootMargin: '0px 0px 0px 0px',
+                    threshold: threshold,
+                }
+            );
+        
+           observer.observe(services); 
+        });
+    }
 }
 
 
