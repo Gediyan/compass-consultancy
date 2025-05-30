@@ -1081,11 +1081,11 @@ body{
     gap: 30px;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 505px) {
   .services-card-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    align-items: flex-start;
+    align-items: center;
   }
 }
 
