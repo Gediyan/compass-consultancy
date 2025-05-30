@@ -1570,7 +1570,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const readMoreBtn = document.createElement('a');
                 readMoreBtn.className = 'read-more-btn';
                 readMoreBtn.textContent = 'Read More';
-                readMoreBtn.href = `services.html#category-${category.id}`;
+                readMoreBtn.href = `pages/services.html#category-${category.id}`;
                 
                 categoryElement.appendChild(servicesList);
                 categoryElement.appendChild(readMoreBtn);
