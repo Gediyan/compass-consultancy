@@ -5,6 +5,7 @@
     --accent-color: #e74c3c;
     --header-bg: rgb(0, 122, 160, 0.8);
     --primary-color: rgb(0, 122, 160);
+    --secondary-color: rgb(103, 192, 219);
     --primary-white-color: white;
     --body-bg-color:#f9f9f9;
     --list-color: rgb(0, 106, 138);
@@ -2387,6 +2388,7 @@ body{
 }
 
 .contact-section {
+    background-color: var(--body-bg-color);
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
@@ -2427,7 +2429,7 @@ body{
 
 /* Form Styles */
 .contact-form {
-    padding: 2rem;
+    background-color: var(--cards-bg-color);
     border-radius: 10px;
     border: 2px solid transparent;
     transition: var(--transition);
@@ -2442,9 +2444,9 @@ body{
 .form-group {
     width: 100%;
     margin-bottom: 1.5rem;
+    margin-right: 1.5rem;
     display: flex;
     flex-direction: column;
-    align-self: start;
     padding: 1rem;
 }
 
@@ -2461,6 +2463,7 @@ body{
     border-radius: 5px;
     font-size: 1rem;
     transition: var(--transition);
+    
 }
 
 .form-control:focus {
@@ -2472,6 +2475,7 @@ body{
 textarea.form-control {
     min-height: 150px;
     resize: vertical;
+    margin-right: 1.5rem;
 }
 
 .submit-btn {
@@ -2570,6 +2574,21 @@ textarea.form-control {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+
+    .page-title {
+        padding: 100px 0 0 30px;
+        margin-bottom: 1rem;
+    }
+    .page-title h1{
+        font-size: 1.2rem;
+    }
+
+    .page-title p {
+        font-size: 0.8rem;
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+    }
+
     .contact-container {
         grid-template-columns: 1fr;
     }

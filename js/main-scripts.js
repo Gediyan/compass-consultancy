@@ -25,6 +25,7 @@ const createSectionObserver = (section, className) => {
 createSectionObserver(document.querySelector('.slideshow-section'), 'scrolled');
 createSectionObserver(document.querySelector('.hero-preview'), 'scrolled');
 createSectionObserver(document.querySelector('.services-section'));
+createSectionObserver(document.querySelector('.contact-section'), 'scrolled');
 
 // For testimonial section
 const serviceSecttionObserver = new IntersectionObserver(
@@ -57,6 +58,13 @@ const testimonialObserver = new IntersectionObserver(
 
 if (document.querySelector('.testimonials-carousel')) {
   testimonialObserver.observe(document.querySelector('.testimonials-carousel'));
+}
+
+if (document.querySelector('.hover-scale')) {
+    const hoverScale = document.querySelectorAll('.hover-scale');
+    hoverScale.forEach(infoCards => {
+        serviceSecttionObserver.observe(infoCards);
+    });
 }
 
 // Automatic Text Slideshow
@@ -1930,3 +1938,28 @@ function displayAllServices(allServices) {
     });
         
 }
+
+
+// Contact us Form submission handling
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get form values
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const subject = document.getElementById('subject').value;
+    
+    // Here you would typically send the data to a server
+    console.log('Form submitted:', { name, email, subject });
+    
+    // Show success message (in a real app, you'd want something more sophisticated)
+    alert(`Thank you, ${name}! Your message has been sent. We'll contact you soon at ${email}.`);
+    
+    // Reset form
+    this.reset();
+});
+
+// Add hover effects to all interactive elements
+document.querySelectorAll('.pointer-cursor, button, input, textarea').forEach(el => {
+    el.style.cursor = 'pointer';
+});
