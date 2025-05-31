@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Services</title>
+    <title>Contact Us</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Reset and base styles */
+        :root {
+            --primary-color: #4e54c8;
+            --secondary-color: #8f94fb;
+            --accent-color: #ff7e5f;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --transition: all 0.3s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,408 +23,330 @@
         }
 
         body {
+            background-color: #f5f7ff;
+            color: var(--dark-color);
             line-height: 1.6;
-            color: #333;
-            background-color: #f5f7fa;
+            cursor: default;
         }
 
-        /* Services Section */
-        .services-section {
-            padding: 80px 0;
-            background: #f5f7fa;
-            position: relative;
-            z-index: 10;
-            overflow: hidden;
-        }
-
-        .container {
+        .contact-section {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 2rem;
         }
 
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
+        /* Header */
+
+        .page-title {
+            display: flex;
+            flex-direction: column;
+            padding: 70px 0 0 50px;
+            background: linear-gradient(transparent, rgba(0, 122, 160,0.8));
+            margin-bottom: 2rem;
         }
 
-        .section-title h2 {
+        .page-title h1 {
             font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 15px;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
             position: relative;
             display: inline-block;
         }
 
-        .section-title h2:after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, #3498db, #9b59b6);
-            border-radius: 2px;
-        }
-
-        .section-title p {
-            color: #7f8c8d;
+        .page-title p {
+            color: #ffffff;
+            font-size: 1.1rem;
             max-width: 700px;
-            margin: 0 auto;
+            margin-bottom: 2rem;
         }
 
-        /* Services Card */
-        .services-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            transform: translateY(100%);
-            opacity: 0;
-            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        /* Contact Section */
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
 
-        .services-card.active {
-            transform: translateY(0);
-            opacity: 1;
+        /* Form Styles */
+        .contact-form {
+            padding: 2rem;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: var(--transition);
         }
 
-        /* Category Styles */
-        .service-category {
-            margin-bottom: 50px;
-        }
-
-        .category-header {
+        .name-email {
             display: flex;
             align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
+            gap: 1rem;
         }
 
-        .category-icon {
-            font-size: 2rem;
-            color: #3498db;
-            margin-right: 15px;
-        }
-
-        .category-title {
-            font-size: 1.8rem;
-            color: #2c3e50;
-        }
-
-        .category-description {
-            color: #7f8c8d;
-            margin-bottom: 25px;
-            line-height: 1.7;
-        }
-
-        /* Services Grid */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .service-item {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 1px solid #eee;
-        }
-
-        .service-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-            border-color: #3498db;
-        }
-
-        .service-image {
+        .form-group {
             width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-self: start;
         }
 
-        .service-item:hover .service-image {
-            transform: scale(1.03);
-        }
-
-        .service-name {
-            font-size: 1.3rem;
-            color: #34495e;
-            margin-bottom: 10px;
-        }
-
-        .service-description {
-            color: #7f8c8d;
-            margin-bottom: 15px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .service-features {
-            margin: 15px 0;
-            padding-left: 20px;
-        }
-
-        .service-features li {
-            font-size: 0.9rem;
-            color: #555;
-            margin-bottom: 8px;
-            position: relative;
-            list-style-type: none;
-        }
-
-        .service-features li:before {
-            content: '';
-            position: absolute;
-            left: -15px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #3498db;
-        }
-
-        /* Read More Button */
-        .read-more-btn {
-            display: inline-block;
-            background: linear-gradient(90deg, #3498db, #9b59b6);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 30px;
-            text-decoration: none;
+        .form-group label {
+            margin-bottom: 0.5rem;
             font-weight: 600;
-            margin-top: 30px;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             font-size: 1rem;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            transition: var(--transition);
         }
 
-        .read-more-btn:hover {
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(78, 84, 200, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        .submit-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+            box-shadow: 0 5px 15px rgba(78, 84, 200, 0.4);
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
         }
 
-        /* Spacer to demonstrate scrolling */
-        .spacer {
-            height: 100vh;
+        /* Info Cards */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 3fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            color: #7f8c8d;
-            background: #f0f3f6;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .info-card:hover .card-icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .info-card-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .card-text {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        /* Map Section */
+        .map-section {
+            margin-top: 3rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .map-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .address-map-container {
+            width: 100%;
+            height: 400px;
+            border: none;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Cursor Effects */
+        .hover-scale {
+            transition: var(--transition);
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+
+        .pointer-cursor {
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="spacer">
-        Scroll down to see services
+    <div class="page-title">
+        <h1>Contact Us</h1>
+        <p>Have questions or want to get in touch? We'd love to hear from you! Fill out the form below or use our contact information.</p>
     </div>
+    <div class="contact-section">
+        <div class="contact-container">
+            
+            <section class="contact-form">
+                <form id="contactForm">
+                    <div class="name-email">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="name-email">
+                        <div class="form-group">
+                            <label for="website">Website (optional)</label>
+                            <input type="url" id="website" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Brief Description</label>
+                        <textarea id="message" class="form-control" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn pointer-cursor">Send Message</button>
+                </form>
+            </section>
+        </div>
 
-    <section class="services-section" id="servicesSection">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Services</h2>
-                <p>Discover the comprehensive range of services we offer to meet your needs</p>
+        <div class="info-cards">
+            <div class="info-card hover-scale">
+                <div class="card-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3 class="info-card-title">Visit Our Place</h3>
+                <p class="card-text">123 Business Avenue<br>Suite 456<br>New York, NY 10001</p>
             </div>
             
-            <div class="services-card" id="servicesCard">
-                <!-- Services will be loaded here by JavaScript -->
+            <div class="info-card hover-scale">
+                <div class="card-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <h3 class="info-card-title">Contact Us</h3>
+                <p class="card-text">
+                    Phone: +1 (555) 123-4567<br>
+                    Email: info@yourcompany.com<br>
+                    Fax: +1 (555) 987-6543
+                </p>
+            </div>
+            
+            <div class="info-card hover-scale">
+                <div class="card-icon">
+                    <i class="far fa-clock"></i>
+                </div>
+                <h3 class="info-card-title">Office Time</h3>
+                <p class="card-text">
+                    Monday - Friday: 9am - 6pm<br>
+                    Saturday: 10am - 4pm<br>
+                    Sunday: Closed
+                </p>
             </div>
         </div>
+    </div>
+
+    <section class="map-section hover-scale">
+        <iframe 
+            class="address-map-container"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215256027566!2d-73.9878449241646!3d40.74844097138998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1689876543210!5m2!1sen!2sus" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
     </section>
 
-    <div class="spacer"></div>
-
     <script>
-        // Sample database - replace with your actual ServiceDB implementation
-        const ServiceDB = {
-            SERVICE_KEY: 'compass_service_categories',
-
-            // Get all services
-            getAll: function() {
-                const services = localStorage.getItem(this.SERVICE_KEY);
-                return services ? JSON.parse(services) : [];
-            },
+        // Form submission handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            getAll: function() {
-                // For demo purposes, we'll return sample data
-                // In your real implementation, this would come from localStorage
-                return [
-                    {
-                        id: '1',
-                        title: 'Web Development',
-                        icon: 'fas fa-code',
-                        description: 'Complete web solutions from simple sites to complex applications',
-                        services: [
-                            {
-                                id: '101',
-                                title: 'Frontend Development',
-                                description: 'Beautiful, responsive user interfaces built with modern technologies',
-                                features: [
-                                    'React.js applications',
-                                    'Vue.js development',
-                                    'Responsive design',
-                                    'Performance optimization'
-                                ],
-                                image: {
-                                    dataUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80'
-                                }
-                            },
-                            {
-                                id: '102',
-                                title: 'Backend Development',
-                                description: 'Robust server-side solutions for your business needs',
-                                features: [
-                                    'Node.js applications',
-                                    'API development',
-                                    'Database integration',
-                                    'Authentication systems'
-                                ],
-                                image: {
-                                    dataUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80'
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        id: '2',
-                        title: 'Mobile Apps',
-                        icon: 'fas fa-mobile-alt',
-                        description: 'Cross-platform mobile applications for iOS and Android',
-                        services: [
-                            {
-                                id: '201',
-                                title: 'React Native Apps',
-                                description: 'Build once, deploy everywhere with native performance',
-                                features: [
-                                    'iOS and Android apps',
-                                    'Single codebase',
-                                    'Native performance',
-                                    'Third-party integrations'
-                                ],
-                                image: {
-                                    dataUrl: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80'
-                                }
-                            }
-                        ]
-                    }
-                ];
-            }
-        };
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const servicesCard = document.getElementById('servicesCard');
-            const servicesSection = document.getElementById('servicesSection');
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
             
-            // Load services immediately
-            loadServicesIntoCard();
+            // Here you would typically send the data to a server
+            console.log('Form submitted:', { name, email, subject });
             
-            // Intersection Observer to trigger animation
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        if (!servicesCard.classList.contains('active')) {
-                            servicesCard.classList.add('active');
-                        }
-                    }
-                });
-            }, { 
-                threshold: 0.2,
-                rootMargin: '0px 0px -100px 0px'
-            });
+            // Show success message (in a real app, you'd want something more sophisticated)
+            alert(`Thank you, ${name}! Your message has been sent. We'll contact you soon at ${email}.`);
             
-            observer.observe(servicesSection);
-            
-            function loadServicesIntoCard() {
-                const categories = ServiceDB.getAll();
-                
-                if (categories.length === 0) {
-                    servicesCard.innerHTML = '<p>No services available yet.</p>';
-                    return;
-                }
-                
-                let html = '';
-                
-                categories.forEach(category => {
-                    if (category.services && category.services.length > 0) {
-                        html += `
-                            <div class="service-category" data-category-id="${category.id}">
-                                <div class="category-header">
-                                    <i class="${category.icon} category-icon"></i>
-                                    <h3 class="category-title">${category.title}</h3>
-                                </div>
-                                <p class="category-description">${category.description}</p>
-                                <div class="services-grid">
-                        `;
-                        
-                        category.services.forEach(service => {
-                            let imageHtml = '';
-                            if (service.image && service.image.dataUrl) {
-                                imageHtml = `<img src="${service.image.dataUrl}" alt="${service.title}" class="service-image">`;
-                            }
-                            
-                            let featuresHtml = '';
-                            if (service.features && service.features.length > 0) {
-                                featuresHtml = `
-                                    <ul class="service-features">
-                                        ${service.features.map(feature => `<li>${feature}</li>`).join('')}
-                                    </ul>
-                                `;
-                            }
-                            
-                            html += `
-                                <div class="service-item" 
-                                    data-service-id="${service.id}" 
-                                    onclick="navigateToService('${service.id}', '${category.id}')">
-                                    ${imageHtml}
-                                    <h4 class="service-name">${service.title}</h4>
-                                    <p class="service-description">${service.description}</p>
-                                    ${featuresHtml}
-                                </div>
-                            `;
-                        });
-                        
-                        html += `
-                                </div>
-                                <button class="read-more-btn" onclick="navigateToCategory('${category.id}')">
-                                    Explore More ${category.title} Services
-                                </button>
-                            </div>
-                        `;
-                    }
-                });
-                
-                servicesCard.innerHTML = html;
-            }
+            // Reset form
+            this.reset();
         });
 
-        // Global navigation functions
-        function navigateToService(serviceId, categoryId) {
-            console.log(`Navigating to service ${serviceId} in category ${categoryId}`);
-            // In your implementation, this would navigate to services.html
-            // window.location.href = `services.html#category-${categoryId}-service-${serviceId}`;
-            alert(`Would navigate to service ${serviceId} in category ${categoryId}`);
-        }
-
-        function navigateToCategory(categoryId) {
-            console.log(`Navigating to category ${categoryId}`);
-            // In your implementation, this would navigate to services.html
-            // window.location.href = `services.html#category-${categoryId}`;
-            alert(`Would navigate to category ${categoryId}`);
-        }
+        // Add hover effects to all interactive elements
+        document.querySelectorAll('.pointer-cursor, button, input, textarea').forEach(el => {
+            el.style.cursor = 'pointer';
+        });
     </script>
 </body>
 </html>

@@ -343,17 +343,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // Wait for all compressions to complete
         const compressionResults = await Promise.all(compressionPromises);
         
-        // Filter out null results (failed compressions) and format
-        selectedImages = compressionResults
+        const newCompressedImages = compressionResults
             .filter(result => result !== null)
             .map(compressionResult => ({
-                id: `new-${Date.now()}`,
+                id: `new-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // Better unique ID
                 data: compressionResult.dataUrl,
                 file: compressionResult.file,
                 originalSize: formatFileSize(compressionResult.originalSize),
                 compressedSize: formatFileSize(compressionResult.compressedSize),
                 isExisting: false
             }));
+
+        // Merge existing images with new compressed images (preserves existing ones)
+        selectedImages = [...selectedImages, ...newCompressedImages];
 
         updateImagePreviews();
         
@@ -926,16 +928,20 @@ document.getElementById('clientImages').addEventListener('change', async functio
     const compressionResults = await Promise.all(compressionPromises);
     
     // Filter out null results (failed compressions) and format
-    selectedClientImages = compressionResults
+
+    const newCompressedImages = compressionResults
         .filter(result => result !== null)
         .map(compressionResult => ({
-            id: `new-${Date.now()}`,
+            id: `new-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // Better unique ID
             data: compressionResult.dataUrl,
             file: compressionResult.file,
             originalSize: formatFileSize(compressionResult.originalSize),
             compressedSize: formatFileSize(compressionResult.compressedSize),
             isExisting: false
         }));
+
+    // Merge existing images with new compressed images (preserves existing ones)
+    selectedClientImages = [...selectedClientImages, ...newCompressedImages];
 
     updateClientImagePreviews();
     
