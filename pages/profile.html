@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>User Profile | Compass AEPED</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="../css/user-profile.css">
+    </head>
+    <body>
+        <button id="back-to-top" title="Go to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 15l7-7 7 7"/>
+            </svg>
+        </button>
+        <div class="profile-container card">
+            <!-- Back button -->
+            <div class="back-to-home">
+                <a href="../index.html" class="btn btn--secondary arrow-back">
+                    <i class="material-icons">arrow_back</i> Back to Home
+                </a>
+            </div>
+            
+            <!-- Profile header -->
+            <header class="profile-header">
+                <h1>User Dashboard</h1>
+                <p>Manage your account and activities</p>
+            </header>
+
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" data-tab="profile">Profile</button>
+                <button class="tab-btn" data-tab="activity">Activity</button>
+                <!-- <button class="tab-btn admin-tab" data-tab="manage">Manage</button> -->
+                 <!-- Tab Navigation -->
+                <select class="tab-btn admin-tab" data-tab="manage" id="manageSelector">
+                    <option value="" disabled selected hidden>Manage</option>
+                    <option value="posts-tab" class="manage-tab-btn">Posts</option>
+                    <option value="testimonials-tab" class="manage-tab-btn">Testimonials</option>
+                    <option value="services-tab" class="manage-tab-btn">Services</option>
+                </select>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profile" class="tab-content active">
+                <!-- Existing profile content remains the same -->
+                <div class="profile-sections">
+                    <section class="card">
+                        <div class="section-header">
+                            <h2><i class="material-icons">account_circle</i> Profile Picture</h2>
+                        </div>
+                        <div class="pp-image">
+                            <div class="profile-initial"  id="profileDefault">
+                                <span id="profileInitial">C</span>
+                            </div>
+                            <div class="profile-picture" id="profilePicture"></div>
+                                <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
+                        
+                            <div class="picture-actions">
+                                <p><i class="material-icons">info</i> JPG, PNG (Max. 25MB)</p>
+                                <div class="upload-controls">
+                                    <label for="profileImageUpload" class="btn btn--primary">
+                                        <i class="material-icons">photo_camera</i> Change Photo
+                                    </label>
+                                    <label id="deletePhotoBtn" class="btn btn--danger" style="display: none;">
+                                        <i class="material-icons">delete</i> Remove Photo
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Personal Information Section -->
+                    <section class="card">
+                        <div class="section-header">
+                            <h2><i class="material-icons">person</i> Personal Information</h2>
+                        </div>
+                        <p>Keep your personal details up to date</p>
+                        
+                        <div class="profile-info">
+                            <div class="field-group">
+                                <label for="nameInput">Full Name</label>
+                                <div class="editable-field" id="nameField">
+                                    <div class="field-container">
+                                        <span class="field-value naming">Guest</span>
+                                        <input type="text" id="nameInput" class="field-input" value="Guest" style="display: none;">
+                                    </div>
+                                    <button class="btn btn--secondary edit-btn"><i class="material-icons">edit</i></button>
+                                </div>
+                            </div>
+                            
+                            <div class="field-group">
+                                <label>Email</label>
+                                <div class="readonly-field" id="emailField">
+                                    <span class="field-value">guest@gmail.com</span>
+                                    <span class="verification-badge" id="emailVerifiedBadge" style="display: none;">
+                                        <i class="material-icons">verified</i> Verified
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="field-group">
+                                <label>Account Created</label>
+                                <div class="readonly-field" id="accountCreatedDate">
+                                    <span class="field-value">Monday</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Account Security Section -->
+                    <section class="card">
+                        <div class="section-header">
+                            <h2><i class="material-icons">security</i> Security</h2>
+                        </div>
+                        <div class="security-actions">
+                            <button class="btn btn--secondary" id="changePasswordBtn">
+                                <i class="material-icons">lock</i> Change Password
+                            </button>
+                            <button class="btn btn--secondary" id="twoFactorBtn">
+                                <i class="material-icons">enhanced_encryption</i> Two-Factor Authentication
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Danger Zone Section -->
+                    <section class="card danger-zone">
+                        <div class="section-header">
+                            <h2><i class="material-icons">warning</i> Danger Zone</h2>
+                        </div>
+                        <div class="danger-actions">
+                            <button class="btn btn--danger" id="deactivateAccountBtn">
+                                <i class="material-icons">person_off</i> Deactivate Account
+                            </button>
+                            <button class="btn btn--danger" id="deleteAccountBtn">
+                                <i class="material-icons">delete_forever</i> Delete Account
+                            </button>
+                        </div>
+                    </section>
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button class="btn btn--primary btn--full" id="saveChanges">
+                            <i class="material-icons">save</i> Save Changes
+                        </button>
+                        <button class="btn btn--secondary btn--full" id="cancelChanges">
+                            <i class="material-icons">cancel</i> Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Section -->
+            <div id="activity" class="tab-content">
+                <div class="activity-sections">
+                    <section class="card">
+                        <div class="section-header">
+                            <h2><i class="material-icons">history</i> Recent Activity</h2>
+                        </div>
+                        <div class="activity-list">
+                            <!-- Activity items will be populated here -->
+                            <div class="activity-item">
+                                <i class="material-icons">login</i>
+                                <div class="activity-details">
+                                    <p>You logged in</p>
+                                    <small>2 hours ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Manage Website Section (Admin Only) -->
+            <div id="manage" class="tab-content">
+                
+                <!-- Posts Tab -->
+                <div id="posts-tab" class="tab-pane active">
+                    <div class="manage-sections">
+                        <!-- Post Creation Form -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">post_add</i> Create New Post</h2>
+                            </div>
+                            
+                            <form id="postForm">
+                                <div class="form-group">
+                                    <label for="postTitle">Post Title</label>
+                                    <input type="text" id="postTitle" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="postType">Post Type</label>
+                                    <select id="postType" required>
+                                        <option value="">Select type</option>
+                                        <option value="news">News</option>
+                                        <option value="event">Event</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="postDescription">Description</label>
+                                    <textarea id="postDescription" rows="5" required></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="postDate">Date</label>
+                                    <input type="date" id="postDate" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="postImages">Select Images (Multiple)</label>
+                                    <input type="file" id="postImages" name="postImages" multiple accept="image/*">
+                                    <small>Recommended size: 600x400 pixels</small>
+                                    <div id="imagePreviews" class="image-previews"></div>
+                                </div>
+                                
+                                <!-- Event-specific fields (hidden by default) -->
+                                <div id="eventFields" style="display: none;">
+                                    <div class="form-group">
+                                        <div id="eventLocationField">
+                                            <label for="eventLocation">Event Location</label>
+                                            <div class="location-input-group">
+                                                <input type="text" id="eventLocation" name="eventLocation">
+                                                <button type="button" id="selectOnMapBtn" class="btn btn--secondary">
+                                                    <i class="fas fa-map-marker-alt"></i> Select on Map
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn--primary">
+                                        <i class="material-icons">publish</i> Publish Post
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+                        
+                        <!-- Existing Posts Management -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">list_alt</i> Manage Existing Posts</h2>
+                            </div>
+                            <div class="posts-list">
+                                <!-- Posts will be listed here -->
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                
+                <!-- Testimonials Tab -->
+                <div id="testimonials-tab" class="tab-pane">
+                    <div class="manage-sections">
+                        <!-- Testimonial Creation Form -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">format_quote</i> Create New Testimonial</h2>
+                            </div>
+                            
+                            <form id="testimonialForm">
+                                <div class="form-group">
+                                    <label for="testimonialRating">Rating (1-5)</label>
+                                    <select id="testimonialRating" required>
+                                        <option value="">Select rating</option>
+                                        <option value="1">1 Star</option>
+                                        <option value="2">2 Stars</option>
+                                        <option value="3">3 Stars</option>
+                                        <option value="4">4 Stars</option>
+                                        <option value="5">5 Stars</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="testimonialQuote">Testimonial Quote</label>
+                                    <textarea id="testimonialQuote" rows="4" required placeholder="What the client said..."></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="clientImages">Select Client Images (First will be used as avatar)</label>
+                                    <input type="file" id="clientImages" name="clientImages" multiple accept="image/*">
+                                    <small>Recommended size: 600x600 pixels for best quality</small>
+                                    <div id="testimonialImagePreviews" class="image-previews-container"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="clientName">Client Name</label>
+                                    <input type="text" id="clientName" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="clientPosition">Client Position/Company</label>
+                                    <input type="text" id="clientPosition" required>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn--primary">
+                                        <i class="material-icons">save</i> Save Testimonial
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+                        
+                        <!-- Existing Testimonials Management -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">reviews</i> Manage Testimonials</h2>
+                            </div>
+                            <div class="testimonials-list">
+                                <!-- Testimonials will be loaded from database -->
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div id="services-tab" class="tab-pane">
+                    <div class="manage-sections">
+                        <!-- Form Selection Dropdown -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">design_services</i> Services Management</h2>
+                            </div>
+                            <div class="form-group">
+                                <label for="serviceFormSelector">Select Form to Display</label>
+                                <select id="serviceFormSelector" class="form-control">
+                                    <option value="category-form">Add New Category</option>
+                                    <option value="service-form">Add New Service</option>
+                                </select>
+                            </div>
+                        </section>
+
+                        <!-- Service Category Creation Form (Initially visible) -->
+                        <section id="category-form" class="card form-section">
+                            <div class="section-header">
+                                <h2><i class="material-icons">category</i> Create Service Category</h2>
+                            </div>
+                            
+                            <form id="serviceCategoryForm">
+                                <div class="form-group">
+                                    <label for="categoryTitle">Category Title</label>
+                                    <input type="text" id="categoryTitle" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="categoryIcon">Category Icon</label>
+                                    <div class="icon-selection">
+                                        <div class="icon-read-only">
+                                            <input type="text" id="categoryIcon" placeholder="e.g., design_services" required readonly>
+                                            <span id="selectedIconPreview" class="icon-preview"></span>
+                                        </div>
+                                        <button type="button" id="openIconPicker" class="btn btn--secondary">
+                                            <i class="material-icons">image_search</i> Select Icon
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="categoryDescription">Category Description</label>
+                                    <textarea id="categoryDescription" rows="3" required></textarea>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn--primary">
+                                        <i class="material-icons">save</i> Save Category
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+
+                        <!-- Individual Service Creation Form (Initially hidden) -->
+                        <section id="service-form" class="card form-section" style="display: none;">
+                            <div class="section-header">
+                                <h2><i class="material-icons">add_circle</i> Add Service to Category</h2>
+                            </div>
+                            
+                            <form id="individualServiceForm">
+                                <div class="form-group">
+                                    <label for="serviceCategory">Select Category</label>
+                                    <select id="serviceCategory" required>
+                                        <option value="">Select a category</option>
+                                        <!-- Categories will be populated here -->
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="individualServiceTitle">Service Title</label>
+                                    <input type="text" id="individualServiceTitle" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="individualServiceDescription">Service Description</label>
+                                    <textarea id="individualServiceDescription" rows="3" required></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Service Features</label>
+                                    <div id="serviceFeaturesContainer">
+                                        <!-- Features will be added here -->
+                                    </div>
+                                    <button type="button" id="addFeatureBtn" class="btn btn--secondary">
+                                        <i class="material-icons">add</i> Add Feature
+                                    </button>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="serviceImage">Service Image</label>
+                                    <input type="file" id="serviceImage" accept="image/*">
+                                    <div id="recommendedImageSize"><small>Recommended size: 800x600 pixels</small></div>
+                                    <div id="serviceImagePreview" class="service-image-preview"></div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn--primary">
+                                        <i class="material-icons">save</i> Save Service
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+                        
+                        <!-- Existing Services Management (Always visible) -->
+                        <section class="card">
+                            <div class="section-header">
+                                <h2><i class="material-icons">list</i> Manage Services</h2>
+                            </div>
+                            <div class="services-accordion" id="servicesAccordion">
+                                <!-- Categories and services will be loaded here -->
+                                <div class="service empty-state">
+                                    <i class="material-icons">info</i>
+                                    <p>No service categories added yet. Create your first category above.</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="imageEditorModal" class="image-modal">
+            <div class="image-modal-content">
+                <div class="image-modal-header">
+                    <h3>Edit Profile Picture</h3>
+                    <button class="image-close-modal">&times;</button>
+                </div>
+                <div class="image-modal-body">
+                    <div class="image-container">
+                        <img id="imageToCrop" src="" alt="Profile picture to crop">
+                    </div>
+                </div>
+                <div class="image-modal-footer">
+                    <button id="rotateLeftBtn" class="btn btn--image-editor">
+                        <i class="material-icons">rotate_left</i>
+                    </button>
+                    <button id="rotateRightBtn" class="btn btn--image-editor">
+                        <i class="material-icons">rotate_right</i>
+                    </button>
+                    <button id="zoomInBtn" class="btn btn--image-editor">
+                        <i class="material-icons">zoom_in</i>
+                    </button>
+                    <button id="zoomOutBtn" class="btn btn--image-editor">
+                        <i class="material-icons">zoom_out</i>
+                    </button>
+                    <button id="cancelCropBtn" class="btn btn--danger">Cancel</button>
+                    <button id="saveCropBtn" class="btn btn--primary">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div class="modal" id="confirmationModal">
+            <div class="modal-content">
+                <button class="close-modal">
+                    <svg viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+                </button>
+                <h3 id="modalTitle">Confirm Action</h3>
+                <p id="modalMessage">Are you sure you want to perform this action?</p>
+                <div class="modal-actions">
+                    <button id="modalConfirmBtn" class="btn btn--danger">Confirm</button>
+                    <button id="modalCancelBtn" class="btn btn--secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Icon Picker Modal -->
+        <div id="iconPickerModal" class="icon-modal">
+            <div class="icon-modal-content">
+                <div class="icon-modal-header">
+                    <h3>Select Material Icon</h3>
+                    <button class="icon-close-modal">
+                        <svg viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="icon-search">
+                        <input type="text" id="iconSearch" placeholder="Search icons...">
+                    </div>
+                    <div class="icons-grid" id="iconsGrid">
+                        <!-- Icons will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+        <!-- scripts path -->
+        <script src="../js/profile-script.js"></script>
+    </body>
+</html>

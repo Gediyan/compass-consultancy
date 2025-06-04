@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Compass AEPED</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link rel="stylesheet" href="css/main-style.css">
+    </head>
+    <body>
+        <button id="back-to-top" title="Go to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 15l7-7 7 7"/>
+            </svg>
+        </button>
+        <header class="main-header">
+            <div class="logo-container">
+                <div class="hamburger" id="logoIcon">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <img src="images/logo-700px-01.png" alt="Company Logo" class="logo">
+                <div class="company-name"><h1>Compass AEPED</h1></div>
+            </div>
+            
+            <nav id="mainNav">
+                <a href="index.html">Home</a>
+                <a href="pages/news-events.html">News & Events</a>
+                <a href="pages/about.html">About</a>
+                <a href="pages/services.html">Services</a>
+                <a href="pages/projects.html">Projects</a>
+                <a href="pages/team.html">Team</a>
+                <a href="pages/contact.html">Contact</a>
+            </nav>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="material-icons sun-icon">light_mode</span>
+                    <span class="material-icons moon-icon">dark_mode</span>
+                </button>
+            
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown">
+                    <div class="dropdown-btn" id="profileDropdownBtn" style="display: none;">G</div>
+                    <div class="sign-in-button" id="signInButton" ><h4>Sign In</h4></div>
+                    <div class="dropdown-content" id="profileDropdown">
+                        <div class="dropdown-profile-info">
+                            <div class="dropdown-profile-icon" id="dropdownProfileIcon">C</div>
+                            <div>
+                                <div id="dropdownUserName">Guest</div>
+                                <div id="dropdownUserEmail"></div>
+                            </div>
+                        </div>
+                        <a href="#" id="profileAction"><i class="material-icons">account_circle</i> Profile</a>
+                        <a href="#"><i class="material-icons">settings</i> Settings</a>
+                        <a href="#"><i class="material-icons">favorite</i> Favorites</a>
+                        <div class="divider"></div>
+                        <a href="#" id="accountAction"><i class="material-icons">account_circle</i> Sign In</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="slideshow-section">
+            <!-- Static Welcome Text -->
+            <div class="welcome-text">
+                <h1>Welcome to Compass AEPED</h1>
+            </div>
+            
+            <!-- Automatic Text Slideshow -->
+            <div class="text-slideshow">
+                <div class="text-slide active">
+                    <h2>Compass AEPED Establishment</h2>
+                    <p>Compass AEPED is an established urban and regional planning 
+                        consultancy with over 15 years of expertise in the field of planning 
+                        and development. Headquartered in Addis Ababa, we are committed to 
+                        shaping sustainable urban environments</p>
+                </div>
+                <div class="text-slide">
+                    <h2>Innovative Engineering Solutions</h2>
+                    <p>We deliver cutting-edge architectural and engineering solutions 
+                        tailored to Ethiopia's unique context. Our team combines international 
+                        standards with local expertise to create functional, sustainable spaces.</p>
+                </div>
+                <div class="text-slide">
+                    <h2>Sustainable Development Approach</h2>
+                    <p>Our approach integrates environmental responsibility with urban 
+                        development. We prioritize green spaces, energy efficiency, and 
+                        community-focused designs in all our projects.</p>
+                </div>
+            </div>
+            
+            <!-- Manual Image Slideshow -->
+            <div class="slideshow-container">
+                <div class="slide fade">
+                    <img src="images/smart-buildings.jpg" alt="Modern City Infrastructure">
+                </div>
+                <div class="slide fade">
+                    <img src="images/tall-building.jpg" alt="Urban Tall Building">
+                </div>
+                <div class="slide fade">
+                    <img src="images/glass-building.jpg" alt="Urban Glass Building">
+                </div>
+                <div class="slide fade">
+                    <img src="images/supertall-buildings.jpg" alt="Urban Super Tall Building">
+                </div>
+                
+                <!-- Navigation Arrows -->
+                <div class="welcome-control">
+                    <a class="welcome-prev" onclick="plusSlides(-1)">&#10094;</a>
+                    <a class="welcome-next" onclick="plusSlides(1)">&#10095;</a>
+                </div>
+                
+            </div>
+            
+            <!-- Dots Indicator -->
+            <div class="dots-container">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot" onclick="currentSlide(4)"></span>
+            </div>
+        </section>
+
+        <!-- Status-section -->
+        <section class="status-section">
+            <div class="stats-container">
+                <div class="stat-item">
+                <div class="counter-wrapper">
+                    <span class="counter" data-target="210">0</span><span class="plus-sign">+</span>
+                </div>
+                <p>Projects Completed</p>
+                </div>
+                <div class="stat-item">
+                <div class="counter-wrapper">
+                    <span class="counter" data-target="100">0</span><span class="plus-sign">+</span>
+                </div>
+                <p>Client Satisfaction</p>
+                </div>
+                <div class="stat-item">
+                <div class="counter-wrapper">
+                    <span class="counter" data-target="16">0</span><span class="plus-sign">+</span>
+                </div>
+                <p>Years Experience</p>
+                </div>
+                <div class="stat-item">
+                <div class="counter-wrapper">
+                    <span class="counter" data-target="40">0</span><span class="plus-sign">+</span>
+                </div>
+                <p>Professional Team</p>
+                </div>
+            </div>
+        </section>
+        <main class="content-section">
+            
+            <div class="section-title">
+                <h2 class="services-header">Latest News</h2>
+            </div>
+            <div class="news-container">
+                <!-- News posts will be dynamically inserted here by JavaScript -->
+            </div>
+
+            <div class="section-title">
+                <h2 class="services-header">Upcoming Events</h2>
+            </div>
+            <div class="events-container">
+                <!-- Event posts will be dynamically inserted here by JavaScript -->
+            </div>
+
+            <!-- Add this where you want the services section to appear -->
+            <div id="servicesSection" class="services-section">
+                <h2 class="services-header">Our Services</h2>
+                <div id="servicesCard" class="services-card">
+                    <!-- Services will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Why Choose Us -->
+            <div class="section-header">
+                <h2>Why Choose Compass AEPED?</h2>
+                <p class="section-subtitle">Excellence in every detail, innovation in every project</p>
+            </div>
+
+            <div class="benefits-grid">
+                <!-- Benefit 1 -->
+                <div class="benefit-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="benefit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <h3>Expert Team</h3>
+                    <p>15+ years of combined experience with specialized professionals in urban planning, architecture, and engineering.</p>
+                </div>
+
+                <!-- Benefit 2 -->
+                <div class="benefit-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="benefit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6l3 6h12l3-6M3 18h18v-3H3z"></path>
+                            <path d="M9 12v9"></path>
+                            <path d="M15 12v9"></path>
+                        </svg>
+                    </div>
+                    <h3>Holistic Approach</h3>
+                    <p>We integrate environmental, social, and economic factors to create sustainable, functional spaces.</p>
+                </div>
+
+                <!-- Benefit 3 -->
+                <div class="benefit-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="benefit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 8v4l3 3"></path>
+                        </svg>
+                    </div>
+                    <h3>Timely Delivery</h3>
+                    <p>Proven track record of completing projects on schedule without compromising quality.</p>
+                </div>
+
+                <!-- Benefit 4 -->
+                <div class="benefit-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="benefit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg>
+                    </div>
+                    <h3>Innovative Solutions</h3>
+                    <p>Cutting-edge technology combined with creative design thinking for unique solutions.</p>
+                </div>
+
+                <!-- Benefit 5 -->
+                <div class="benefit-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="benefit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3>Client-Centric</h3>
+                    <p>Your vision is our priority. We maintain transparent communication throughout the process.</p>
+                </div>
+
+                <!-- Benefit 6 -->
+                <div class="benefit-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="benefit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <path d="M22 4L12 14.01l-3-3"></path>
+                        </svg>
+                    </div>
+                    <h3>Quality Assurance</h3>
+                    <p>Rigorous quality control processes ensure exceptional results on every project.</p>
+                </div>
+            </div>
+            
+            <div class="section-header">
+                <h2 class="section-title">What Our Clients Say</h2>
+                <p class="section-subtitle">Trusted by organizations across Ethiopia</p>
+            </div>
+
+            <div class="testimonials-carousel">
+                <div class="testimonials-track">
+                    <!-- Testimonials will be loaded from database -->
+                    
+                </div>
+            </div>
+
+            <div class="testimonial-controls">
+                <button class="control-btn previous" aria-label="Previous testimonial">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <button class="control-btn next" aria-label="Next testimonial">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                </button>
+            </div>
+        </main>
+        
+        <div id="footer-container"></div>
+
+        <script>
+            // Load footer and dispatch event when done
+            fetch('footer.html')
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.text();
+                })
+                .then(html => {
+                    const container = document.getElementById('footer-container');
+                    if (!container) throw new Error('Footer container not found');
+                    container.innerHTML = html;
+                    document.dispatchEvent(new CustomEvent('footerLoaded'));
+                })
+                .catch(error => {
+                    console.error('Footer loading failed:', error);
+                    // Fallback content
+                    document.getElementById('footer-container').innerHTML = `
+                    <footer>© ${new Date().getFullYear()} Compass AEPED</footer>
+                    `;
+                });
+        </script>
+
+        <!-- At the bottom of your HTML, before </body> -->
+        <script src="js/main-scripts.js"></script>
+    </body>
+</html>

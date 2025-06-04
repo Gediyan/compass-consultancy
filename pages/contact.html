@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contact US | Compass AEPED</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="../css/main-style.css">
+    </head>
+    <body>
+        <button id="back-to-top" title="Go to top">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 15l7-7 7 7"/>
+            </svg>
+        </button>
+        <header class="main-header">
+            <div class="logo-container">
+                <div class="hamburger" id="logoIcon">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <img src="../images/logo-700px-01.png" alt="Company Logo" class="logo">
+                <div class="company-name"><h1>Compass AEPED</h1></div>
+            </div>
+            
+            <nav id="mainNav">
+                <a href="../index.html">Home</a>
+                <a href="news-events.html">News & Events</a>
+                <a href="about.html">About</a>
+                <a href="services.html">Services</a>
+                <a href="projects.html">Projects</a>
+                <a href="team.html">Team</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="material-icons sun-icon">light_mode</span>
+                    <span class="material-icons moon-icon">dark_mode</span>
+                </button>
+            
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown">
+                    <div class="dropdown-btn" id="profileDropdownBtn" style="display: none;">G</div>
+                    <div class="sign-in-button" id="signInButton" ><h4>Sign In</h4></div>
+                    
+                    <div class="dropdown-content" id="profileDropdown">
+                        <div class="dropdown-profile-info">
+                            <div class="dropdown-profile-icon" id="dropdownProfileIcon">C</div>
+                            <div>
+                                <div id="dropdownUserName">Guest</div>
+                                <div id="dropdownUserEmail"></div>
+                            </div>
+                        </div>
+                        <a href="#" id="profileAction"><i class="material-icons">account_circle</i> Profile</a>
+                        <a href="#"><i class="material-icons">settings</i> Settings</a>
+                        <a href="#"><i class="material-icons">favorite</i> Favorites</a>
+                        <div class="divider"></div>
+                        <a href="#" id="accountAction"><i class="material-icons">account_circle</i> Sign In</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="contact-page-section">
+            <!-- Static Welcome Text -->
+            <img src="../images/smart-buildings.jpg" alt="Modern City Infrastructure">
+        </section>
+        <main class="content-section">
+            <div class="contact-us-container">
+                <div class="page-title">
+                    <h1>Contact Us</h1>
+                </div>
+                <form id="contactForm" class="contact-form">
+                    <!-- Name + Email Row -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Name*</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email*</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Website + Subject Row -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="website">Website</label>
+                            <input type="url" id="website" class="form-control" placeholder="https://example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject*</label>
+                            <input type="text" id="subject" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Message Row -->
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="message">Brief Description*</label>
+                            <textarea id="message" class="form-control message-area" rows="6" required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-submit">
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </div>
+                </form>
+            </div>
+            <div class="info-container">
+                <div class="info-card hover-scale">
+                    <div class="card-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3 class="info-card-title">Visit Our Place</h3>
+                    <p class="card-text">CMC Road, CMC<br>EEA Building<br>Addis Ababa, Ethiopia</p>
+                </div>
+                
+                <div class="info-card hover-scale">
+                    <div class="card-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <h3 class="info-card-title">Contact Us</h3>
+                    <p class="card-text">
+                        Phone: +251 (116) 464-789<br>
+                        Email: compassaeped@gmail.com<br>
+                        Fax: +1 (555) 987-6543
+                    </p>
+                </div>
+                
+                <div class="info-card hover-scale">
+                    <div class="card-icon">
+                        <i class="far fa-clock"></i>
+                    </div>
+                    <h3 class="info-card-title">Office Time</h3>
+                    <p class="card-text">
+                        Monday - Friday: 8:30am - 11:30pm<br>
+                        Saturday: 8:30am - 12:00am<br>
+                        Sunday: Closed
+                    </p>
+                </div>
+            </div>
+        </main>
+        <section class="map-section">
+            <iframe 
+                class="address-map-container"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215256027566!2d-73.9878449241646!3d40.74844097138998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1689876543210!5m2!1sen!2sus" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </section>
+        
+        <div id="footer-container"></div>
+
+        <script>
+            // Load footer and dispatch event when done
+            fetch('../footer.html')
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.text();
+                })
+                .then(html => {
+                    const container = document.getElementById('footer-container');
+                    if (!container) throw new Error('Footer container not found');
+                    container.innerHTML = html;
+                    document.dispatchEvent(new CustomEvent('footerLoaded'));
+                })
+                .catch(error => {
+                    console.error('Footer loading failed:', error);
+                    // Fallback content
+                    document.getElementById('footer-container').innerHTML = `
+                    <footer>© ${new Date().getFullYear()} Compass AEPED</footer>
+                    `;
+                });
+        </script>
+        <!-- scripts path -->
+        <script src="../js/main-scripts.js"></script>
+    </body>
+</html>
