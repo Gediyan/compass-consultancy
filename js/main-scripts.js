@@ -2455,10 +2455,7 @@ const aboutContent = {
                             principles stem from both societal values and our commitment to 
                             serving the public interest. We adhere to existing rules, regulations, 
                             and policies, ensuring citizens' right to participate in planning decisions. 
-                            We prioritize the integrity of the natural environment and the heritage of 
-                            the built environment in all our projects. We consider the long-term impact 
-                            of our decisions, promoting sustainable solutions that benefit communities 
-                            for generations to come.</p>
+                            </p>
                         </div>
                     </div>
                 </div>
