@@ -1976,7 +1976,7 @@ body{
 
 .main-header.sticky {
     box-shadow: 0 5px 5px rgba(0,0,0,0.3);
-    background-color: var(--primary-color);
+    background-color: var(--header-bg);
     position: sticky;
 }
 
@@ -1985,7 +1985,7 @@ body{
     display: none; /* Hidden by default on desktop */
     width: 100%;
     padding: 1rem;
-    background-color: rgb(176, 172, 172);
+    background-color: var(--cards-bg-color);
     color: var(--text-color);
     border: none;
     font-size: 1rem;
@@ -2007,7 +2007,7 @@ body{
 #aboutNav.about-nav-list {
     display: flex;
     justify-content: flex-end;
-    background-color: rgb(176, 172, 172);
+    background-color: var(--cards-bg-color);
     padding: 0.8rem 2rem;
     gap: 1.2rem;
     flex-wrap: wrap;
@@ -2055,7 +2055,7 @@ body{
         top: 100%;
         left: 0;
         right: 0;
-        background-color: white;
+        background-color: var(--cards-bg-color);
         flex-direction: column;
         gap: 0;
         padding: 0;
@@ -2072,7 +2072,7 @@ body{
     .about-nav {
         padding: 1rem;
         border-bottom: 1px solid #eee;
-        color: #333;
+        color: var(--text-color);
         white-space: normal;
     }
     
@@ -2146,6 +2146,7 @@ body{
 /* Responsive adjustment for smaller screens */
 @media (max-width: 600px) {
     .about-page-section {
+        height: 30vh;
         align-items: start;
         text-align: start;
     }
@@ -2259,13 +2260,13 @@ body{
 
 .leadership-intro h2 {
     font-size: 2.2rem;
-    color: #003366;
+    color: var(--primary-color);
     margin-bottom: 1rem;
 }
 
 .leadership-intro p {
     font-size: 1.1rem;
-    color: #555;
+    color: var(--post-card-description);
     max-width: 800px;
     margin: 0 auto;
     line-height: 1.6;
@@ -2292,8 +2293,8 @@ body{
 }
 
 .tab-btn.active {
-    color: #0066cc;
-    border-bottom-color: #0066cc;
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
 }
 
 .tab-btn:hover:not(.active) {
@@ -2317,7 +2318,7 @@ body{
 }
 
 .leader-card {
-    background: #fff;
+    background: var(--cards-bg-color);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -2389,19 +2390,19 @@ body{
 
 .leader-info h3 {
     font-size: 1.4rem;
-    color: #003366;
+    color: var(--paragraph-text-color);
     margin-bottom: 0.5rem;
 }
 
 .position {
-    color: #0066cc;
+    color: var(--primary-color);
     font-weight: 500;
     margin-bottom: 1rem;
     font-size: 0.95rem;
 }
 
 .leader-bio p {
-    color: #555;
+    color: var(--post-card-description);
     line-height: 1.6;
     margin-bottom: 1rem;
 }
@@ -2409,7 +2410,7 @@ body{
 .bio-toggle {
     background: none;
     border: none;
-    color: #0066cc;
+    color: var(--primary-color);
     font-weight: 500;
     cursor: pointer;
     padding: 0;
@@ -2502,7 +2503,6 @@ body{
 }
 
 .value-item:hover {
-    background: var(--footer-section-bg-color);
     transform: translateY(-5px);
 }
 
