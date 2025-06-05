@@ -405,7 +405,12 @@ body {
 }
 
 .tab-btn {
-    padding: 12px 20px;
+    /* padding: 1rem 2rem; */
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-right: 2rem;
+    gap: 10px;
+    align-items: center;
     background: none;
     border: none;
     border-bottom: 3px solid transparent;
@@ -413,7 +418,6 @@ body {
     font-size: 1rem;
     color: var(--light-text);
     transition: all 0.3s ease;
-    margin-right: 5px;
 }
 
 .tab-btn.active {
@@ -424,6 +428,12 @@ body {
 
 .tab-btn:hover:not(.active) {
     color: var(--primary-color);
+}
+
+#manageSelector {
+    padding: 10px;
+    background-color: var(--form-input-bg);
+    color: var(--text-color);
 }
 
 .tab-content {

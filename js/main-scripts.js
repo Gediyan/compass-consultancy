@@ -2173,10 +2173,12 @@ const aboutContent = {
                                 </div>
                             </div>
                             <div class="leader-info">
-                                <h3>Gossaye Bekele</h3>
+                                <h3>Mr. Gossaye Bekele</h3>
                                 <p class="position">General Manager</p>
                                 <div class="leader-bio">
-                                    <p>With over 25 years in infrastructure development, Gossaye has led transformative projects across three continents.</p>
+                                    <p>General Manager of the organization, is senior urban planning and design professional who 
+                                    served for about 30 years on different technical and managerial positions here in 
+                                    compass and other public offices and civil Service university</p>
                                     <button class="bio-toggle">Read Full Bio</button>
                                     <div class="full-bio">
                                         <p>Prior to joining Compass AEPED, Gossaye served as Senior VP at Global Infrastructure Partners. He holds an MBA from Harvard and a Civil Engineering degree from MIT.</p>
@@ -2196,10 +2198,13 @@ const aboutContent = {
                                 </div>
                             </div>
                             <div class="leader-info">
-                                <h3>Yimer Mohammed</h3>
+                                <h3>Mr. Yimer Mohammed</h3>
                                 <p class="position">Deputy Manager</p>
                                 <div class="leader-bio">
-                                    <p>Operational strategist with 15+ years experience. Yimer brings strategic insight and operational excellence to ensure we deliver exceptional results for our clients.</p>
+                                    <p>Deputy G/manager of the firm, is an urban and regional 
+                                    development planner who served for more than 37 years in 
+                                    multiple government offices, private consultancy firms and 
+                                    Civil Service University with managerial and technical capacity.</p>
                                     <button class="bio-toggle">Read Full Bio</button>
                                     <div class="full-bio">
                                         <p>His background in organizational development has been instrumental in optimizing our service delivery.</p>
