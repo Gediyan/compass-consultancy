@@ -2127,6 +2127,16 @@ body{
     justify-content: center;
 }
 
+.about-page-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1; /* Ensure the image is behind the text */
+}
+
 .about-text {
     position: absolute;
     top: 15%;
@@ -2141,6 +2151,10 @@ body{
     margin-bottom: 1rem;
     font-family: Arial;
     animation: fadeIn 0.8s ease forwards;
+}
+
+.about-text p {
+    padding-right: 2rem;
 }
 
 /* Responsive adjustment for smaller screens */
@@ -2248,7 +2262,6 @@ body{
 
 /* Leadership Section Styles */
 .leadership-section {
-    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1rem;
 }
@@ -2558,7 +2571,7 @@ body{
 /* Purpose Section Styles */
 .purpose-section {
     margin: 0 auto;
-    padding: 0 1rem 4rem;
+    padding: 0 0 2rem;
     color: #333;
 }
 
@@ -2677,8 +2690,13 @@ body{
 }
 
 .values-accordion {
-    max-width: 800px;
     margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .values-accordion {
+        max-width: 800px;
+    }  
 }
 
 .value-toggle {

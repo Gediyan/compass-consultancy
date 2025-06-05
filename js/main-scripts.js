@@ -2146,7 +2146,7 @@ const aboutContent = {
                 <h1 class="about-title">Our Leadership</h1>
                 <p>Guiding our company with vision and expertise</p>
             </div>
-            <img src="../images/night-city-picture.jpg" alt="Leadership Team">
+            <img src="../images/supertall-buildings.jpg" alt="Leadership Team">
         `,
         contentSection: `
             <div class="leadership-section">
