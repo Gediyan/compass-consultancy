@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About US | Compass AEPED</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/main-style.css">
+</head>
+<body>
+    <button id="back-to-top" title="Go to top">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 15l7-7 7 7"/>
+        </svg>
+    </button>
+    <header class="main-header sticky">
+        <div class="logo-container">
+            <div class="hamburger" id="logoIcon">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <img src="../images/logo-700px-01.png" alt="Company Logo" class="logo">
+            <div class="company-name"><h1>Compass AEPED</h1></div>
+        </div>
+        
+        <nav id="mainNav">
+            <a href="../index.html">Home</a>
+            <a href="news-events.html">News & Events</a>
+            <a href="about.html">About</a>
+            <a href="services.html">Services</a>
+            <a href="projects.html">Projects</a>
+            <a href="team.html">Team</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle">
+                <span class="material-icons sun-icon">light_mode</span>
+                <span class="material-icons moon-icon">dark_mode</span>
+            </button>
+        
+            <!-- Profile Dropdown -->
+            <div class="profile-dropdown">
+                <div class="dropdown-btn" id="profileDropdownBtn" style="display: none;">G</div>
+                <div class="sign-in-button" id="signInButton" ><h4>Sign In</h4></div>
+                
+                <div class="dropdown-content" id="profileDropdown">
+                    <div class="dropdown-profile-info">
+                        <div class="dropdown-profile-icon" id="dropdownProfileIcon">C</div>
+                        <div>
+                            <div id="dropdownUserName">Guest</div>
+                            <div id="dropdownUserEmail"></div>
+                        </div>
+                    </div>
+                    <a href="#" id="profileAction"><i class="material-icons">account_circle</i> Profile</a>
+                    <a href="#"><i class="material-icons">settings</i> Settings</a>
+                    <a href="#"><i class="material-icons">favorite</i> Favorites</a>
+                    <div class="divider"></div>
+                    <a href="#" id="accountAction"><i class="material-icons">account_circle</i> Sign In</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="about-nav-container">
+        <!-- Dropdown button for mobile -->
+        <button class="dropdown-toggle" id="aboutNavToggle" aria-expanded="false" aria-controls="aboutNav">
+            <span>Select a page</span>
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        
+        <!-- Existing aboutNav as a list -->
+        <div id="aboutNav" class="about-nav-list">
+            <a href="" class="about-nav active">About us</a>
+            <a href="" class="about-nav">Our leadership</a>
+            <a href="" class="about-nav">Our purpose</a>
+            <a href="" class="about-nav">Our brands</a>
+            <a href="" class="about-nav">TechEx</a>
+            <a href="" class="about-nav">Sustainable legacies</a>
+            <a href="" class="about-nav">Welcoming Workplace</a>
+            <a href="" class="about-nav">Corporate Responsibility</a>
+            <a href="" class="about-nav">Safety</a>
+            <a href="" class="about-nav">Innovation + Digital</a>
+            <a href="" class="about-nav">Ethics & Compliance</a>
+            <a href="" class="about-nav">Government Relations</a>
+        </div>
+    </div>
+    
+    <!-- Current sections - keep these -->
+    <section class="about-page-section" id="dynamic-about-section">
+        <!-- Content will be loaded here dynamically -->
+    </section>
+    <main class="content-section" id="dynamic-content-section">
+        <!-- Content will be loaded here dynamically -->
+    </main>
+        
+    <div id="footer-container"></div>
+
+    <script>
+        // Load footer and dispatch event when done
+        fetch('../footer.html')
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return response.text();
+            })
+            .then(html => {
+                const container = document.getElementById('footer-container');
+                if (!container) throw new Error('Footer container not found');
+                container.innerHTML = html;
+                document.dispatchEvent(new CustomEvent('footerLoaded'));
+            })
+            .catch(error => {
+                console.error('Footer loading failed:', error);
+                // Fallback content
+                document.getElementById('footer-container').innerHTML = `
+                <footer>© ${new Date().getFullYear()} Compass AEPED</footer>
+                `;
+            });
+    </script>
+    <!-- Add this in your head section or before the closing body tag -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- scripts path -->
+    <script src="../js/main-scripts.js"></script>
+</body>
+</html>
